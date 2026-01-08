@@ -30,20 +30,38 @@ class CosplayViewModel(private val repository: CosplayRepository) : ViewModel() 
         _currentCosplanId.value = id
     }
 
+    suspend fun getCosplayById(id: Long): Cosplay? {
+        return repository.getCosplayById(id)
+    }
+
     fun insertCosplay(cosplay: Cosplay) = viewModelScope.launch {
         repository.insertCosplay(cosplay)
     }
 
+    fun updateCosplay(cosplay: Cosplay) = viewModelScope.launch {
+        repository.updateCosplay(cosplay)
+    }
+
     // Handmade Parts
     fun getHandmadeParts(cosplayId: Long) = repository.getHandmadeParts(cosplayId)
+    
     fun insertHandmadePart(part: HandmadePart) = viewModelScope.launch {
         repository.insertHandmadePart(part)
     }
 
+    fun updateHandmadePart(part: HandmadePart) = viewModelScope.launch {
+        repository.updateHandmadePart(part)
+    }
+
     // Purchased Items
     fun getPurchasedItems(cosplayId: Long) = repository.getPurchasedItems(cosplayId)
+    
     fun insertPurchasedItem(item: PurchasedItem) = viewModelScope.launch {
         repository.insertPurchasedItem(item)
+    }
+
+    fun updatePurchasedItem(item: PurchasedItem) = viewModelScope.launch {
+        repository.updatePurchasedItem(item)
     }
 }
 

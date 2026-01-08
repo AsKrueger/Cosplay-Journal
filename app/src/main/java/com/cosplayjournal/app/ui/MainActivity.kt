@@ -23,6 +23,9 @@ import com.cosplayjournal.app.ui.screens.cosplan.AddEditCosplanScreen
 import com.cosplayjournal.app.ui.screens.cosplan.CosplanDetailScreen
 import com.cosplayjournal.app.ui.screens.cosplan.CosplanListScreen
 import com.cosplayjournal.app.ui.screens.cosplay.AddEditCosplayScreen
+import com.cosplayjournal.app.ui.screens.cosplay.AddEditHandmadePartScreen
+import com.cosplayjournal.app.ui.screens.cosplay.AddEditPurchasedItemScreen
+import com.cosplayjournal.app.ui.screens.cosplay.CosplayDetailScreen
 import com.cosplayjournal.app.ui.screens.cosplay.CosplayListScreen
 import com.cosplayjournal.app.ui.theme.CosplayJournalTheme
 import com.cosplayjournal.app.ui.viewmodel.CosplanViewModel
@@ -142,8 +145,8 @@ fun MainScreen() {
             composable(Screen.Cosplays.route) {
                 CosplayListScreen(
                     viewModel = cosplayViewModel,
-                    onCosplayClick = { id -> /* TODO: Detail */ },
-                    onAddCosplayClick = { /* This route should usually have a cosplanId context */ }
+                    onCosplayClick = { id -> navController.navigate("cosplay_detail/$id") },
+                    onAddCosplayClick = { /* N/A */ }
                 )
             }
 
@@ -155,8 +158,23 @@ fun MainScreen() {
                 CosplayListScreen(
                     viewModel = cosplayViewModel,
                     cosplanId = cosplanId,
-                    onCosplayClick = { id -> /* TODO: Detail */ },
+                    onCosplayClick = { id -> navController.navigate("cosplay_detail/$id") },
                     onAddCosplayClick = { id -> navController.navigate("add_edit_cosplay/$id") }
+                )
+            }
+
+            composable(
+                route = "cosplay_detail/{cosplayId}",
+                arguments = listOf(navArgument("cosplayId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val cosplayId = backStackEntry.arguments?.getLong("cosplayId") ?: return@composable
+                CosplayDetailScreen(
+                    viewModel = cosplayViewModel,
+                    cosplayId = cosplayId,
+                    onEditClick = { id -> /* TODO */ },
+                    onAddHandmadePart = { id -> navController.navigate("add_handmade_part/$id") },
+                    onAddPurchasedItem = { id -> navController.navigate("add_purchased_item/$id") },
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 
@@ -175,6 +193,30 @@ fun MainScreen() {
                 AddEditCosplayScreen(
                     viewModel = cosplayViewModel,
                     cosplanId = cosplanId,
+                    cosplayId = cosplayId,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(
+                route = "add_handmade_part/{cosplayId}",
+                arguments = listOf(navArgument("cosplayId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val cosplayId = backStackEntry.arguments?.getLong("cosplayId") ?: return@composable
+                AddEditHandmadePartScreen(
+                    viewModel = cosplayViewModel,
+                    cosplayId = cosplayId,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(
+                route = "add_purchased_item/{cosplayId}",
+                arguments = listOf(navArgument("cosplayId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val cosplayId = backStackEntry.arguments?.getLong("cosplayId") ?: return@composable
+                AddEditPurchasedItemScreen(
+                    viewModel = cosplayViewModel,
                     cosplayId = cosplayId,
                     onNavigateBack = { navController.popBackStack() }
                 )
