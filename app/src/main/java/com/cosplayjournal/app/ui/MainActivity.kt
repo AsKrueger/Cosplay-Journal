@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -27,11 +29,14 @@ import com.cosplayjournal.app.ui.screens.cosplay.AddEditHandmadePartScreen
 import com.cosplayjournal.app.ui.screens.cosplay.AddEditPurchasedItemScreen
 import com.cosplayjournal.app.ui.screens.cosplay.CosplayDetailScreen
 import com.cosplayjournal.app.ui.screens.cosplay.CosplayListScreen
+import com.cosplayjournal.app.ui.screens.event.EventListScreen
 import com.cosplayjournal.app.ui.theme.CosplayJournalTheme
 import com.cosplayjournal.app.ui.viewmodel.CosplanViewModel
 import com.cosplayjournal.app.ui.viewmodel.CosplanViewModelFactory
 import com.cosplayjournal.app.ui.viewmodel.CosplayViewModel
 import com.cosplayjournal.app.ui.viewmodel.CosplayViewModelFactory
+import com.cosplayjournal.app.ui.viewmodel.EventViewModel
+import com.cosplayjournal.app.ui.viewmodel.EventViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,16 +53,18 @@ class MainActivity : ComponentActivity() {
 fun MainScreen() {
     val navController = rememberNavController()
     val context = LocalContext.current
-    val repository = (context.applicationContext as CosplayJournalApplication).repository
+    val app = context.applicationContext as CosplayJournalApplication
+    val repository = app.repository
+    val eventRepository = app.eventRepository
     
     val cosplanViewModel: CosplanViewModel = viewModel(factory = CosplanViewModelFactory(repository))
     val cosplayViewModel: CosplayViewModel = viewModel(factory = CosplayViewModelFactory(repository))
+    val eventViewModel: EventViewModel = viewModel(factory = EventViewModelFactory(eventRepository))
 
     val bottomNavItems = listOf(
         Screen.Home,
+        Screen.Events, // Moved to match your design image order (Home, Calendar, Gallery, Profile)
         Screen.Cosplans,
-        Screen.Cosplays,
-        Screen.Events,
         Screen.Profile
     )
 
@@ -68,11 +75,13 @@ fun MainScreen() {
             val showBottomBar = bottomNavItems.any { it.route == currentDestination?.route }
 
             if (showBottomBar) {
-                NavigationBar {
+                NavigationBar(
+                    containerColor = androidx.compose.ui.graphics.Color.White,
+                    tonalElevation = 8.dp
+                ) {
                     bottomNavItems.forEach { screen ->
                         NavigationBarItem(
                             icon = { screen.icon?.let { Icon(it, contentDescription = null) } },
-                            label = { Text(screen.title) },
                             selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                             onClick = {
                                 navController.navigate(screen.route) {
@@ -82,20 +91,43 @@ fun MainScreen() {
                                     launchSingleTop = true
                                     restoreState = true
                                 }
-                            }
+                            },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = androidx.compose.ui.graphics.Color(0xFF00ACC1),
+                                indicatorColor = androidx.compose.ui.graphics.Color.Transparent
+                            )
                         )
                     }
+                }
+            }
+        },
+        floatingActionButton = {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+            if (currentRoute == Screen.Events.route) {
+                FloatingActionButton(
+                    onClick = { /* TODO */ },
+                    containerColor = androidx.compose.ui.graphics.Color(0xFF00ACC1),
+                    contentColor = androidx.compose.ui.graphics.Color.White,
+                    shape = CircleShape
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "Add")
                 }
             }
         }
     ) { innerPadding ->
         NavHost(
             navController,
-            startDestination = Screen.Home.route,
+            startDestination = Screen.Events.route, // Set as start for now to see it immediately
             Modifier.padding(innerPadding)
         ) {
             composable(Screen.Home.route) { Text("Home Screen") }
             
+            // EVENTS
+            composable(Screen.Events.route) {
+                EventListScreen(viewModel = eventViewModel)
+            }
+
             // COSPLANS
             composable(Screen.Cosplans.route) {
                 CosplanListScreen(
@@ -222,7 +254,6 @@ fun MainScreen() {
                 )
             }
 
-            composable(Screen.Events.route) { Text("Events Screen") }
             composable(Screen.Profile.route) { Text("Profile Screen") }
         }
     }
