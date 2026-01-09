@@ -8,7 +8,7 @@
     "endDate": "2024-07-04",
     "website": "https://www.anime-expo.org/",
     "ticketsLink": "https://www.anime-expo.org/register/",
-    "image": "https://example.com/ax.jpg"
+    "image": null
   },
   {
     "id": "2",
@@ -19,17 +19,6 @@
     "endDate": "2024-09-04",
     "website": "https://www.dragoncon.org/",
     "ticketsLink": "https://www.dragoncon.org/buy-now/",
-    "image": "https://example.com/dc.jpg"
-  },
-  {
-    "id": "3",
-    "name": "TwitchCon",
-    "city": "San Diego, CA",
-    "venue": "San Diego Convention Center",
-    "startDate": "2024-09-20",
-    "endDate": "2024-09-22",
-    "website": "https://www.twitchcon.com/",
-    "ticketsLink": "https://www.twitchcon.com/tickets/",
-    "image": "https://example.com/tc.jpg"
+    "image": null
   }
 ]

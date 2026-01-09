@@ -8,8 +8,8 @@ data class Cosplan(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
     val description: String,
-    val status: String, // e.g., "Planned", "In Progress", "Finished"
-    val tags: String, // Comma separated for simplicity, or a separate table if needed
+    val status: String,
+    val tags: String,
     val season: String,
     val difficulty: String,
     val estimatedBudget: Double,

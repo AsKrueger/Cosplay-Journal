@@ -30,7 +30,6 @@ object PdfExporter {
             val pdf = PdfDocument(writer)
             val document = Document(pdf)
 
-            // Title
             document.add(Paragraph("Cosplay Project Report").setBold().setFontSize(24f))
             document.add(Paragraph("Character: ${cosplay.characterName}"))
             document.add(Paragraph("Series: ${cosplay.series}"))

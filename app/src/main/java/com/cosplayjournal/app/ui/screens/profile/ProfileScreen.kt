@@ -96,12 +96,12 @@ fun ProfileScreen(
                     }
 
                     Spacer(modifier = Modifier.height(12.dp))
-                    Text("MochiCos", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                    Text("Crafting armor and dreams since 2018", color = Color(0xFF00ACC1), style = MaterialTheme.typography.bodySmall)
+                    Text("My Cosplay Journey", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+                    Text("Offline Explorer", color = Color(0xFF00ACC1), style = MaterialTheme.typography.bodySmall)
                     
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        "Focus on mecha and foam work. Obsessed with high-mobility suit designs and weathering techniques.",
+                        "Plan, track, and document your cosplay projects locally. Your personal creative sanctuary.",
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.Gray
@@ -112,7 +112,7 @@ fun ProfileScreen(
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                         StatItem(count = uiState.totalCosplans.toString(), label = "PROJECTS")
                         StatItem(count = uiState.totalEvents.toString(), label = "EVENTS")
-                        StatItem(count = "0", label = "AWARDS")
+                        StatItem(count = uiState.favoriteCosplays.size.toString(), label = "FAVES")
                     }
                 }
             }
@@ -157,7 +157,6 @@ fun ProfileScreen(
                 }
             }
 
-            // Portfolio Grid with real data
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
                 modifier = Modifier.weight(1f),
@@ -184,7 +183,6 @@ fun ProfileScreen(
                     }
                 }
                 
-                // Show placeholders if less than 9
                 val placeholders = (9 - uiState.allCosplays.size).coerceAtLeast(0)
                 items(placeholders) {
                     Box(

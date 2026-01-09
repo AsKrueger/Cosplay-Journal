@@ -27,5 +27,5 @@ data class Cosplay(
     val accessories: String = "",
     val notes: String = "",
     val isFavorite: Boolean = false,
-    val mainImageUri: String? = null // Store the local URI of the image
+    val mainImageUri: String? = null
 )

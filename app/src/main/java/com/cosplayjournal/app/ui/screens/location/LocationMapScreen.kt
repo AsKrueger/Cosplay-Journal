@@ -1,6 +1,7 @@
 package com.cosplayjournal.app.ui.screens.location
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddLocation
 import androidx.compose.material.icons.filled.ArrowBack
@@ -32,7 +33,7 @@ fun LocationMapScreen(
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
             controller.setZoom(15.0)
-            controller.setCenter(GeoPoint(40.4168, -3.7038)) // Default to Madrid or current location
+            controller.setCenter(GeoPoint(40.4168, -3.7038))
         }
     }
 
@@ -49,7 +50,6 @@ fun LocationMapScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { 
-                // Logic to add current center as location
                 val center = mapView.mapCenter
                 viewModel.insertLocation(
                     Location(
@@ -82,7 +82,6 @@ fun LocationMapScreen(
                 }
             )
             
-            // Helpful hint
             Surface(
                 modifier = Modifier.align(Alignment.TopCenter).padding(16.dp),
                 color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),

@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -13,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.cosplayjournal.app.data.entity.Cosplan
+import com.cosplayjournal.app.ui.components.EmptyState
 import com.cosplayjournal.app.ui.viewmodel.CosplanViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,13 +36,27 @@ fun CosplanListScreen(
             }
         }
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
-            items(cosplans) { cosplan ->
-                CosplanItem(cosplan = cosplan, onClick = { onCosplanClick(cosplan.id) })
+        if (cosplans.isEmpty()) {
+            EmptyState(
+                modifier = Modifier.padding(padding),
+                icon = Icons.Default.Assignment,
+                title = "No Cosplans yet",
+                description = "Start your next adventure by creating your first cosplay plan!",
+                actionButton = {
+                    Button(onClick = onAddCosplanClick) {
+                        Text("Create Cosplan")
+                    }
+                }
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            ) {
+                items(cosplans) { cosplan ->
+                    CosplanItem(cosplan = cosplan, onClick = { onCosplanClick(cosplan.id) })
+                }
             }
         }
     }
