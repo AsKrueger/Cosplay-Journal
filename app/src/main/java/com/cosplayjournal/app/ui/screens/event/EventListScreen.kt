@@ -8,10 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,9 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.cosplayjournal.app.data.model.Event
 import com.cosplayjournal.app.ui.viewmodel.EventViewModel
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.format.TextStyle
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,27 +85,54 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
 
 @Composable
 fun CalendarSection() {
+    val today = remember { LocalDate.now() }
+    var currentMonth by remember { mutableStateOf(YearMonth.now()) }
+    val maxMonth = remember { YearMonth.now().plusMonths(20) }
+    val minMonth = remember { YearMonth.now() }
+
     Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { /* Prev */ }) { Text("<") }
-            Text("July 2024", fontWeight = FontWeight.Bold)
-            IconButton(onClick = { /* Next */ }) { Text(">") }
+            IconButton(
+                onClick = { if (currentMonth > minMonth) currentMonth = currentMonth.minusMonths(1) },
+                enabled = currentMonth > minMonth
+            ) { 
+                Icon(Icons.Default.ChevronLeft, contentDescription = "Previous") 
+            }
+            
+            Text(
+                text = "${currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${currentMonth.year}",
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium
+            )
+            
+            IconButton(
+                onClick = { if (currentMonth < maxMonth) currentMonth = currentMonth.plusMonths(1) },
+                enabled = currentMonth < maxMonth
+            ) { 
+                Icon(Icons.Default.ChevronRight, contentDescription = "Next") 
+            }
         }
         
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             listOf("S", "M", "T", "W", "T", "F", "S").forEach { day ->
-                Text(day, modifier = Modifier.weight(1f), style = MaterialTheme.typography.labelSmall, color = Color.Gray, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                Text(day, modifier = Modifier.weight(1f), style = MaterialTheme.typography.labelSmall, color = Color.Gray, textAlign = TextAlign.Center)
             }
         }
         
-        val days = listOf("", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14")
-        val chunkedDays = days.chunked(7)
+        val daysInMonth = currentMonth.lengthOfMonth()
+        val firstDayOfMonth = currentMonth.atDay(1).dayOfWeek.value % 7 // Adjusted for Sunday start
         
-        chunkedDays.forEach { week ->
+        val days = mutableListOf<String>()
+        repeat(firstDayOfMonth) { days.add("") }
+        for (i in 1..daysInMonth) { days.add(i.toString()) }
+        
+        val weeks = days.chunked(7)
+        
+        weeks.forEach { week ->
             Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
                 week.forEach { day ->
                     Box(
@@ -111,22 +141,26 @@ fun CalendarSection() {
                             .aspectRatio(1f),
                         contentAlignment = Alignment.Center
                     ) {
-                        if (day == "5") {
-                            Box(modifier = Modifier.size(32.dp).background(Color(0xFF00ACC1), CircleShape), contentAlignment = Alignment.Center) {
-                                Text(day, color = Color.White)
-                            }
-                        } else if (day == "1") {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        if (day.isNotEmpty()) {
+                            val isToday = currentMonth.year == today.year && 
+                                          currentMonth.month == today.month && 
+                                          day.toInt() == today.dayOfMonth
+                            
+                            if (isToday) {
+                                Box(
+                                    modifier = Modifier.size(32.dp).background(Color(0xFF00ACC1), CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(day, color = Color.White, fontWeight = FontWeight.Bold)
+                                }
+                            } else {
                                 Text(day)
-                                Box(modifier = Modifier.size(4.dp).background(Color(0xFF00ACC1), CircleShape))
                             }
-                        } else {
-                            Text(day)
                         }
                     }
                 }
-                repeat(7 - week.size) {
-                    Spacer(modifier = Modifier.weight(1f))
+                if (week.size < 7) {
+                    repeat(7 - week.size) { Spacer(modifier = Modifier.weight(1f)) }
                 }
             }
         }

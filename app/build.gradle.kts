@@ -1,9 +1,9 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.google.devtools.ksp)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.androidApp)
+    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.devtoolsKsp)
+    alias(libs.plugins.serialization)
 }
 
 android {
@@ -59,6 +59,11 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
+    implementation("androidx.compose.material:material-icons-extended") // Added for AddAPhoto
+    
+    // UI Libraries for Themes
+    implementation(libs.material)
+    implementation("androidx.appcompat:appcompat:1.7.0")
 
     // Room
     implementation(libs.androidx.room.runtime)

@@ -34,8 +34,10 @@ import com.cosplayjournal.app.ui.screens.cosplay.CosplayDetailScreen
 import com.cosplayjournal.app.ui.screens.cosplay.CosplayListScreen
 import com.cosplayjournal.app.ui.screens.event.EventDetailScreen
 import com.cosplayjournal.app.ui.screens.event.EventListScreen
+import com.cosplayjournal.app.ui.screens.home.HomeScreen
 import com.cosplayjournal.app.ui.screens.profile.FavoritesScreen
 import com.cosplayjournal.app.ui.screens.profile.ProfileScreen
+import com.cosplayjournal.app.ui.screens.profile.SettingsScreen
 import com.cosplayjournal.app.ui.theme.CosplayJournalTheme
 import com.cosplayjournal.app.ui.viewmodel.*
 
@@ -65,8 +67,8 @@ fun MainScreen() {
 
     val bottomNavItems = listOf(
         Screen.Home,
-        Screen.Events,
         Screen.Cosplans,
+        Screen.Events,
         Screen.Profile
     )
 
@@ -103,31 +105,24 @@ fun MainScreen() {
                     }
                 }
             }
-        },
-        floatingActionButton = {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route
-            if (currentRoute == Screen.Events.route || currentRoute == Screen.Cosplans.route) {
-                FloatingActionButton(
-                    onClick = { 
-                        if (currentRoute == Screen.Events.route) { /* Add Event */ }
-                        else { navController.navigate("add_edit_cosplan") }
-                    },
-                    containerColor = Color(0xFF00ACC1),
-                    contentColor = Color.White,
-                    shape = CircleShape
-                ) {
-                    Icon(Icons.Default.Add, contentDescription = "Add")
-                }
-            }
         }
     ) { innerPadding ->
         NavHost(
             navController,
-            startDestination = Screen.Events.route,
+            startDestination = Screen.Home.route,
             Modifier.padding(innerPadding)
         ) {
-            composable(Screen.Home.route) { Text("Home Screen") }
+            // HOME / ACTIVITY LOG
+            composable(Screen.Home.route) {
+                HomeScreen(
+                    profileViewModel = profileViewModel,
+                    eventViewModel = eventViewModel,
+                    onCosplayClick = { id -> navController.navigate("cosplay_detail/$id") },
+                    onEventClick = { id -> navController.navigate("event_detail/$id") },
+                    onAddCosplanClick = { navController.navigate("add_edit_cosplan") },
+                    onCalendarClick = { navController.navigate(Screen.Events.route) }
+                )
+            }
             
             // EVENTS
             composable(Screen.Events.route) {
@@ -149,7 +144,7 @@ fun MainScreen() {
                 )
             }
 
-            // COSPLANS
+            // COSPLANS / STASH
             composable(Screen.Cosplans.route) {
                 CosplanListScreen(
                     viewModel = cosplanViewModel,
@@ -194,7 +189,7 @@ fun MainScreen() {
                 )
             }
 
-            // COSPLAYS (Individual Character management)
+            // COSPLAYS (Detail and List)
             composable("cosplay_list/{cosplanId}", 
                 arguments = listOf(navArgument("cosplanId") { type = NavType.LongType })
             ) { backStackEntry ->
@@ -286,7 +281,9 @@ fun MainScreen() {
                 )
             }
 
-            composable(Screen.Settings.route) { Text("Settings Screen") }
+            composable(Screen.Settings.route) { 
+                SettingsScreen(onNavigateBack = { navController.popBackStack() }) 
+            }
         }
     }
 }

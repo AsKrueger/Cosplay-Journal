@@ -10,7 +10,7 @@ import com.itextpdf.kernel.pdf.PdfWriter
 import com.itextpdf.layout.Document
 import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.element.Table
-import com.itextpdf.layout.property.UnitValue
+import com.itextpdf.layout.properties.UnitValue
 import java.io.File
 import java.io.FileOutputStream
 
@@ -30,6 +30,7 @@ object PdfExporter {
             val pdf = PdfDocument(writer)
             val document = Document(pdf)
 
+            // Title
             document.add(Paragraph("Cosplay Project Report").setBold().setFontSize(24f))
             document.add(Paragraph("Character: ${cosplay.characterName}"))
             document.add(Paragraph("Series: ${cosplay.series}"))

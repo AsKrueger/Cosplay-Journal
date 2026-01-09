@@ -11,8 +11,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AddAPhoto
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -46,7 +46,6 @@ fun AddEditCosplayScreen(
         onResult = { uri -> imageUri = uri }
     )
 
-    // Load existing data if editing
     LaunchedEffect(cosplayId) {
         if (cosplayId != null) {
             viewModel.getCosplayById(cosplayId)?.let { cosplay ->
@@ -67,7 +66,7 @@ fun AddEditCosplayScreen(
                 title = { Text(if (cosplayId == null) "New Cosplay" else "Edit Cosplay") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -81,7 +80,6 @@ fun AddEditCosplayScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Image Picker
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -115,7 +113,7 @@ fun AddEditCosplayScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
-                series,
+                value = series,
                 onValueChange = { series = it },
                 label = { Text("Series/Game/Anime") },
                 modifier = Modifier.fillMaxWidth()

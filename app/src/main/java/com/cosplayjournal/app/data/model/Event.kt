@@ -8,9 +8,11 @@ data class Event(
     val name: String,
     val city: String,
     val venue: String,
-    val startDate: String,
+    val startDate: String, // format "YYYY-MM-DD"
     val endDate: String,
     val website: String,
-    val ticketsLink: String,
-    val image: String? = null
+    val image: String? = null,
+    val schedule: String = "",
+    val price: String = "",
+    val address: String = ""
 )
