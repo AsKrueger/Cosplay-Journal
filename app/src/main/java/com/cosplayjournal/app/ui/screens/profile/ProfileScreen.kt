@@ -1,8 +1,8 @@
 package com.cosplayjournal.app.ui.screens.profile
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -21,11 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.cosplayjournal.app.ui.viewmodel.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,7 +34,8 @@ fun ProfileScreen(
     viewModel: ProfileViewModel,
     onFavoritesClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onSeeAllPortfolioClick: () -> Unit
+    onSeeAllPortfolioClick: () -> Unit,
+    onCosplayClick: (Long) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -74,7 +75,6 @@ fun ProfileScreen(
                     modifier = Modifier.padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Avatar with badge
                     Box(contentAlignment = Alignment.BottomEnd) {
                         Box(
                             modifier = Modifier
@@ -109,18 +109,16 @@ fun ProfileScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
                     
-                    // Stats row
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                         StatItem(count = uiState.totalCosplans.toString(), label = "PROJECTS")
-                        StatItem(count = "12", label = "EVENTS")
-                        StatItem(count = "8", label = "AWARDS")
+                        StatItem(count = uiState.totalEvents.toString(), label = "EVENTS")
+                        StatItem(count = "0", label = "AWARDS")
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Action Buttons
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Button(
                     onClick = onFavoritesClick,
@@ -148,7 +146,6 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Portfolio Header
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -160,7 +157,7 @@ fun ProfileScreen(
                 }
             }
 
-            // Portfolio Grid (Fixed height for preview or just a small grid)
+            // Portfolio Grid with real data
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
                 modifier = Modifier.weight(1f),
@@ -168,26 +165,37 @@ fun ProfileScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(9) { index ->
+                items(uiState.allCosplays) { cosplay ->
                     Box(
                         modifier = Modifier
                             .aspectRatio(1f)
                             .clip(RoundedCornerShape(12.dp))
                             .background(Color.LightGray)
+                            .clickable { onCosplayClick(cosplay.id) }
                     ) {
-                        if (index == 5) { // Empty state indicator for the demo
-                            Icon(
-                                Icons.Default.Share, // Placeholder for add image
+                        if (cosplay.mainImageUri != null) {
+                            AsyncImage(
+                                model = cosplay.mainImageUri,
                                 contentDescription = null,
-                                modifier = Modifier.align(Alignment.Center),
-                                tint = Color.White
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
                             )
                         }
                     }
                 }
+                
+                // Show placeholders if less than 9
+                val placeholders = (9 - uiState.allCosplays.size).coerceAtLeast(0)
+                items(placeholders) {
+                    Box(
+                        modifier = Modifier
+                            .aspectRatio(1f)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color(0xFFE0F2F1))
+                    )
+                }
             }
 
-            // PDF Button
             Button(
                 onClick = { /* Export PDF */ },
                 modifier = Modifier
@@ -201,14 +209,6 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Export Profile as PDF", fontWeight = FontWeight.Bold)
             }
-            
-            Text(
-                "LAST UPDATED: JAN 24, 2024",
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.labelSmall,
-                color = Color.LightGray
-            )
         }
     }
 }

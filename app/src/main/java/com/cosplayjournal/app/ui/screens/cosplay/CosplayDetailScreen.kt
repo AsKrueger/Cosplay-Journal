@@ -1,5 +1,7 @@
 package com.cosplayjournal.app.ui.screens.cosplay
 
+import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,7 +13,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.cosplayjournal.app.data.entity.Cosplay
 import com.cosplayjournal.app.data.entity.HandmadePart
 import com.cosplayjournal.app.data.entity.PurchasedItem
@@ -55,30 +60,52 @@ fun CosplayDetailScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp),
+                .padding(padding),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                CosplayHeaderInfo(cosplay)
+                if (cosplay?.mainImageUri != null) {
+                    AsyncImage(
+                        model = cosplay?.mainImageUri,
+                        contentDescription = "Cosplay Image",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(250.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
 
             item {
-                SectionHeader("Handmade Parts", onAddClick = { onAddHandmadePart(cosplayId) })
+                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    CosplayHeaderInfo(cosplay)
+                }
+            }
+
+            item {
+                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    SectionHeader("Handmade Parts", onAddClick = { onAddHandmadePart(cosplayId) })
+                }
             }
             items(handmadeParts) { part ->
-                HandmadePartItem(part = part, onCheckedChange = { isFinished ->
-                    viewModel.updateHandmadePart(part.copy(isFinished = isFinished))
-                })
+                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    HandmadePartItem(part = part, onCheckedChange = { isFinished ->
+                        viewModel.updateHandmadePart(part.copy(isFinished = isFinished))
+                    })
+                }
             }
 
             item {
-                SectionHeader("Purchased Items", onAddClick = { onAddPurchasedItem(cosplayId) })
+                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    SectionHeader("Purchased Items", onAddClick = { onAddPurchasedItem(cosplayId) })
+                }
             }
             items(purchasedItems) { item ->
-                PurchasedItemRow(item = item, onCheckedChange = { isReceived ->
-                    viewModel.updatePurchasedItem(item.copy(isReceived = isReceived))
-                })
+                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    PurchasedItemRow(item = item, onCheckedChange = { isReceived ->
+                        viewModel.updatePurchasedItem(item.copy(isReceived = isReceived))
+                    })
+                }
             }
         }
     }

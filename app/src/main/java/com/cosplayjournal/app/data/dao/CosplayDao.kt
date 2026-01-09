@@ -66,4 +66,23 @@ interface CosplayDao {
 
     @Query("SELECT * FROM purchased_items WHERE cosplayId = :cosplayId")
     fun getPurchasedItems(cosplayId: Long): Flow<List<PurchasedItem>>
+
+    // User Event Data
+    @Query("SELECT * FROM user_event_data WHERE eventId = :eventId")
+    suspend fun getUserEventData(eventId: String): UserEventData?
+
+    @Query("SELECT * FROM user_event_data")
+    fun getAllUserEventData(): Flow<List<UserEventData>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUserEventData(data: UserEventData)
+
+    @Query("SELECT * FROM event_cosplan_selection WHERE eventId = :eventId")
+    fun getCosplanSelectionsForEvent(eventId: String): Flow<List<EventCosplanSelection>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCosplanSelection(selection: EventCosplanSelection)
+
+    @Query("DELETE FROM event_cosplan_selection WHERE eventId = :eventId AND cosplanId = :cosplanId AND day = :day")
+    suspend fun deleteCosplanSelection(eventId: String, cosplanId: Long, day: String)
 }

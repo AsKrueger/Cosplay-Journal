@@ -12,6 +12,7 @@ class CosplayRepository(private val cosplayDao: CosplayDao) {
     suspend fun deleteCosplan(cosplan: Cosplan) = cosplayDao.deleteCosplan(cosplan)
 
     // Cosplays
+    val allCosplays: Flow<List<Cosplay>> = cosplayDao.getAllCosplays()
     fun getCosplaysForCosplan(cosplanId: Long): Flow<List<Cosplay>> = cosplayDao.getCosplaysForCosplan(cosplanId)
     suspend fun getCosplayById(id: Long): Cosplay? = cosplayDao.getCosplayById(id)
     suspend fun insertCosplay(cosplay: Cosplay): Long = cosplayDao.insertCosplay(cosplay)
@@ -30,4 +31,18 @@ class CosplayRepository(private val cosplayDao: CosplayDao) {
     suspend fun insertPurchasedItem(item: PurchasedItem) = cosplayDao.insertPurchasedItem(item)
     suspend fun updatePurchasedItem(item: PurchasedItem) = cosplayDao.updatePurchasedItem(item)
     suspend fun deletePurchasedItem(item: PurchasedItem) = cosplayDao.deletePurchasedItem(item)
+
+    // User Event Data
+    val allUserEventData: Flow<List<UserEventData>> = cosplayDao.getAllUserEventData()
+    suspend fun getUserEventData(eventId: String): UserEventData? = cosplayDao.getUserEventData(eventId)
+    suspend fun insertUserEventData(data: UserEventData) = cosplayDao.insertUserEventData(data)
+
+    fun getCosplanSelectionsForEvent(eventId: String): Flow<List<EventCosplanSelection>> = 
+        cosplayDao.getCosplanSelectionsForEvent(eventId)
+    
+    suspend fun insertCosplanSelection(selection: EventCosplanSelection) = 
+        cosplayDao.insertCosplanSelection(selection)
+    
+    suspend fun deleteCosplanSelection(eventId: String, cosplanId: Long, day: String) = 
+        cosplayDao.deleteCosplanSelection(eventId, cosplanId, day)
 }
