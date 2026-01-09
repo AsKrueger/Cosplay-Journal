@@ -1,7 +1,6 @@
 package com.cosplayjournal.app.ui.screens.cosplay
 
-import android.net.Uri
-import androidx.compose.foundation.background
+import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,18 +8,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
 import coil.compose.AsyncImage
 import com.cosplayjournal.app.data.entity.Cosplay
 import com.cosplayjournal.app.data.entity.HandmadePart
 import com.cosplayjournal.app.data.entity.PurchasedItem
 import com.cosplayjournal.app.ui.viewmodel.CosplayViewModel
+import com.cosplayjournal.app.util.PdfExporter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,6 +35,7 @@ fun CosplayDetailScreen(
     onAddPurchasedItem: (Long) -> Unit,
     onNavigateBack: () -> Unit
 ) {
+    val context = LocalContext.current
     var cosplay by remember { mutableStateOf<Cosplay?>(null) }
     val handmadeParts by viewModel.getHandmadeParts(cosplayId).collectAsState(initial = emptyList())
     val purchasedItems by viewModel.getPurchasedItems(cosplayId).collectAsState(initial = emptyList())
@@ -50,6 +54,22 @@ fun CosplayDetailScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = {
+                        cosplay?.let { c ->
+                            val file = PdfExporter.exportCosplayToPdf(context, c, handmadeParts, purchasedItems)
+                            file?.let {
+                                val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", it)
+                                val intent = Intent(Intent.ACTION_SEND).apply {
+                                    type = "application/pdf"
+                                    putExtra(Intent.EXTRA_STREAM, uri)
+                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                }
+                                context.startActivity(Intent.createChooser(intent, "Share Cosplay PDF"))
+                            }
+                        }
+                    }) {
+                        Icon(Icons.Default.PictureAsPdf, contentDescription = "Export PDF")
+                    }
                     IconButton(onClick = { onEditClick(cosplayId) }) {
                         Icon(Icons.Default.Edit, contentDescription = "Edit")
                     }

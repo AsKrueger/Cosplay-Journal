@@ -68,13 +68,13 @@ dependencies {
     // OpenStreetMap
     implementation(libs.osmdroid)
 
-    // PDF
+    // PDF (iText7)
     implementation(libs.itext7.core)
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)
 
-    // Coil
+    // Coil (Images)
     implementation(libs.coil.compose)
 
     testImplementation(libs.junit)
