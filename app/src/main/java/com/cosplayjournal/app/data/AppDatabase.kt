@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.cosplayjournal.app.data.dao.CosplayDao
+import com.cosplayjournal.app.data.dao.LocationDao
 import com.cosplayjournal.app.data.entity.*
 
 @Database(
@@ -17,13 +18,16 @@ import com.cosplayjournal.app.data.entity.*
         Location::class,
         CosplayReferenceCrossRef::class,
         PhotoSession::class,
-        CosplayPhotoSessionCrossRef::class
+        CosplayPhotoSessionCrossRef::class,
+        UserEventData::class,
+        EventCosplanSelection::class
     ],
-    version = 1,
+    version = 3, // Increment version for new DAO
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun cosplayDao(): CosplayDao
+    abstract fun locationDao(): LocationDao
 
     companion object {
         @Volatile
@@ -35,7 +39,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "cosplay_journal_db"
-                ).build()
+                )
+                .fallbackToDestructiveMigration()
+                .build()
                 INSTANCE = instance
                 instance
             }
