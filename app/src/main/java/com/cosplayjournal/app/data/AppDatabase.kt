@@ -17,9 +17,11 @@ import com.cosplayjournal.app.data.entity.*
         Location::class,
         CosplayReferenceCrossRef::class,
         PhotoSession::class,
-        CosplayPhotoSessionCrossRef::class
+        CosplayPhotoSessionCrossRef::class,
+        UserEventData::class,
+        EventCosplanSelection::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -35,7 +37,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "cosplay_journal_db"
-                ).build()
+                )
+                .fallbackToDestructiveMigration() // Simplified for development, usually use proper migrations
+                .build()
                 INSTANCE = instance
                 instance
             }

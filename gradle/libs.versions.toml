@@ -14,6 +14,7 @@ navigationCompose = "2.7.7"
 osmBonusPack = "6.9.0"
 osmdroid = "6.1.18"
 itext7 = "7.2.5"
+kotlinxSerialization = "1.6.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,8 +44,12 @@ osmdroid = { group = "org.osmdroid", name = "osmdroid-android", version.ref = "o
 # PDF Export (iText7)
 itext7-core = { group = "com.itextpdf", name = "itext7-core", version.ref = "itext7" }
 
+# Serialization
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
