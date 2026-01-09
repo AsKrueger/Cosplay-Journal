@@ -215,7 +215,7 @@ fun MainScreen() {
                 CosplayDetailScreen(
                     viewModel = cosplayViewModel,
                     cosplayId = cosplayId,
-                    onEditClick = { id -> /* TODO */ },
+                    onEditClick = { id -> navController.navigate("add_edit_cosplay/0?cosplayId=$id") },
                     onAddHandmadePart = { id -> navController.navigate("add_handmade_part/$id") },
                     onAddPurchasedItem = { id -> navController.navigate("add_purchased_item/$id") },
                     onNavigateBack = { navController.popBackStack() }
@@ -272,7 +272,8 @@ fun MainScreen() {
                     viewModel = profileViewModel,
                     onFavoritesClick = { navController.navigate(Screen.Favorites.route) },
                     onSettingsClick = { navController.navigate(Screen.Settings.route) },
-                    onSeeAllPortfolioClick = { /* TODO */ }
+                    onSeeAllPortfolioClick = { /* TODO */ },
+                    onCosplayClick = { id -> navController.navigate("cosplay_detail/$id") }
                 )
             }
 
