@@ -4,10 +4,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -27,11 +32,12 @@ import com.cosplayjournal.app.ui.screens.cosplay.AddEditHandmadePartScreen
 import com.cosplayjournal.app.ui.screens.cosplay.AddEditPurchasedItemScreen
 import com.cosplayjournal.app.ui.screens.cosplay.CosplayDetailScreen
 import com.cosplayjournal.app.ui.screens.cosplay.CosplayListScreen
+import com.cosplayjournal.app.ui.screens.event.EventDetailScreen
+import com.cosplayjournal.app.ui.screens.event.EventListScreen
+import com.cosplayjournal.app.ui.screens.profile.FavoritesScreen
+import com.cosplayjournal.app.ui.screens.profile.ProfileScreen
 import com.cosplayjournal.app.ui.theme.CosplayJournalTheme
-import com.cosplayjournal.app.ui.viewmodel.CosplanViewModel
-import com.cosplayjournal.app.ui.viewmodel.CosplanViewModelFactory
-import com.cosplayjournal.app.ui.viewmodel.CosplayViewModel
-import com.cosplayjournal.app.ui.viewmodel.CosplayViewModelFactory
+import com.cosplayjournal.app.ui.viewmodel.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,16 +54,19 @@ class MainActivity : ComponentActivity() {
 fun MainScreen() {
     val navController = rememberNavController()
     val context = LocalContext.current
-    val repository = (context.applicationContext as CosplayJournalApplication).repository
+    val app = context.applicationContext as CosplayJournalApplication
+    val repository = app.repository
+    val eventRepository = app.eventRepository
     
     val cosplanViewModel: CosplanViewModel = viewModel(factory = CosplanViewModelFactory(repository))
     val cosplayViewModel: CosplayViewModel = viewModel(factory = CosplayViewModelFactory(repository))
+    val eventViewModel: EventViewModel = viewModel(factory = EventViewModelFactory(eventRepository, repository))
+    val profileViewModel: ProfileViewModel = viewModel(factory = ProfileViewModelFactory(repository, eventRepository))
 
     val bottomNavItems = listOf(
         Screen.Home,
-        Screen.Cosplans,
-        Screen.Cosplays,
         Screen.Events,
+        Screen.Cosplans,
         Screen.Profile
     )
 
@@ -68,7 +77,10 @@ fun MainScreen() {
             val showBottomBar = bottomNavItems.any { it.route == currentDestination?.route }
 
             if (showBottomBar) {
-                NavigationBar {
+                NavigationBar(
+                    containerColor = Color.White,
+                    tonalElevation = 8.dp
+                ) {
                     bottomNavItems.forEach { screen ->
                         NavigationBarItem(
                             icon = { screen.icon?.let { Icon(it, contentDescription = null) } },
@@ -82,20 +94,61 @@ fun MainScreen() {
                                     launchSingleTop = true
                                     restoreState = true
                                 }
-                            }
+                            },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Color(0xFF00ACC1),
+                                indicatorColor = Color.Transparent
+                            )
                         )
                     }
+                }
+            }
+        },
+        floatingActionButton = {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+            if (currentRoute == Screen.Events.route || currentRoute == Screen.Cosplans.route) {
+                FloatingActionButton(
+                    onClick = { 
+                        if (currentRoute == Screen.Events.route) { /* Add Event */ }
+                        else { navController.navigate("add_edit_cosplan") }
+                    },
+                    containerColor = Color(0xFF00ACC1),
+                    contentColor = Color.White,
+                    shape = CircleShape
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "Add")
                 }
             }
         }
     ) { innerPadding ->
         NavHost(
             navController,
-            startDestination = Screen.Home.route,
+            startDestination = Screen.Events.route,
             Modifier.padding(innerPadding)
         ) {
             composable(Screen.Home.route) { Text("Home Screen") }
             
+            // EVENTS
+            composable(Screen.Events.route) {
+                EventListScreen(viewModel = eventViewModel, onEventClick = { id ->
+                    navController.navigate("event_detail/$id")
+                })
+            }
+
+            composable(
+                route = Screen.EventDetail.route,
+                arguments = listOf(navArgument("eventId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val eventId = backStackEntry.arguments?.getString("eventId") ?: return@composable
+                EventDetailScreen(
+                    eventViewModel = eventViewModel,
+                    cosplanViewModel = cosplanViewModel,
+                    eventId = eventId,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
             // COSPLANS
             composable(Screen.Cosplans.route) {
                 CosplanListScreen(
@@ -106,7 +159,7 @@ fun MainScreen() {
             }
 
             composable(
-                route = "cosplan_detail/{cosplanId}",
+                route = Screen.CosplanDetail.route,
                 arguments = listOf(navArgument("cosplanId") { type = NavType.LongType })
             ) { backStackEntry ->
                 val cosplanId = backStackEntry.arguments?.getLong("cosplanId") ?: return@composable
@@ -141,17 +194,8 @@ fun MainScreen() {
                 )
             }
 
-            // COSPLAYS
-            composable(Screen.Cosplays.route) {
-                CosplayListScreen(
-                    viewModel = cosplayViewModel,
-                    onCosplayClick = { id -> navController.navigate("cosplay_detail/$id") },
-                    onAddCosplayClick = { /* N/A */ }
-                )
-            }
-
-            composable(
-                route = "cosplay_list/{cosplanId}",
+            // COSPLAYS (Individual Character management)
+            composable("cosplay_list/{cosplanId}", 
                 arguments = listOf(navArgument("cosplanId") { type = NavType.LongType })
             ) { backStackEntry ->
                 val cosplanId = backStackEntry.arguments?.getLong("cosplanId")
@@ -164,7 +208,7 @@ fun MainScreen() {
             }
 
             composable(
-                route = "cosplay_detail/{cosplayId}",
+                route = Screen.CosplayDetail.route,
                 arguments = listOf(navArgument("cosplayId") { type = NavType.LongType })
             ) { backStackEntry ->
                 val cosplayId = backStackEntry.arguments?.getLong("cosplayId") ?: return@composable
@@ -222,8 +266,26 @@ fun MainScreen() {
                 )
             }
 
-            composable(Screen.Events.route) { Text("Events Screen") }
-            composable(Screen.Profile.route) { Text("Profile Screen") }
+            // PROFILE & FAVORITES
+            composable(Screen.Profile.route) {
+                ProfileScreen(
+                    viewModel = profileViewModel,
+                    onFavoritesClick = { navController.navigate(Screen.Favorites.route) },
+                    onSettingsClick = { navController.navigate(Screen.Settings.route) },
+                    onSeeAllPortfolioClick = { /* TODO */ }
+                )
+            }
+
+            composable(Screen.Favorites.route) {
+                FavoritesScreen(
+                    viewModel = profileViewModel,
+                    onEventClick = { id -> navController.navigate("event_detail/$id") },
+                    onCosplayClick = { id -> navController.navigate("cosplay_detail/$id") },
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(Screen.Settings.route) { Text("Settings Screen") }
         }
     }
 }
