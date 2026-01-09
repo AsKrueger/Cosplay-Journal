@@ -1,13 +1,14 @@
 package com.cosplayjournal.app.ui.screens.event
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
@@ -19,14 +20,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.cosplayjournal.app.data.model.Event
 import com.cosplayjournal.app.ui.viewmodel.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventListScreen(viewModel: EventViewModel) {
+fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
     val events by viewModel.events.collectAsState()
+    val userEventData by viewModel.userEventData.collectAsState()
 
     Scaffold(
         topBar = {
@@ -65,7 +66,14 @@ fun EventListScreen(viewModel: EventViewModel) {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(events) { event ->
-                    EventCard(event)
+                    val data = userEventData.find { it.eventId == event.id }
+                    EventCard(
+                        event = event, 
+                        status = data?.status ?: "PLANNING",
+                        isFavorite = data?.isFavorite ?: false,
+                        onClick = { onEventClick(event.id) },
+                        onFavoriteClick = { viewModel.toggleFavorite(event.id) }
+                    )
                 }
             }
         }
@@ -85,14 +93,12 @@ fun CalendarSection() {
             IconButton(onClick = { /* Next */ }) { Text(">") }
         }
         
-        // Days of week header
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             listOf("S", "M", "T", "W", "T", "F", "S").forEach { day ->
                 Text(day, modifier = Modifier.weight(1f), style = MaterialTheme.typography.labelSmall, color = Color.Gray, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
             }
         }
         
-        // Mock days
         val days = listOf("", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14")
         val chunkedDays = days.chunked(7)
         
@@ -119,7 +125,6 @@ fun CalendarSection() {
                         }
                     }
                 }
-                // Fill empty slots if week is not full
                 repeat(7 - week.size) {
                     Spacer(modifier = Modifier.weight(1f))
                 }
@@ -132,13 +137,13 @@ fun CalendarSection() {
 }
 
 @Composable
-fun EventCard(event: Event) {
-    // Determine status based on ID for demo purposes
-    val status = when(event.id) {
-        "1" -> "ATTENDING"
-        "2" -> "INTERESTED"
-        else -> "PLANNING"
-    }
+fun EventCard(
+    event: Event, 
+    status: String, 
+    isFavorite: Boolean,
+    onClick: () -> Unit,
+    onFavoriteClick: () -> Unit
+) {
     val statusColor = when(status) {
         "ATTENDING" -> Color(0xFFE0F2F1)
         "INTERESTED" -> Color(0xFFF5F5F5)
@@ -151,13 +156,12 @@ fun EventCard(event: Event) {
     }
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-            // Placeholder Image
             Box(
                 modifier = Modifier
                     .size(80.dp)
@@ -191,8 +195,12 @@ fun EventCard(event: Event) {
             }
             
             Column(verticalArrangement = Arrangement.SpaceBetween, horizontalAlignment = Alignment.End) {
-                IconButton(onClick = { /* Fav */ }) {
-                    Icon(Icons.Default.FavoriteBorder, contentDescription = "Favorite", tint = Color.LightGray)
+                IconButton(onClick = onFavoriteClick) {
+                    Icon(
+                        if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder, 
+                        contentDescription = "Favorite", 
+                        tint = if (isFavorite) Color.Red else Color.LightGray
+                    )
                 }
                 IconButton(onClick = { /* Share */ }) {
                     Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.LightGray)

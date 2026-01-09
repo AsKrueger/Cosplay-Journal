@@ -4,12 +4,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -29,6 +32,7 @@ import com.cosplayjournal.app.ui.screens.cosplay.AddEditHandmadePartScreen
 import com.cosplayjournal.app.ui.screens.cosplay.AddEditPurchasedItemScreen
 import com.cosplayjournal.app.ui.screens.cosplay.CosplayDetailScreen
 import com.cosplayjournal.app.ui.screens.cosplay.CosplayListScreen
+import com.cosplayjournal.app.ui.screens.event.EventDetailScreen
 import com.cosplayjournal.app.ui.screens.event.EventListScreen
 import com.cosplayjournal.app.ui.theme.CosplayJournalTheme
 import com.cosplayjournal.app.ui.viewmodel.CosplanViewModel
@@ -59,11 +63,11 @@ fun MainScreen() {
     
     val cosplanViewModel: CosplanViewModel = viewModel(factory = CosplanViewModelFactory(repository))
     val cosplayViewModel: CosplayViewModel = viewModel(factory = CosplayViewModelFactory(repository))
-    val eventViewModel: EventViewModel = viewModel(factory = EventViewModelFactory(eventRepository))
+    val eventViewModel: EventViewModel = viewModel(factory = EventViewModelFactory(eventRepository, repository))
 
     val bottomNavItems = listOf(
         Screen.Home,
-        Screen.Events, // Moved to match your design image order (Home, Calendar, Gallery, Profile)
+        Screen.Events,
         Screen.Cosplans,
         Screen.Profile
     )
@@ -76,7 +80,7 @@ fun MainScreen() {
 
             if (showBottomBar) {
                 NavigationBar(
-                    containerColor = androidx.compose.ui.graphics.Color.White,
+                    containerColor = Color.White,
                     tonalElevation = 8.dp
                 ) {
                     bottomNavItems.forEach { screen ->
@@ -93,8 +97,8 @@ fun MainScreen() {
                                 }
                             },
                             colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = androidx.compose.ui.graphics.Color(0xFF00ACC1),
-                                indicatorColor = androidx.compose.ui.graphics.Color.Transparent
+                                selectedIconColor = Color(0xFF00ACC1),
+                                indicatorColor = Color.Transparent
                             )
                         )
                     }
@@ -104,11 +108,14 @@ fun MainScreen() {
         floatingActionButton = {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
-            if (currentRoute == Screen.Events.route) {
+            if (currentRoute == Screen.Events.route || currentRoute == Screen.Cosplans.route) {
                 FloatingActionButton(
-                    onClick = { /* TODO */ },
-                    containerColor = androidx.compose.ui.graphics.Color(0xFF00ACC1),
-                    contentColor = androidx.compose.ui.graphics.Color.White,
+                    onClick = { 
+                        if (currentRoute == Screen.Events.route) { /* Add Event */ }
+                        else { navController.navigate("add_edit_cosplan") }
+                    },
+                    containerColor = Color(0xFF00ACC1),
+                    contentColor = Color.White,
                     shape = CircleShape
                 ) {
                     Icon(Icons.Default.Add, contentDescription = "Add")
@@ -118,14 +125,29 @@ fun MainScreen() {
     ) { innerPadding ->
         NavHost(
             navController,
-            startDestination = Screen.Events.route, // Set as start for now to see it immediately
+            startDestination = Screen.Events.route,
             Modifier.padding(innerPadding)
         ) {
             composable(Screen.Home.route) { Text("Home Screen") }
             
             // EVENTS
             composable(Screen.Events.route) {
-                EventListScreen(viewModel = eventViewModel)
+                EventListScreen(viewModel = eventViewModel, onEventClick = { id ->
+                    navController.navigate("event_detail/$id")
+                })
+            }
+
+            composable(
+                route = "event_detail/{eventId}",
+                arguments = listOf(navArgument("eventId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val eventId = backStackEntry.arguments?.getString("eventId") ?: return@composable
+                EventDetailScreen(
+                    eventViewModel = eventViewModel,
+                    cosplanViewModel = cosplanViewModel,
+                    eventId = eventId,
+                    onNavigateBack = { navController.popBackStack() }
+                )
             }
 
             // COSPLANS
@@ -173,17 +195,8 @@ fun MainScreen() {
                 )
             }
 
-            // COSPLAYS
-            composable(Screen.Cosplays.route) {
-                CosplayListScreen(
-                    viewModel = cosplayViewModel,
-                    onCosplayClick = { id -> navController.navigate("cosplay_detail/$id") },
-                    onAddCosplayClick = { /* N/A */ }
-                )
-            }
-
-            composable(
-                route = "cosplay_list/{cosplanId}",
+            // COSPLAYS (Individual Character management)
+            composable("cosplay_list/{cosplanId}", 
                 arguments = listOf(navArgument("cosplanId") { type = NavType.LongType })
             ) { backStackEntry ->
                 val cosplanId = backStackEntry.arguments?.getLong("cosplanId")
