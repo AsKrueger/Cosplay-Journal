@@ -1,5 +1,6 @@
 package com.cosplayjournal.app.ui.screens.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.cosplayjournal.app.data.entity.Cosplay
+import com.cosplayjournal.app.data.entity.Cosplan
 import com.cosplayjournal.app.data.model.Event
 import com.cosplayjournal.app.ui.viewmodel.EventViewModel
 import com.cosplayjournal.app.ui.viewmodel.ProfileViewModel
@@ -40,22 +42,32 @@ fun HomeScreen(
     val uiState by profileViewModel.uiState.collectAsState()
     val events by eventViewModel.events.collectAsState()
 
+    // Mezclamos cosplays y cosplans para la sección de recientes
+    val recentItems = remember(uiState.allCosplays, uiState.allCosplans) {
+        val list = mutableListOf<Pair<Any, String>>()
+        list.addAll(uiState.allCosplays.map { it to "cosplay" })
+        list.addAll(uiState.allCosplans.map { it to "cosplan" })
+        
+        list.sortedByDescending { (item, _) ->
+            when (item) {
+                is Cosplay -> item.id
+                is Cosplan -> item.id
+                else -> 0L
+            }
+        }.take(10)
+    }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Column(horizontalAlignment = Alignment.Start, modifier = Modifier.fillMaxWidth().padding(start = 16.dp)) {
-                        Text("Hello, Maker", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+                        Text("Hola Cosplayer!!", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Box(modifier = Modifier.size(8.dp).background(Color(0xFF4DB6AC), CircleShape))
                             Spacer(modifier = Modifier.width(4.dp))
                             Text("OFFLINE SYNCED", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
                         }
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { /* Share */ }) {
-                        Icon(Icons.Default.Share, contentDescription = "Share")
                     }
                 }
             )
@@ -69,29 +81,36 @@ fun HomeScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            // Active Projects Section
             item {
-                SectionHeader(title = "Active Projects", actionText = "View All", onActionClick = { /* Navigate to Stash */ })
+                SectionHeader(title = "Vistas recientes", actionText = "Ver todos", onActionClick = { /* Navigate to Stash */ })
                 Spacer(modifier = Modifier.height(16.dp))
-                if (uiState.allCosplays.isEmpty()) {
-                    Text("No active projects. Start one today!", color = Color.Gray, modifier = Modifier.padding(vertical = 16.dp))
+                if (recentItems.isEmpty()) {
+                    Text("No hay nada reciente. ¡Empieza un proyecto hoy!", color = Color.Gray, modifier = Modifier.padding(vertical = 16.dp))
                 } else {
-                    LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        items(uiState.allCosplays.take(5)) { cosplay ->
-                            ActiveProjectCard(cosplay, onClick = { onCosplayClick(cosplay.id) })
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(horizontal = 4.dp)
+                    ) {
+                        items(recentItems) { (item, type) ->
+                            RecentItemCard(
+                                item = item,
+                                type = type,
+                                onClick = {
+                                    if (type == "cosplay") onCosplayClick((item as Cosplay).id)
+                                }
+                            )
                         }
                     }
                 }
             }
 
-            // Quick Tools Section
             item {
-                Text("Quick Tools", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                Text("Herramientas rápidas", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     ToolButton(
                         icon = Icons.Default.AddCircle,
-                        label = "NEW\nCOSPLAN",
+                        label = "NUEVO\nCOSPLAN",
                         containerColor = Color(0xFF00ACC1),
                         contentColor = Color.White,
                         onClick = onAddCosplanClick,
@@ -99,7 +118,7 @@ fun HomeScreen(
                     )
                     ToolButton(
                         icon = Icons.Default.PhotoCamera,
-                        label = "ADD\nSHOOT",
+                        label = "AÑADIR\nSESIÓN",
                         containerColor = Color(0xFFF5F5F5),
                         contentColor = Color.Black,
                         onClick = { /* TODO */ },
@@ -116,9 +135,8 @@ fun HomeScreen(
                 }
             }
 
-            // Upcoming Events Section
             item {
-                SectionHeader(title = "Upcoming Events", actionText = "Calendar", onActionClick = onCalendarClick)
+                SectionHeader(title = "Próximos Eventos", actionText = "Calendario", onActionClick = onCalendarClick)
                 Spacer(modifier = Modifier.height(16.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     events.take(2).forEach { event ->
@@ -145,57 +163,62 @@ fun SectionHeader(title: String, actionText: String, onActionClick: () -> Unit) 
 }
 
 @Composable
-fun ActiveProjectCard(cosplay: Cosplay, onClick: () -> Unit) {
+fun RecentItemCard(item: Any, type: String, onClick: () -> Unit) {
+    val isCosplan = type == "cosplan"
+    // Borde blanco rojizo para cosplan, blanco verdoso para cosplay
+    val borderColor = if (isCosplan) Color(0xFFFFEBEE) else Color(0xFFE8F5E9)
+    val accentColor = if (isCosplan) Color(0xFFFF5252) else Color(0xFF4CAF50)
+    
+    val name = when (item) {
+        is Cosplay -> item.characterName
+        is Cosplan -> item.name
+        else -> ""
+    }
+    
+    val imageUri = when (item) {
+        is Cosplay -> item.mainImageUri
+        else -> null
+    }
+
     Card(
         modifier = Modifier
-            .width(200.dp)
+            .width(160.dp)
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        border = BorderStroke(3.dp, borderColor)
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier.padding(10.dp)) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(150.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color.LightGray)
+                    .height(110.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color(0xFFF5F5F5))
             ) {
-                if (cosplay.mainImageUri != null) {
+                if (imageUri != null) {
                     AsyncImage(
-                        model = cosplay.mainImageUri,
+                        model = imageUri,
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
-                }
-                Surface(
-                    modifier = Modifier.align(Alignment.BottomStart).padding(8.dp),
-                    color = Color.Black.copy(alpha = 0.6f),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text(
-                        "IN PROGRESS",
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White,
-                        fontSize = 8.sp
+                } else {
+                    Icon(
+                        imageVector = if (isCosplan) Icons.Default.Inventory2 else Icons.Default.CheckCircle,
+                        contentDescription = null,
+                        modifier = Modifier.align(Alignment.Center).size(32.dp),
+                        tint = accentColor.copy(alpha = 0.3f)
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(cosplay.series.uppercase(), color = Color(0xFF00ACC1), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
-            Text(cosplay.characterName, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("COMPLETION", style = MaterialTheme.typography.labelSmall, color = Color.Gray, modifier = Modifier.weight(1f))
-                Text("65%", style = MaterialTheme.typography.labelSmall, color = Color(0xFF00ACC1), fontWeight = FontWeight.Bold)
-            }
-            LinearProgressIndicator(
-                progress = 0.65f,
-                modifier = Modifier.fillMaxWidth().height(4.dp).clip(CircleShape),
-                color = Color(0xFF00ACC1),
-                trackColor = Color(0xFFE0E0E0)
+            Text(
+                text = name,
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
         }
     }
@@ -262,7 +285,7 @@ fun EventListItem(event: Event, onClick: () -> Unit) {
                     Text(event.name, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.width(8.dp))
                     Surface(color = Color(0xFFFFE0E0), shape = RoundedCornerShape(8.dp)) {
-                        Text("12 DAYS LEFT", modifier = Modifier.padding(horizontal = 6.dp), fontSize = 8.sp, color = Color.Red, fontWeight = FontWeight.Bold)
+                        Text("QUEDAN 12 DÍAS", modifier = Modifier.padding(horizontal = 6.dp), fontSize = 8.sp, color = Color.Red, fontWeight = FontWeight.Bold)
                     }
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {

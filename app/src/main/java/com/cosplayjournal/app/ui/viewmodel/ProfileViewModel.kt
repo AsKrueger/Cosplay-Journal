@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.cosplayjournal.app.data.entity.Cosplay
+import com.cosplayjournal.app.data.entity.Cosplan
 import com.cosplayjournal.app.data.model.Event
 import com.cosplayjournal.app.data.repository.CosplayRepository
 import com.cosplayjournal.app.data.repository.EventRepository
@@ -15,7 +16,8 @@ data class ProfileUiState(
     val totalEvents: Int = 0,
     val favoriteCosplays: List<Cosplay> = emptyList(),
     val favoriteEvents: List<Event> = emptyList(),
-    val allCosplays: List<Cosplay> = emptyList()
+    val allCosplays: List<Cosplay> = emptyList(),
+    val allCosplans: List<Cosplan> = emptyList()
 )
 
 class ProfileViewModel(
@@ -48,7 +50,8 @@ class ProfileViewModel(
                     totalEvents = favEvents.size,
                     favoriteCosplays = favCosplays,
                     favoriteEvents = favEvents,
-                    allCosplays = allCosplays
+                    allCosplays = allCosplays,
+                    allCosplans = cosplans
                 )
             }.collect {
                 _uiState.value = it

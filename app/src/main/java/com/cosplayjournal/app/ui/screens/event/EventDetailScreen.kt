@@ -96,7 +96,7 @@ fun EventDetailScreen(
                         Text("Del ${e.startDate} al ${e.endDate}", style = MaterialTheme.typography.bodyMedium, color = Color.LightGray)
                         
                         Spacer(modifier = Modifier.height(16.dp))
-                       creeText(e.description, style = MaterialTheme.typography.bodyLarge, color = Color.White)
+                        Text(e.venue, style = MaterialTheme.typography.bodyLarge, color = Color.White)
                         
                         Spacer(modifier = Modifier.height(24.dp))
                         DetailSection("HORARIO", e.schedule)
