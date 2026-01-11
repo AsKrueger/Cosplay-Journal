@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -28,6 +29,10 @@ import com.cosplayjournal.app.data.entity.Cosplan
 import com.cosplayjournal.app.data.model.Event
 import com.cosplayjournal.app.ui.viewmodel.EventViewModel
 import com.cosplayjournal.app.ui.viewmodel.ProfileViewModel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,12 +42,13 @@ fun HomeScreen(
     onCosplayClick: (Long) -> Unit,
     onEventClick: (String) -> Unit,
     onAddCosplanClick: () -> Unit,
+    onAddCosplayClick: () -> Unit,
+    onAddSessionClick: () -> Unit,
     onCalendarClick: () -> Unit
 ) {
     val uiState by profileViewModel.uiState.collectAsState()
     val events by eventViewModel.events.collectAsState()
 
-    // Mezclamos cosplays y cosplans para la sección de recientes
     val recentItems = remember(uiState.allCosplays, uiState.allCosplans) {
         val list = mutableListOf<Pair<Any, String>>()
         list.addAll(uiState.allCosplays.map { it to "cosplay" })
@@ -63,11 +69,6 @@ fun HomeScreen(
                 title = {
                     Column(horizontalAlignment = Alignment.Start, modifier = Modifier.fillMaxWidth().padding(start = 16.dp)) {
                         Text("Hola Cosplayer!!", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(modifier = Modifier.size(8.dp).background(Color(0xFF4DB6AC), CircleShape))
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text("OFFLINE SYNCED", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
-                        }
                     }
                 }
             )
@@ -117,19 +118,19 @@ fun HomeScreen(
                         modifier = Modifier.weight(1f)
                     )
                     ToolButton(
+                        icon = Icons.Default.CheckCircle,
+                        label = "NUEVO\nCOSPLAY",
+                        containerColor = Color(0xFFF5F5F5),
+                        contentColor = Color.Black,
+                        onClick = onAddCosplayClick,
+                        modifier = Modifier.weight(1f)
+                    )
+                    ToolButton(
                         icon = Icons.Default.PhotoCamera,
                         label = "AÑADIR\nSESIÓN",
                         containerColor = Color(0xFFF5F5F5),
                         contentColor = Color.Black,
-                        onClick = { /* TODO */ },
-                        modifier = Modifier.weight(1f)
-                    )
-                    ToolButton(
-                        icon = Icons.Default.LocationOn,
-                        label = "LOG\nSPOT",
-                        containerColor = Color(0xFFF5F5F5),
-                        contentColor = Color.Black,
-                        onClick = { /* TODO */ },
+                        onClick = onAddSessionClick,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -139,7 +140,7 @@ fun HomeScreen(
                 SectionHeader(title = "Próximos Eventos", actionText = "Calendario", onActionClick = onCalendarClick)
                 Spacer(modifier = Modifier.height(16.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    events.take(2).forEach { event ->
+                    events.take(3).forEach { event ->
                         EventListItem(event, onClick = { onEventClick(event.id) })
                     }
                 }
@@ -165,7 +166,6 @@ fun SectionHeader(title: String, actionText: String, onActionClick: () -> Unit) 
 @Composable
 fun RecentItemCard(item: Any, type: String, onClick: () -> Unit) {
     val isCosplan = type == "cosplan"
-    // Borde blanco rojizo para cosplan, blanco verdoso para cosplay
     val borderColor = if (isCosplan) Color(0xFFFFEBEE) else Color(0xFFE8F5E9)
     val accentColor = if (isCosplan) Color(0xFFFF5252) else Color(0xFF4CAF50)
     
@@ -218,7 +218,7 @@ fun RecentItemCard(item: Any, type: String, onClick: () -> Unit) {
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
-                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
@@ -263,45 +263,103 @@ fun ToolButton(
 
 @Composable
 fun EventListItem(event: Event, onClick: () -> Unit) {
+    val date = remember(event.startDate) {
+        try {
+            LocalDate.parse(event.startDate)
+        } catch (e: Exception) {
+            LocalDate.now()
+        }
+    }
+    
+    val month = remember(date) { date.format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())).uppercase() }
+    val day = remember(date) { date.format(DateTimeFormatter.ofPattern("dd")) }
+    
+    val daysUntil = remember(date) {
+        ChronoUnit.DAYS.between(LocalDate.now(), date)
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5))
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Recuadro de fecha dinámico
             Surface(
-                modifier = Modifier.size(50.dp),
+                modifier = Modifier.size(52.dp),
                 shape = RoundedCornerShape(12.dp),
-                color = Color.White
+                color = Color(0xFFF5F5F5)
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                    Text("JUL", fontSize = 10.sp, color = Color.Gray)
-                    Text("01", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(month, fontSize = 10.sp, color = Color(0xFF00ACC1), fontWeight = FontWeight.Bold)
+                    Text(day, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
                 }
             }
+            
             Spacer(modifier = Modifier.width(16.dp))
+            
             Column(modifier = Modifier.weight(1f)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(event.name, fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Surface(color = Color(0xFFFFE0E0), shape = RoundedCornerShape(8.dp)) {
-                        Text("QUEDAN 12 DÍAS", modifier = Modifier.padding(horizontal = 6.dp), fontSize = 8.sp, color = Color.Red, fontWeight = FontWeight.Bold)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = event.name,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.bodyLarge,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false)
+                    )
+                    
+                    if (daysUntil >= 0) {
+                        Surface(
+                            color = if (daysUntil <= 7) Color(0xFFFFEBEE) else Color(0xFFE0F7FA),
+                            shape = RoundedCornerShape(6.dp)
+                        ) {
+                            Text(
+                                text = if (daysUntil == 0L) "¡HOY!" else "FALTAN $daysUntil DÍAS",
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                fontSize = 8.sp,
+                                color = if (daysUntil <= 7) Color.Red else Color(0xFF00838F),
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
                 }
+                
+                Spacer(modifier = Modifier.height(4.dp))
+                
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.LocationOn,
                         contentDescription = null,
-                        modifier = Modifier.size(12.dp),
+                        modifier = Modifier.size(14.dp),
                         tint = Color.Gray
                     )
-                    Text(event.city, fontSize = 12.sp, color = Color.Gray)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "${event.city}, ${event.venue}",
+                        fontSize = 12.sp,
+                        color = Color.Gray,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
+            
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                tint = Color.LightGray
+                tint = Color.LightGray,
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
     }
