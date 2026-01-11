@@ -26,5 +26,6 @@ data class Cosplay(
     val makeup: String = "",
     val accessories: String = "",
     val notes: String = "",
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false,
+    val mainImageUri: String? = null
 )

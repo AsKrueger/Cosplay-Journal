@@ -21,7 +21,7 @@ data class HandmadePart(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val cosplayId: Long,
     val name: String,
-    val processSteps: String, // Could be JSON or just text
+    val processSteps: String,
     val materials: String,
     val estimatedCost: Double,
     val isFinished: Boolean = false
