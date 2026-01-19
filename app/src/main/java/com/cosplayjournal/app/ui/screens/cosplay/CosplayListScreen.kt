@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -19,31 +20,38 @@ fun CosplayListScreen(
     viewModel: CosplayViewModel,
     cosplanId: Long? = null,
     onCosplayClick: (Long) -> Unit,
-    onAddCosplayClick: (Long) -> Unit
+    onAddCosplayClick: (Long) -> Unit,
+    onNavigateBack: (() -> Unit)? = null
 ) {
-    if (cosplanId != null) {
-        LaunchedEffect(cosplanId) {
-            viewModel.setCosplanId(cosplanId)
-        }
+    // Si cosplanId es null, seteamos -1 para que el ViewModel cargue TODOS los cosplays
+    LaunchedEffect(cosplanId) {
+        viewModel.setCosplanId(cosplanId ?: -1L)
     }
 
     val cosplays by viewModel.cosplaysForPlan.collectAsState()
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(if (cosplanId != null) "Cosplays for Plan" else "All My Cosplays") })
+            TopAppBar(
+                title = { Text(if (cosplanId != null) "Cosplays del Plan" else "Todos mis Cosplays") },
+                navigationIcon = {
+                    if (onNavigateBack != null) {
+                        IconButton(onClick = onNavigateBack) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        }
+                    }
+                }
+            )
         },
         floatingActionButton = {
-            if (cosplanId != null) {
-                FloatingActionButton(onClick = { onAddCosplayClick(cosplanId) }) {
-                    Icon(Icons.Default.Add, contentDescription = "Add Cosplay")
-                }
+            FloatingActionButton(onClick = { onAddCosplayClick(cosplanId ?: 0L) }) {
+                Icon(Icons.Default.Add, contentDescription = "Añadir Cosplay")
             }
         }
     ) { padding ->
         if (cosplays.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = androidx.compose.ui.Alignment.Center) {
-                Text("No cosplays yet.")
+                Text("No hay cosplays registrados aún.")
             }
         } else {
             LazyColumn(
@@ -64,13 +72,13 @@ fun CosplayItem(cosplay: Cosplay, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable(onClick = onClick),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = cosplay.characterName, style = MaterialTheme.typography.titleLarge)
-            Text(text = cosplay.series, style = MaterialTheme.typography.bodyMedium)
+            Text(text = cosplay.series, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
