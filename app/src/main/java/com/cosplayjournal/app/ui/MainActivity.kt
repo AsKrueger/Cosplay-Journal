@@ -29,6 +29,7 @@ import com.cosplayjournal.app.ui.screens.cosplay.AddEditHandmadePartScreen
 import com.cosplayjournal.app.ui.screens.cosplay.AddEditPurchasedItemScreen
 import com.cosplayjournal.app.ui.screens.cosplay.CosplayDetailScreen
 import com.cosplayjournal.app.ui.screens.cosplay.CosplayListScreen
+import com.cosplayjournal.app.ui.screens.cosplay.CosplaySelectionScreen
 import com.cosplayjournal.app.ui.screens.event.EventDetailScreen
 import com.cosplayjournal.app.ui.screens.event.EventListScreen
 import com.cosplayjournal.app.ui.screens.home.HomeScreen
@@ -130,15 +131,37 @@ fun MainScreen() {
             }
 
             composable(Screen.Cosplays.route) {
+                CosplaySelectionScreen(
+                    cosplayViewModel = cosplayViewModel,
+                    cosplanViewModel = cosplanViewModel,
+                    onNavigateToCosplays = { navController.navigate(Screen.CosplayList.route) },
+                    onNavigateToCosplans = { navController.navigate(Screen.CosplanList.route) },
+                    onAddCosplanClick = { navController.navigate("add_edit_cosplan") },
+                    onAddCosplayClick = { navController.navigate("add_edit_cosplay/0") },
+                    onSettingsClick = { navController.navigate(Screen.Settings.route) }
+                )
+            }
+
+            composable(Screen.CosplanList.route) {
                 CosplanListScreen(
                     viewModel = cosplanViewModel,
                     onCosplanClick = { id -> navController.navigate("cosplan_detail/$id") },
-                    onAddCosplanClick = { navController.navigate("add_edit_cosplan") }
+                    onAddCosplanClick = { navController.navigate("add_edit_cosplan") },
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(Screen.CosplayList.route) {
+                CosplayListScreen(
+                    viewModel = cosplayViewModel,
+                    cosplanId = null,
+                    onCosplayClick = { id -> navController.navigate("cosplay_detail/$id") },
+                    onAddCosplayClick = { id -> navController.navigate("add_edit_cosplay/0") },
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 
             composable(Screen.Gallery.route) {
-                // TODO: Implement Gallery Screen
                 Text("Pantalla de Galería en construcción", modifier = Modifier.padding(16.dp))
             }
 
@@ -152,7 +175,6 @@ fun MainScreen() {
                 )
             }
 
-            // Mantenemos el resto de rutas (detalles, formularios, etc.) igual...
             composable(Screen.EventDetail.route, arguments = listOf(navArgument("eventId") { type = NavType.StringType })) { backStackEntry ->
                 val eventId = backStackEntry.arguments?.getString("eventId") ?: return@composable
                 EventDetailScreen(eventViewModel = eventViewModel, cosplanViewModel = cosplanViewModel, eventId = eventId, onNavigateBack = { navController.popBackStack() })
@@ -170,7 +192,7 @@ fun MainScreen() {
 
             composable("cosplay_list/{cosplanId}", arguments = listOf(navArgument("cosplanId") { type = NavType.LongType })) { backStackEntry ->
                 val cosplanId = backStackEntry.arguments?.getLong("cosplanId")
-                CosplayListScreen(viewModel = cosplayViewModel, cosplanId = cosplanId, onCosplayClick = { id -> navController.navigate("cosplay_detail/$id") }, onAddCosplayClick = { id -> navController.navigate("add_edit_cosplay/$id") })
+                CosplayListScreen(viewModel = cosplayViewModel, cosplanId = cosplanId, onCosplayClick = { id -> navController.navigate("cosplay_detail/$id") }, onAddCosplayClick = { id -> navController.navigate("add_edit_cosplay/$id") }, onNavigateBack = { navController.popBackStack() })
             }
 
             composable(Screen.CosplayDetail.route, arguments = listOf(navArgument("cosplayId") { type = NavType.LongType })) { backStackEntry ->

@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -22,17 +23,27 @@ import com.cosplayjournal.app.ui.viewmodel.CosplanViewModel
 fun CosplanListScreen(
     viewModel: CosplanViewModel,
     onCosplanClick: (Long) -> Unit,
-    onAddCosplanClick: () -> Unit
+    onAddCosplanClick: () -> Unit,
+    onNavigateBack: (() -> Unit)? = null
 ) {
     val cosplans by viewModel.allCosplans.collectAsState()
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("My Cosplans") })
+            TopAppBar(
+                title = { Text("Mis Cosplans") },
+                navigationIcon = {
+                    if (onNavigateBack != null) {
+                        IconButton(onClick = onNavigateBack) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        }
+                    }
+                }
+            )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddCosplanClick) {
-                Icon(Icons.Default.Add, contentDescription = "Add Cosplan")
+                Icon(Icons.Default.Add, contentDescription = "Añadir Cosplan")
             }
         }
     ) { padding ->
@@ -40,11 +51,11 @@ fun CosplanListScreen(
             EmptyState(
                 modifier = Modifier.padding(padding),
                 icon = Icons.Default.Assignment,
-                title = "No Cosplans yet",
-                description = "Start your next adventure by creating your first cosplay plan!",
+                title = "No hay planes aún",
+                description = "¡Empieza tu próxima aventura creando tu primer plan de cosplay!",
                 actionButton = {
                     Button(onClick = onAddCosplanClick) {
-                        Text("Create Cosplan")
+                        Text("Crear Cosplan")
                     }
                 }
             )
@@ -67,14 +78,17 @@ fun CosplanItem(cosplan: Cosplan, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable(onClick = onClick),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = cosplan.name, style = MaterialTheme.typography.titleLarge)
-            Text(text = "Status: ${cosplan.status}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Difficulty: ${cosplan.difficulty}", style = MaterialTheme.typography.bodySmall)
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(text = "Estado: ${cosplan.status}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Dificultad: ${cosplan.difficulty}", style = MaterialTheme.typography.bodySmall)
+            }
         }
     }
 }

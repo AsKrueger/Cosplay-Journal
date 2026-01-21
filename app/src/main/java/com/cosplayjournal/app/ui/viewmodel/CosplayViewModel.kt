@@ -18,8 +18,14 @@ class CosplayViewModel(private val repository: CosplayRepository) : ViewModel() 
 
     private val _currentCosplanId = MutableStateFlow<Long>(-1L)
     
+    val allCosplays: StateFlow<List<Cosplay>> = repository.allCosplays.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
+
     val cosplaysForPlan: StateFlow<List<Cosplay>> = _currentCosplanId.flatMapLatest { id ->
-        repository.getCosplaysForCosplan(id)
+        if (id == -1L) repository.allCosplays else repository.getCosplaysForCosplan(id)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
