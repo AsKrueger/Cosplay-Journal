@@ -137,6 +137,7 @@ fun MainScreen() {
                     onNavigateToCosplays = { navController.navigate(Screen.CosplayList.route) },
                     onNavigateToCosplans = { navController.navigate(Screen.CosplanList.route) },
                     onAddCosplanClick = { navController.navigate("add_edit_cosplan") },
+                    onAddCosplayClick = { navController.navigate("add_edit_cosplay/0") },
                     onSettingsClick = { navController.navigate(Screen.Settings.route) }
                 )
             }

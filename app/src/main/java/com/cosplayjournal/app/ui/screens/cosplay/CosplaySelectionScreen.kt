@@ -36,6 +36,7 @@ fun CosplaySelectionScreen(
     onNavigateToCosplays: () -> Unit,
     onNavigateToCosplans: () -> Unit,
     onAddCosplanClick: () -> Unit,
+    onAddCosplayClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onMenuClick: () -> Unit = {}
 ) {
@@ -100,6 +101,8 @@ fun CosplaySelectionScreen(
                 buttonText = "Ir a mis Cosplays",
                 label = "FINALIZADO",
                 labelColor = Color(0xFF00BFA5),
+                showAddButton = true,
+                onAddButtonClick = onAddCosplayClick,
                 onClick = onNavigateToCosplays,
                 modifier = Modifier.weight(1f)
             )
