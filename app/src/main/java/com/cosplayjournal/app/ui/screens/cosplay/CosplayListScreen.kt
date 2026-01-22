@@ -31,6 +31,9 @@ fun CosplayListScreen(
     cosplanId: Long? = null,
     onCosplayClick: (Long) -> Unit,
     onAddCosplayClick: (Long) -> Unit,
+    onNavigateToHome: () -> Unit = {},
+    onNavigateToSelection: () -> Unit = {},
+    onNavigateToProfile: () -> Unit = {},
     onMenuClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
     onNavigateBack: (() -> Unit)? = null
@@ -58,7 +61,6 @@ fun CosplayListScreen(
                     .background(Color.White)
                     .padding(top = 8.dp)
             ) {
-                // Centered Header with Menu and Settings
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -98,7 +100,6 @@ fun CosplayListScreen(
                     }
                 }
 
-                // Search Bar
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
@@ -118,7 +119,6 @@ fun CosplayListScreen(
                     singleLine = true
                 )
 
-                // Filter Chips
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -152,18 +152,45 @@ fun CosplayListScreen(
                 }
             }
         },
+        bottomBar = {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp),
+                color = Color(0xFFE0F7FA).copy(alpha = 0.5f),
+                tonalElevation = 0.dp
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center // Correctly Centered Group
+                ) {
+                    IconButton(onClick = onNavigateToHome, modifier = Modifier.padding(horizontal = 25.dp)) {
+                        Icon(Icons.Default.Home, contentDescription = "Home", tint = Color.Gray, modifier = Modifier.size(28.dp))
+                    }
+                    IconButton(onClick = onNavigateToSelection, modifier = Modifier.padding(horizontal = 25.dp)) {
+                        Icon(Icons.Default.Checkroom, contentDescription = "Cosplays", tint = Color(0xFF00ACC1), modifier = Modifier.size(30.dp))
+                    }
+                    IconButton(onClick = onNavigateToProfile, modifier = Modifier.padding(horizontal = 25.dp)) {
+                        Icon(Icons.Default.Person, contentDescription = "Profile", tint = Color.Gray, modifier = Modifier.size(28.dp))
+                    }
+                }
+            }
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onAddCosplayClick(cosplanId ?: 0L) },
                 containerColor = Color(0xFF00ACC1),
                 contentColor = Color.White,
                 shape = CircleShape,
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier
+                    .size(60.dp)
+                    .offset(y = (-15).dp) // Raised more to avoid cut-off and look better
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add Cosplay", modifier = Modifier.size(32.dp))
+                Icon(Icons.Default.Add, contentDescription = "Add Cosplay", modifier = Modifier.size(30.dp))
             }
         },
-        floatingActionButtonPosition = FabPosition.Center
+        floatingActionButtonPosition = FabPosition.End
     ) { padding ->
         if (filteredCosplays.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
@@ -174,7 +201,7 @@ fun CosplayListScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding),
-                contentPadding = PaddingValues(bottom = 100.dp) // Space for the centered FAB
+                contentPadding = PaddingValues(bottom = 20.dp)
             ) {
                 items(filteredCosplays) { cosplay ->
                     CosplayCard(
@@ -212,9 +239,8 @@ fun CosplayCard(cosplay: Cosplay, onClick: () -> Unit) {
                     contentScale = ContentScale.Crop
                 )
                 
-                // Status Badge (Top-Left)
                 Surface(
-                    color = Color(0xFFFF8A65), // Crafting Color
+                    color = Color(0xFFFF8A65),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.padding(16.dp)
                 ) {
@@ -226,7 +252,6 @@ fun CosplayCard(cosplay: Cosplay, onClick: () -> Unit) {
                     )
                 }
 
-                // Share button (Top-Right)
                 Surface(
                     color = Color.Black.copy(alpha = 0.2f),
                     shape = CircleShape,
@@ -276,7 +301,6 @@ fun CosplayCard(cosplay: Cosplay, onClick: () -> Unit) {
                     }
                 }
 
-                // Progress Info (Right Side)
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
                         "PROGRESS",
@@ -288,7 +312,7 @@ fun CosplayCard(cosplay: Cosplay, onClick: () -> Unit) {
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     LinearProgressIndicator(
-                        progress = 0.45f, // Placeholder progress
+                        progress = 0.45f,
                         modifier = Modifier
                             .width(80.dp)
                             .height(6.dp)
