@@ -40,7 +40,6 @@ fun AddEditPurchasedItemScreen(
     var name by remember { mutableStateOf("") }
     var purchaseLink by remember { mutableStateOf("") }
     var adjustmentDescription by remember { mutableStateOf("") }
-    var projectPercentage by remember { mutableFloatStateOf(0f) }
     var price by remember { mutableStateOf("") }
     var imageUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
 
@@ -48,8 +47,6 @@ fun AddEditPurchasedItemScreen(
 
     // Colors
     val primaryPurple = Color(0xFF6750A4)
-    val lightPurpleBackground = Color(0xFFF7F2FA)
-    val fieldBorderColor = Color(0xFFE7E0EC)
     val grayText = Color(0xFF79747E)
 
     val launcher = rememberLauncherForActivityResult(
@@ -63,7 +60,6 @@ fun AddEditPurchasedItemScreen(
                 name = item.name
                 purchaseLink = item.purchaseLink
                 adjustmentDescription = item.adjustmentDescription
-                projectPercentage = item.projectPercentage.toFloat()
                 price = if (item.price > 0) item.price.toString() else ""
                 imageUris = if (item.imageUris.isNotBlank()) {
                     item.imageUris.split(",").map { Uri.parse(it) }
@@ -93,7 +89,6 @@ fun AddEditPurchasedItemScreen(
                                     name = name,
                                     purchaseLink = purchaseLink,
                                     adjustmentDescription = adjustmentDescription,
-                                    projectPercentage = projectPercentage.toInt(),
                                     price = price.toDoubleOrNull() ?: 0.0,
                                     imageUris = imageUris.joinToString(",") { it.toString() }
                                 )
@@ -228,29 +223,6 @@ fun AddEditPurchasedItemScreen(
                 )
             }
 
-            // PROJECT COMPLETION
-            Surface(
-                color = lightPurpleBackground,
-                shape = RoundedCornerShape(24.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(modifier = Modifier.padding(20.dp)) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text("Project Completion", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                        }
-                        Text("${projectPercentage.toInt()}%", fontWeight = FontWeight.Bold, fontSize = 24.sp, color = primaryPurple)
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Slider(
-                        value = projectPercentage,
-                        onValueChange = { projectPercentage = it },
-                        valueRange = 0f..100f,
-                        colors = SliderDefaults.colors(thumbColor = primaryPurple, activeTrackColor = primaryPurple)
-                    )
-                }
-            }
-
             // SAVE BUTTON
             Button(
                 onClick = {
@@ -261,7 +233,6 @@ fun AddEditPurchasedItemScreen(
                             name = name,
                             purchaseLink = purchaseLink,
                             adjustmentDescription = adjustmentDescription,
-                            projectPercentage = projectPercentage.toInt(),
                             price = price.toDoubleOrNull() ?: 0.0,
                             imageUris = imageUris.joinToString(",") { it.toString() }
                         )

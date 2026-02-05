@@ -21,9 +21,10 @@ import com.cosplayjournal.app.data.entity.*
         PhotoSession::class,
         CosplayPhotoSessionCrossRef::class,
         UserEventData::class,
-        EventCosplanSelection::class
+        EventCosplanSelection::class,
+        WigMakeup::class
     ],
-    version = 5, // Incremented version due to PartResource schema change
+    version = 6, // Incremented version for WigMakeup addition
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

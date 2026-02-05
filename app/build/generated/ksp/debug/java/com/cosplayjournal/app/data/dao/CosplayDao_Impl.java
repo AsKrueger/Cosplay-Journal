@@ -22,6 +22,7 @@ import com.cosplayjournal.app.data.entity.PartResource;
 import com.cosplayjournal.app.data.entity.PhotoSession;
 import com.cosplayjournal.app.data.entity.PurchasedItem;
 import com.cosplayjournal.app.data.entity.UserEventData;
+import com.cosplayjournal.app.data.entity.WigMakeup;
 import java.lang.Class;
 import java.lang.Exception;
 import java.lang.Long;
@@ -49,6 +50,8 @@ public final class CosplayDao_Impl implements CosplayDao {
 
   private final EntityInsertionAdapter<HandmadePart> __insertionAdapterOfHandmadePart;
 
+  private final EntityInsertionAdapter<WigMakeup> __insertionAdapterOfWigMakeup;
+
   private final EntityInsertionAdapter<PartResource> __insertionAdapterOfPartResource;
 
   private final EntityInsertionAdapter<PurchasedItem> __insertionAdapterOfPurchasedItem;
@@ -67,6 +70,8 @@ public final class CosplayDao_Impl implements CosplayDao {
 
   private final EntityDeletionOrUpdateAdapter<HandmadePart> __deletionAdapterOfHandmadePart;
 
+  private final EntityDeletionOrUpdateAdapter<WigMakeup> __deletionAdapterOfWigMakeup;
+
   private final EntityDeletionOrUpdateAdapter<PartResource> __deletionAdapterOfPartResource;
 
   private final EntityDeletionOrUpdateAdapter<PurchasedItem> __deletionAdapterOfPurchasedItem;
@@ -76,6 +81,8 @@ public final class CosplayDao_Impl implements CosplayDao {
   private final EntityDeletionOrUpdateAdapter<Cosplay> __updateAdapterOfCosplay;
 
   private final EntityDeletionOrUpdateAdapter<HandmadePart> __updateAdapterOfHandmadePart;
+
+  private final EntityDeletionOrUpdateAdapter<WigMakeup> __updateAdapterOfWigMakeup;
 
   private final EntityDeletionOrUpdateAdapter<PartResource> __updateAdapterOfPartResource;
 
@@ -163,6 +170,28 @@ public final class CosplayDao_Impl implements CosplayDao {
         statement.bindString(9, entity.getMaterials());
         final int _tmp = entity.isFinished() ? 1 : 0;
         statement.bindLong(10, _tmp);
+      }
+    };
+    this.__insertionAdapterOfWigMakeup = new EntityInsertionAdapter<WigMakeup>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "INSERT OR REPLACE INTO `wig_makeup_items` (`id`,`cosplayId`,`name`,`imageUris`,`price`,`timeSpent`,`description`,`productsUsed`,`isFinished`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?)";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final WigMakeup entity) {
+        statement.bindLong(1, entity.getId());
+        statement.bindLong(2, entity.getCosplayId());
+        statement.bindString(3, entity.getName());
+        statement.bindString(4, entity.getImageUris());
+        statement.bindDouble(5, entity.getPrice());
+        statement.bindString(6, entity.getTimeSpent());
+        statement.bindString(7, entity.getDescription());
+        statement.bindString(8, entity.getProductsUsed());
+        final int _tmp = entity.isFinished() ? 1 : 0;
+        statement.bindLong(9, _tmp);
       }
     };
     this.__insertionAdapterOfPartResource = new EntityInsertionAdapter<PartResource>(__db) {
@@ -312,6 +341,19 @@ public final class CosplayDao_Impl implements CosplayDao {
         statement.bindLong(1, entity.getId());
       }
     };
+    this.__deletionAdapterOfWigMakeup = new EntityDeletionOrUpdateAdapter<WigMakeup>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "DELETE FROM `wig_makeup_items` WHERE `id` = ?";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final WigMakeup entity) {
+        statement.bindLong(1, entity.getId());
+      }
+    };
     this.__deletionAdapterOfPartResource = new EntityDeletionOrUpdateAdapter<PartResource>(__db) {
       @Override
       @NonNull
@@ -421,6 +463,29 @@ public final class CosplayDao_Impl implements CosplayDao {
         statement.bindLong(11, entity.getId());
       }
     };
+    this.__updateAdapterOfWigMakeup = new EntityDeletionOrUpdateAdapter<WigMakeup>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "UPDATE OR ABORT `wig_makeup_items` SET `id` = ?,`cosplayId` = ?,`name` = ?,`imageUris` = ?,`price` = ?,`timeSpent` = ?,`description` = ?,`productsUsed` = ?,`isFinished` = ? WHERE `id` = ?";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final WigMakeup entity) {
+        statement.bindLong(1, entity.getId());
+        statement.bindLong(2, entity.getCosplayId());
+        statement.bindString(3, entity.getName());
+        statement.bindString(4, entity.getImageUris());
+        statement.bindDouble(5, entity.getPrice());
+        statement.bindString(6, entity.getTimeSpent());
+        statement.bindString(7, entity.getDescription());
+        statement.bindString(8, entity.getProductsUsed());
+        final int _tmp = entity.isFinished() ? 1 : 0;
+        statement.bindLong(9, _tmp);
+        statement.bindLong(10, entity.getId());
+      }
+    };
     this.__updateAdapterOfPartResource = new EntityDeletionOrUpdateAdapter<PartResource>(__db) {
       @Override
       @NonNull
@@ -521,6 +586,25 @@ public final class CosplayDao_Impl implements CosplayDao {
         __db.beginTransaction();
         try {
           final Long _result = __insertionAdapterOfHandmadePart.insertAndReturnId(part);
+          __db.setTransactionSuccessful();
+          return _result;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object insertWigMakeup(final WigMakeup item,
+      final Continuation<? super Long> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
+      @Override
+      @NonNull
+      public Long call() throws Exception {
+        __db.beginTransaction();
+        try {
+          final Long _result = __insertionAdapterOfWigMakeup.insertAndReturnId(item);
           __db.setTransactionSuccessful();
           return _result;
         } finally {
@@ -700,6 +784,25 @@ public final class CosplayDao_Impl implements CosplayDao {
   }
 
   @Override
+  public Object deleteWigMakeup(final WigMakeup item,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __deletionAdapterOfWigMakeup.handle(item);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
   public Object deletePartResource(final PartResource resource,
       final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
@@ -783,6 +886,25 @@ public final class CosplayDao_Impl implements CosplayDao {
         __db.beginTransaction();
         try {
           __updateAdapterOfHandmadePart.handle(part);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object updateWigMakeup(final WigMakeup item,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __updateAdapterOfWigMakeup.handle(item);
           __db.setTransactionSuccessful();
           return Unit.INSTANCE;
         } finally {
@@ -1352,6 +1474,123 @@ public final class CosplayDao_Impl implements CosplayDao {
             _tmp = _cursor.getInt(_cursorIndexOfIsFinished);
             _tmpIsFinished = _tmp != 0;
             _result = new HandmadePart(_tmpId,_tmpCosplayId,_tmpName,_tmpImageUris,_tmpPrice,_tmpTimeSpent,_tmpProcessDescription,_tmpProjectPercentage,_tmpMaterials,_tmpIsFinished);
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Flow<List<WigMakeup>> getWigMakeupItems(final long cosplayId) {
+    final String _sql = "SELECT * FROM wig_makeup_items WHERE cosplayId = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, cosplayId);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"wig_makeup_items"}, new Callable<List<WigMakeup>>() {
+      @Override
+      @NonNull
+      public List<WigMakeup> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfCosplayId = CursorUtil.getColumnIndexOrThrow(_cursor, "cosplayId");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfImageUris = CursorUtil.getColumnIndexOrThrow(_cursor, "imageUris");
+          final int _cursorIndexOfPrice = CursorUtil.getColumnIndexOrThrow(_cursor, "price");
+          final int _cursorIndexOfTimeSpent = CursorUtil.getColumnIndexOrThrow(_cursor, "timeSpent");
+          final int _cursorIndexOfDescription = CursorUtil.getColumnIndexOrThrow(_cursor, "description");
+          final int _cursorIndexOfProductsUsed = CursorUtil.getColumnIndexOrThrow(_cursor, "productsUsed");
+          final int _cursorIndexOfIsFinished = CursorUtil.getColumnIndexOrThrow(_cursor, "isFinished");
+          final List<WigMakeup> _result = new ArrayList<WigMakeup>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final WigMakeup _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpCosplayId;
+            _tmpCosplayId = _cursor.getLong(_cursorIndexOfCosplayId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpImageUris;
+            _tmpImageUris = _cursor.getString(_cursorIndexOfImageUris);
+            final double _tmpPrice;
+            _tmpPrice = _cursor.getDouble(_cursorIndexOfPrice);
+            final String _tmpTimeSpent;
+            _tmpTimeSpent = _cursor.getString(_cursorIndexOfTimeSpent);
+            final String _tmpDescription;
+            _tmpDescription = _cursor.getString(_cursorIndexOfDescription);
+            final String _tmpProductsUsed;
+            _tmpProductsUsed = _cursor.getString(_cursorIndexOfProductsUsed);
+            final boolean _tmpIsFinished;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsFinished);
+            _tmpIsFinished = _tmp != 0;
+            _item = new WigMakeup(_tmpId,_tmpCosplayId,_tmpName,_tmpImageUris,_tmpPrice,_tmpTimeSpent,_tmpDescription,_tmpProductsUsed,_tmpIsFinished);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Object getWigMakeupById(final long id, final Continuation<? super WigMakeup> $completion) {
+    final String _sql = "SELECT * FROM wig_makeup_items WHERE id = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, id);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<WigMakeup>() {
+      @Override
+      @Nullable
+      public WigMakeup call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfCosplayId = CursorUtil.getColumnIndexOrThrow(_cursor, "cosplayId");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfImageUris = CursorUtil.getColumnIndexOrThrow(_cursor, "imageUris");
+          final int _cursorIndexOfPrice = CursorUtil.getColumnIndexOrThrow(_cursor, "price");
+          final int _cursorIndexOfTimeSpent = CursorUtil.getColumnIndexOrThrow(_cursor, "timeSpent");
+          final int _cursorIndexOfDescription = CursorUtil.getColumnIndexOrThrow(_cursor, "description");
+          final int _cursorIndexOfProductsUsed = CursorUtil.getColumnIndexOrThrow(_cursor, "productsUsed");
+          final int _cursorIndexOfIsFinished = CursorUtil.getColumnIndexOrThrow(_cursor, "isFinished");
+          final WigMakeup _result;
+          if (_cursor.moveToFirst()) {
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpCosplayId;
+            _tmpCosplayId = _cursor.getLong(_cursorIndexOfCosplayId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpImageUris;
+            _tmpImageUris = _cursor.getString(_cursorIndexOfImageUris);
+            final double _tmpPrice;
+            _tmpPrice = _cursor.getDouble(_cursorIndexOfPrice);
+            final String _tmpTimeSpent;
+            _tmpTimeSpent = _cursor.getString(_cursorIndexOfTimeSpent);
+            final String _tmpDescription;
+            _tmpDescription = _cursor.getString(_cursorIndexOfDescription);
+            final String _tmpProductsUsed;
+            _tmpProductsUsed = _cursor.getString(_cursorIndexOfProductsUsed);
+            final boolean _tmpIsFinished;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsFinished);
+            _tmpIsFinished = _tmp != 0;
+            _result = new WigMakeup(_tmpId,_tmpCosplayId,_tmpName,_tmpImageUris,_tmpPrice,_tmpTimeSpent,_tmpDescription,_tmpProductsUsed,_tmpIsFinished);
           } else {
             _result = null;
           }

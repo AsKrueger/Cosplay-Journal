@@ -57,6 +57,22 @@ interface CosplayDao {
     @Query("SELECT * FROM handmade_parts WHERE id = :id")
     suspend fun getHandmadePartById(id: Long): HandmadePart?
 
+    // Wig & Makeup
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertWigMakeup(item: WigMakeup): Long
+
+    @Update
+    suspend fun updateWigMakeup(item: WigMakeup)
+
+    @Delete
+    suspend fun deleteWigMakeup(item: WigMakeup)
+
+    @Query("SELECT * FROM wig_makeup_items WHERE cosplayId = :cosplayId")
+    fun getWigMakeupItems(cosplayId: Long): Flow<List<WigMakeup>>
+
+    @Query("SELECT * FROM wig_makeup_items WHERE id = :id")
+    suspend fun getWigMakeupById(id: Long): WigMakeup?
+
     // Part Resources
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPartResource(resource: PartResource)

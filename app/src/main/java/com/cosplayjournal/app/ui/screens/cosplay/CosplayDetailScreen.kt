@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -39,7 +40,10 @@ fun CosplayDetailScreen(
     onNavigateBack: () -> Unit,
     onEditClick: (Long) -> Unit,
     onAddHandmadePart: (Long) -> Unit,
-    onAddPurchasedItem: (Long) -> Unit
+    onAddPurchasedItem: (Long) -> Unit,
+    onAddWig: (Long) -> Unit,
+    onAddMakeup: (Long) -> Unit,
+    onEditWigMakeup: (Long, Long, Boolean) -> Unit
 ) {
     var cosplay by remember { mutableStateOf<Cosplay?>(null) }
     val handmadeParts by viewModel.getHandmadeParts(cosplayId).collectAsState(initial = emptyList())
@@ -53,8 +57,6 @@ fun CosplayDetailScreen(
     val scope = rememberCoroutineScope()
     var showSheet by remember { mutableStateOf(false) }
     var currentDetailType by remember { mutableStateOf<DetailType?>(null) }
-
-    val primaryPurple = Color(0xFF6750A4)
 
     Scaffold(
         topBar = {
@@ -80,7 +82,7 @@ fun CosplayDetailScreen(
                 .background(Color(0xFFF8F9FA))
         ) {
             item {
-                Box(modifier = Modifier.fillMaxWidth().height(200.dp)) {
+                Box(modifier = Modifier.fillMaxWidth().height(220.dp)) {
                     AsyncImage(
                         model = cosplay?.mainImageUri,
                         contentDescription = null,
@@ -88,13 +90,33 @@ fun CosplayDetailScreen(
                         contentScale = ContentScale.Crop
                     )
                     Surface(
-                        modifier = Modifier.align(Alignment.BottomStart).padding(16.dp),
-                        color = Color.Black.copy(alpha = 0.6f),
-                        shape = RoundedCornerShape(12.dp)
+                        modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(16.dp),
+                        color = Color.Black.copy(alpha = 0.7f),
+                        shape = RoundedCornerShape(16.dp)
                     ) {
-                        Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)) {
-                            Text(cosplay?.series ?: "", color = Color.White.copy(alpha = 0.8f), fontSize = 11.sp)
-                            Text(cosplay?.characterName ?: "", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                        Row(
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(cosplay?.series ?: "", color = Color.White.copy(alpha = 0.7f), fontSize = 11.sp)
+                                Text(cosplay?.characterName ?: "", color = Color.White, fontWeight = FontWeight.ExtraBold, fontSize = 20.sp)
+                            }
+                            
+                            Column(horizontalAlignment = Alignment.End) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(Icons.Default.CloudQueue, contentDescription = null, tint = Color(0xFF03A9F4), modifier = Modifier.size(14.dp))
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text("WEATHER", color = Color.White.copy(alpha = 0.7f), fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                                }
+                                Text(
+                                    text = formatWeather(cosplay?.preferredWeather),
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 13.sp
+                                )
+                            }
                         }
                     }
                 }
@@ -107,14 +129,13 @@ fun CosplayDetailScreen(
                     shape = RoundedCornerShape(20.dp),
                     border = BorderStroke(1.dp, Color(0xFFF1F3F4))
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Default.Description, contentDescription = null, tint = Color.LightGray, modifier = Modifier.size(16.dp))
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("CREATIVE NOTES", style = MaterialTheme.typography.labelLarge, color = Color.Gray, fontWeight = FontWeight.Bold)
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(cosplay?.notes ?: "No notes yet.", fontSize = 13.sp, lineHeight = 18.sp)
+                    Column(modifier = Modifier.padding(20.dp)) {
+                        Text(
+                            text = cosplay?.notes ?: "No notes yet.", 
+                            fontSize = 14.sp, 
+                            lineHeight = 20.sp,
+                            color = if (cosplay?.notes.isNullOrBlank()) Color.LightGray else Color.Black
+                        )
                     }
                 }
             }
@@ -124,10 +145,18 @@ fun CosplayDetailScreen(
                     Text("BUILD DETAILS", style = MaterialTheme.typography.labelLarge, color = Color.Gray, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(10.dp))
                     
+                    val wigMakeupSubtitle = remember(cosplay?.wigs, cosplay?.makeup) {
+                        val parts = listOfNotNull(
+                            cosplay?.wigs?.takeIf { it.isNotBlank() },
+                            cosplay?.makeup?.takeIf { it.isNotBlank() }
+                        )
+                        if (parts.isEmpty()) "Tap to add wig and makeup info" else parts.joinToString(", ")
+                    }
+
                     DetailNavigationRow(
                         icon = Icons.Default.Face,
                         title = "Wig & Makeup",
-                        subtitle = "${cosplay?.wigs ?: ""}, ${cosplay?.makeup ?: ""}",
+                        subtitle = wigMakeupSubtitle,
                         onClick = { 
                             currentDetailType = DetailType.WIG_MAKEUP
                             showSheet = true
@@ -234,6 +263,21 @@ fun CosplayDetailScreen(
     }
 }
 
+fun formatWeather(weather: String?): String {
+    if (weather.isNullOrBlank()) return "Any"
+    return weather.split(", ")
+        .map { it.trim() }
+        .joinToString(", ") {
+            when (it) {
+                "Winter" -> "❄️ Winter"
+                "Spring" -> "🌸 Spring"
+                "Summer" -> "☀️ Summer"
+                "Autumn" -> "🍂 Autumn"
+                else -> it
+            }
+        }
+}
+
 @Composable
 fun ItemDetailPanel(
     type: DetailType?,
@@ -284,9 +328,9 @@ fun ItemDetailPanel(
 
         when (type) {
             DetailType.WIG_MAKEUP -> {
-                DetailSection("DETAILS", cosplay?.wigs ?: "")
-                Spacer(modifier = Modifier.height(12.dp))
-                DetailSection("MAKEUP NOTES", cosplay?.makeup ?: "")
+                DetailSection("WIG DETAILS", cosplay?.wigs ?: "", Icons.Default.Face)
+                Spacer(modifier = Modifier.height(16.dp))
+                DetailSection("MAKEUP NOTES", cosplay?.makeup ?: "", Icons.Default.AutoFixHigh)
             }
             DetailType.HANDMADE -> {
                 if (handmadeParts.isEmpty()) {
@@ -348,7 +392,7 @@ fun HandmadePartDetailContent(part: HandmadePart, viewModel: CosplayViewModel) {
         }
         
         Text(part.name, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
-        DetailSection("HOW IT WAS MADE", part.processDescription)
+        DetailSection("HOW IT WAS MADE", part.processDescription, Icons.Default.Handyman)
         
         Text("MATERIALS USED", style = MaterialTheme.typography.labelLarge, color = Color.Gray, fontWeight = FontWeight.Bold)
         Column {
@@ -363,7 +407,7 @@ fun HandmadePartDetailContent(part: HandmadePart, viewModel: CosplayViewModel) {
         
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             StatBox(Modifier.weight(1f), Icons.Default.AccessTime, "TIME SPENT", part.timeSpent)
-            StatBox(Modifier.weight(1f), Icons.Default.Payments, "MATERIAL COST", "$${part.price}")
+            StatBox(Modifier.weight(1f), Icons.Default.Payments, "MATERIAL COST", "${part.price}€")
         }
     }
 }
@@ -380,9 +424,9 @@ fun PurchasedItemDetailContent(item: PurchasedItem) {
             )
         }
         Text(item.name, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
-        DetailSection("WHERE IT WAS BOUGHT", item.purchaseLink)
-        DetailSection("ADJUSTMENTS MADE", item.adjustmentDescription)
-        StatBox(Modifier.fillMaxWidth(), Icons.Default.Payments, "COST", "$${item.price}")
+        DetailSection("WHERE IT WAS BOUGHT", item.purchaseLink, Icons.Default.ShoppingCart)
+        DetailSection("ADJUSTMENTS MADE", item.adjustmentDescription, Icons.Default.AutoFixNormal)
+        StatBox(Modifier.fillMaxWidth(), Icons.Default.Payments, "COST", "${item.price}€")
     }
 }
 
@@ -414,16 +458,22 @@ fun StatBox(modifier: Modifier, icon: androidx.compose.ui.graphics.vector.ImageV
 }
 
 @Composable
-fun DetailSection(label: String, content: String) {
+fun DetailSection(label: String, content: String, icon: androidx.compose.ui.graphics.vector.ImageVector) {
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Default.Handyman, contentDescription = null, tint = Color(0xFF6750A4), modifier = Modifier.size(14.dp))
+            Icon(icon, contentDescription = null, tint = Color(0xFF6750A4), modifier = Modifier.size(14.dp))
             Spacer(modifier = Modifier.width(8.dp))
             Text(label, fontSize = 9.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
         }
         Spacer(modifier = Modifier.height(6.dp))
         Surface(color = Color(0xFFF8F9FA), shape = RoundedCornerShape(10.dp)) {
-            Text(content.ifBlank { "No info provided." }, modifier = Modifier.padding(12.dp), fontSize = 12.sp, lineHeight = 16.sp)
+            Text(
+                text = content.ifBlank { "No info provided." }, 
+                modifier = Modifier.padding(12.dp).fillMaxWidth(), 
+                fontSize = 12.sp, 
+                lineHeight = 16.sp,
+                color = if (content.isBlank()) Color.Gray else Color.Black
+            )
         }
     }
 }
@@ -475,7 +525,13 @@ fun DetailNavigationRow(icon: androidx.compose.ui.graphics.vector.ImageVector, t
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(title, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                Text(subtitle, fontSize = 11.sp, color = Color.Gray)
+                Text(
+                    text = subtitle, 
+                    fontSize = 11.sp, 
+                    color = Color.Gray,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
             Icon(Icons.Default.ChevronRight, contentDescription = null, tint = Color.LightGray, modifier = Modifier.size(20.dp))
         }

@@ -37,6 +37,8 @@ fun AddEditCosplayScreen(
     cosplayId: Long? = null,
     onAddHandmadePart: (Long) -> Unit,
     onAddPurchasedItem: (Long) -> Unit,
+    onAddWig: (Long) -> Unit,
+    onAddMakeup: (Long) -> Unit,
     onNavigateBack: () -> Unit
 ) {
     var currentCosplayId by remember { mutableStateOf(cosplayId) }
@@ -241,6 +243,35 @@ fun AddEditCosplayScreen(
                     }
                     
                     DropdownMenu(expanded = showAddMenu, onDismissRequest = { showAddMenu = false }) {
+                        DropdownMenuItem(
+                            text = { Text("Peluca (Wig)") },
+                            onClick = { 
+                                showAddMenu = false
+                                scope.launch {
+                                    val id = currentCosplayId ?: viewModel.insertCosplayAndGetId(
+                                        Cosplay(cosplanId = cosplanId, characterName = characterName, series = series, preferredWeather = preferredWeather, notes = notes, mainImageUri = imageUri?.toString())
+                                    )
+                                    currentCosplayId = id
+                                    onAddWig(id)
+                                }
+                            },
+                            leadingIcon = { Icon(Icons.Default.Face, contentDescription = null) }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Maquillaje (Makeup)") },
+                            onClick = { 
+                                showAddMenu = false
+                                scope.launch {
+                                    val id = currentCosplayId ?: viewModel.insertCosplayAndGetId(
+                                        Cosplay(cosplanId = cosplanId, characterName = characterName, series = series, preferredWeather = preferredWeather, notes = notes, mainImageUri = imageUri?.toString())
+                                    )
+                                    currentCosplayId = id
+                                    onAddMakeup(id)
+                                }
+                            },
+                            leadingIcon = { Icon(Icons.Default.AutoFixHigh, contentDescription = null) }
+                        )
+                        HorizontalDivider()
                         DropdownMenuItem(
                             text = { Text("A Mano (Handmade)") },
                             onClick = { 

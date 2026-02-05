@@ -38,7 +38,7 @@ public final class AppDatabase_Impl extends AppDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(5) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(6) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `cosplans` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `status` TEXT NOT NULL, `tags` TEXT NOT NULL, `season` TEXT NOT NULL, `difficulty` TEXT NOT NULL, `estimatedBudget` REAL NOT NULL, `realBudget` REAL NOT NULL, `notes` TEXT NOT NULL)");
@@ -60,8 +60,10 @@ public final class AppDatabase_Impl extends AppDatabase {
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_cosplay_photosession_cross_ref_photoSessionId` ON `cosplay_photosession_cross_ref` (`photoSessionId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `user_event_data` (`eventId` TEXT NOT NULL, `status` TEXT NOT NULL, `isFavorite` INTEGER NOT NULL, PRIMARY KEY(`eventId`))");
         db.execSQL("CREATE TABLE IF NOT EXISTS `event_cosplan_selection` (`eventId` TEXT NOT NULL, `cosplanId` INTEGER NOT NULL, `day` TEXT NOT NULL, PRIMARY KEY(`eventId`, `cosplanId`, `day`))");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `wig_makeup_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cosplayId` INTEGER NOT NULL, `name` TEXT NOT NULL, `imageUris` TEXT NOT NULL, `price` REAL NOT NULL, `timeSpent` TEXT NOT NULL, `description` TEXT NOT NULL, `productsUsed` TEXT NOT NULL, `isFinished` INTEGER NOT NULL, FOREIGN KEY(`cosplayId`) REFERENCES `cosplays`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_wig_makeup_items_cosplayId` ON `wig_makeup_items` (`cosplayId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '71e6ee0e65af7506ac176253fa3d2f01')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '323ac1a74e5b026098eb643858c49f98')");
       }
 
       @Override
@@ -78,6 +80,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         db.execSQL("DROP TABLE IF EXISTS `cosplay_photosession_cross_ref`");
         db.execSQL("DROP TABLE IF EXISTS `user_event_data`");
         db.execSQL("DROP TABLE IF EXISTS `event_cosplan_selection`");
+        db.execSQL("DROP TABLE IF EXISTS `wig_makeup_items`");
         final List<? extends RoomDatabase.Callback> _callbacks = mCallbacks;
         if (_callbacks != null) {
           for (RoomDatabase.Callback _callback : _callbacks) {
@@ -329,9 +332,30 @@ public final class AppDatabase_Impl extends AppDatabase {
                   + " Expected:\n" + _infoEventCosplanSelection + "\n"
                   + " Found:\n" + _existingEventCosplanSelection);
         }
+        final HashMap<String, TableInfo.Column> _columnsWigMakeupItems = new HashMap<String, TableInfo.Column>(9);
+        _columnsWigMakeupItems.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsWigMakeupItems.put("cosplayId", new TableInfo.Column("cosplayId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsWigMakeupItems.put("name", new TableInfo.Column("name", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsWigMakeupItems.put("imageUris", new TableInfo.Column("imageUris", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsWigMakeupItems.put("price", new TableInfo.Column("price", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsWigMakeupItems.put("timeSpent", new TableInfo.Column("timeSpent", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsWigMakeupItems.put("description", new TableInfo.Column("description", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsWigMakeupItems.put("productsUsed", new TableInfo.Column("productsUsed", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsWigMakeupItems.put("isFinished", new TableInfo.Column("isFinished", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysWigMakeupItems = new HashSet<TableInfo.ForeignKey>(1);
+        _foreignKeysWigMakeupItems.add(new TableInfo.ForeignKey("cosplays", "CASCADE", "NO ACTION", Arrays.asList("cosplayId"), Arrays.asList("id")));
+        final HashSet<TableInfo.Index> _indicesWigMakeupItems = new HashSet<TableInfo.Index>(1);
+        _indicesWigMakeupItems.add(new TableInfo.Index("index_wig_makeup_items_cosplayId", false, Arrays.asList("cosplayId"), Arrays.asList("ASC")));
+        final TableInfo _infoWigMakeupItems = new TableInfo("wig_makeup_items", _columnsWigMakeupItems, _foreignKeysWigMakeupItems, _indicesWigMakeupItems);
+        final TableInfo _existingWigMakeupItems = TableInfo.read(db, "wig_makeup_items");
+        if (!_infoWigMakeupItems.equals(_existingWigMakeupItems)) {
+          return new RoomOpenHelper.ValidationResult(false, "wig_makeup_items(com.cosplayjournal.app.data.entity.WigMakeup).\n"
+                  + " Expected:\n" + _infoWigMakeupItems + "\n"
+                  + " Found:\n" + _existingWigMakeupItems);
+        }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "71e6ee0e65af7506ac176253fa3d2f01", "d1e5369b6842bf321959ef440019f5c1");
+    }, "323ac1a74e5b026098eb643858c49f98", "6e37666b499edf996bb8293b1f65cdc3");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;
@@ -342,7 +366,7 @@ public final class AppDatabase_Impl extends AppDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     final HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "cosplans","cosplays","handmade_parts","part_resources","purchased_items","character_references","locations","cosplay_reference_cross_ref","photo_sessions","cosplay_photosession_cross_ref","user_event_data","event_cosplan_selection");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "cosplans","cosplays","handmade_parts","part_resources","purchased_items","character_references","locations","cosplay_reference_cross_ref","photo_sessions","cosplay_photosession_cross_ref","user_event_data","event_cosplan_selection","wig_makeup_items");
   }
 
   @Override
@@ -370,6 +394,7 @@ public final class AppDatabase_Impl extends AppDatabase {
       _db.execSQL("DELETE FROM `cosplay_photosession_cross_ref`");
       _db.execSQL("DELETE FROM `user_event_data`");
       _db.execSQL("DELETE FROM `event_cosplan_selection`");
+      _db.execSQL("DELETE FROM `wig_makeup_items`");
       super.setTransactionSuccessful();
     } finally {
       super.endTransaction();

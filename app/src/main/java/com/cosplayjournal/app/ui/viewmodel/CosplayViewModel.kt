@@ -69,6 +69,23 @@ class CosplayViewModel(private val repository: CosplayRepository) : ViewModel() 
         repository.updateHandmadePart(part)
     }
 
+    // Wig & Makeup
+    fun getWigMakeupItems(cosplayId: Long) = repository.getWigMakeupItems(cosplayId)
+
+    suspend fun getWigMakeupById(id: Long): WigMakeup? = repository.getWigMakeupById(id)
+
+    fun insertWigMakeup(item: WigMakeup) = viewModelScope.launch {
+        repository.insertWigMakeup(item)
+    }
+
+    suspend fun insertWigMakeupAndGetId(item: WigMakeup): Long = withContext(Dispatchers.IO) {
+        repository.insertWigMakeup(item)
+    }
+
+    fun updateWigMakeup(item: WigMakeup) = viewModelScope.launch {
+        repository.updateWigMakeup(item)
+    }
+
     // Part Resources
     fun getResourcesForPart(partId: Long) = repository.getResourcesForPart(partId)
     

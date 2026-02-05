@@ -27,6 +27,13 @@ class CosplayRepository(private val cosplayDao: CosplayDao) {
     suspend fun updateHandmadePart(part: HandmadePart) = cosplayDao.updateHandmadePart(part)
     suspend fun deleteHandmadePart(part: HandmadePart) = cosplayDao.deleteHandmadePart(part)
 
+    // Wig & Makeup
+    fun getWigMakeupItems(cosplayId: Long): Flow<List<WigMakeup>> = cosplayDao.getWigMakeupItems(cosplayId)
+    suspend fun getWigMakeupById(id: Long): WigMakeup? = cosplayDao.getWigMakeupById(id)
+    suspend fun insertWigMakeup(item: WigMakeup): Long = cosplayDao.insertWigMakeup(item)
+    suspend fun updateWigMakeup(item: WigMakeup) = cosplayDao.updateWigMakeup(item)
+    suspend fun deleteWigMakeup(item: WigMakeup) = cosplayDao.deleteWigMakeup(item)
+
     // Part Resources
     fun getResourcesForPart(partId: Long): Flow<List<PartResource>> = cosplayDao.getResourcesForPart(partId)
     suspend fun insertPartResource(resource: PartResource) = cosplayDao.insertPartResource(resource)
