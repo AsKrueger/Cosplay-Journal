@@ -201,9 +201,17 @@ fun MainScreen() {
             }
 
             composable("add_edit_cosplay/{cosplanId}?cosplayId={cosplayId}", arguments = listOf(navArgument("cosplanId") { type = NavType.LongType }, navArgument("cosplayId") { type = NavType.LongType; defaultValue = -1L })) { backStackEntry ->
-                val cosplanId = backStackEntry.arguments?.getLong("cosplanId") ?: return@composable
+                val cosplanIdArg = backStackEntry.arguments?.getLong("cosplanId") ?: 0L
+                val cosplanId = if (cosplanIdArg == 0L) null else cosplanIdArg
                 val cosplayId = backStackEntry.arguments?.getLong("cosplayId").takeIf { it != -1L }
-                AddEditCosplayScreen(viewModel = cosplayViewModel, cosplanId = cosplanId, cosplayId = cosplayId, onNavigateBack = { navController.popBackStack() })
+                AddEditCosplayScreen(
+                    viewModel = cosplayViewModel,
+                    cosplanId = cosplanId,
+                    cosplayId = cosplayId,
+                    onAddHandmadePart = { id -> navController.navigate("add_handmade_part/$id") },
+                    onAddPurchasedItem = { id -> navController.navigate("add_purchased_item/$id") },
+                    onNavigateBack = { navController.popBackStack() }
+                )
             }
 
             composable("add_handmade_part/{cosplayId}", arguments = listOf(navArgument("cosplayId") { type = NavType.LongType })) { backStackEntry ->

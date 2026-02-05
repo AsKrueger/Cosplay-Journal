@@ -1,4 +1,4 @@
-#Thu Jan 22 12:59:44 CET 2026
+#Thu Feb 05 11:43:19 CET 2026
 base.0=C\:\\Users\\lovei\\OneDrive\\Escritorio\\Cosplay-Journal\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 base.1=C\:\\Users\\lovei\\OneDrive\\Escritorio\\Cosplay-Journal\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
 base.10=C\:\\Users\\lovei\\OneDrive\\Escritorio\\Cosplay-Journal\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\9\\classes.dex

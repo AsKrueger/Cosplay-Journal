@@ -43,7 +43,7 @@ interface CosplayDao {
 
     // Handmade Parts
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertHandmadePart(part: HandmadePart)
+    suspend fun insertHandmadePart(part: HandmadePart): Long
 
     @Update
     suspend fun updateHandmadePart(part: HandmadePart)
@@ -53,6 +53,19 @@ interface CosplayDao {
 
     @Query("SELECT * FROM handmade_parts WHERE cosplayId = :cosplayId")
     fun getHandmadeParts(cosplayId: Long): Flow<List<HandmadePart>>
+
+    // Part Resources
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPartResource(resource: PartResource)
+
+    @Update
+    suspend fun updatePartResource(resource: PartResource)
+
+    @Delete
+    suspend fun deletePartResource(resource: PartResource)
+
+    @Query("SELECT * FROM part_resources WHERE partId = :partId")
+    fun getResourcesForPart(partId: Long): Flow<List<PartResource>>
 
     // Purchased Items
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -66,6 +79,16 @@ interface CosplayDao {
 
     @Query("SELECT * FROM purchased_items WHERE cosplayId = :cosplayId")
     fun getPurchasedItems(cosplayId: Long): Flow<List<PurchasedItem>>
+
+    // Photo Sessions
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPhotoSession(session: PhotoSession): Long
+
+    @Query("SELECT * FROM photo_sessions ps INNER JOIN cosplay_photosession_cross_ref ref ON ps.id = ref.photoSessionId WHERE ref.cosplayId = :cosplayId")
+    fun getPhotoSessionsForCosplay(cosplayId: Long): Flow<List<PhotoSession>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCosplayPhotoSessionCrossRef(crossRef: CosplayPhotoSessionCrossRef)
 
     // User Event Data
     @Query("SELECT * FROM user_event_data WHERE eventId = :eventId")

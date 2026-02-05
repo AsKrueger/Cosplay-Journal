@@ -105,7 +105,7 @@ fun CosplayListScreen(
                     onValueChange = { searchQuery = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
                     placeholder = { Text("Search characters or series...", color = Color.Gray) },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Color.LightGray) },
                     trailingIcon = { Icon(Icons.Default.Tune, contentDescription = null, tint = Color.LightGray) },
@@ -122,7 +122,7 @@ fun CosplayListScreen(
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    modifier = Modifier.padding(bottom = 8.dp)
                 ) {
                     items(filters) { filter ->
                         FilterChip(
@@ -156,23 +156,23 @@ fun CosplayListScreen(
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(70.dp),
+                    .height(64.dp),
                 color = Color(0xFFE0F7FA).copy(alpha = 0.5f),
                 tonalElevation = 0.dp
             ) {
                 Row(
                     modifier = Modifier.fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center // Correctly Centered Group
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     IconButton(onClick = onNavigateToHome, modifier = Modifier.padding(horizontal = 25.dp)) {
-                        Icon(Icons.Default.Home, contentDescription = "Home", tint = Color.Gray, modifier = Modifier.size(28.dp))
+                        Icon(Icons.Default.Home, contentDescription = "Home", tint = Color.Gray, modifier = Modifier.size(26.dp))
                     }
                     IconButton(onClick = onNavigateToSelection, modifier = Modifier.padding(horizontal = 25.dp)) {
-                        Icon(Icons.Default.Checkroom, contentDescription = "Cosplays", tint = Color(0xFF00ACC1), modifier = Modifier.size(30.dp))
+                        Icon(Icons.Default.Checkroom, contentDescription = "Cosplays", tint = Color(0xFF00ACC1), modifier = Modifier.size(28.dp))
                     }
                     IconButton(onClick = onNavigateToProfile, modifier = Modifier.padding(horizontal = 25.dp)) {
-                        Icon(Icons.Default.Person, contentDescription = "Profile", tint = Color.Gray, modifier = Modifier.size(28.dp))
+                        Icon(Icons.Default.Person, contentDescription = "Profile", tint = Color.Gray, modifier = Modifier.size(26.dp))
                     }
                 }
             }
@@ -184,10 +184,10 @@ fun CosplayListScreen(
                 contentColor = Color.White,
                 shape = CircleShape,
                 modifier = Modifier
-                    .size(60.dp)
-                    .offset(y = (-15).dp) // Raised more to avoid cut-off and look better
+                    .size(56.dp)
+                    .offset(y = (-10).dp)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add Cosplay", modifier = Modifier.size(30.dp))
+                Icon(Icons.Default.Add, contentDescription = "Add Cosplay", modifier = Modifier.size(28.dp))
             }
         },
         floatingActionButtonPosition = FabPosition.End
@@ -201,7 +201,7 @@ fun CosplayListScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding),
-                contentPadding = PaddingValues(bottom = 20.dp)
+                contentPadding = PaddingValues(bottom = 16.dp)
             ) {
                 items(filteredCosplays) { cosplay ->
                     CosplayCard(
@@ -219,18 +219,18 @@ fun CosplayCard(cosplay: Cosplay, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 10.dp)
+            .padding(horizontal = 16.dp, vertical = 5.dp)
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(28.dp),
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Column {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(220.dp)
-                    .clip(RoundedCornerShape(28.dp))
+                    .height(120.dp)
+                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
             ) {
                 AsyncImage(
                     model = cosplay.mainImageUri ?: "https://images.unsplash.com/photo-1514328537558-630b978dba33?q=80&w=1000&auto=format&fit=crop",
@@ -240,31 +240,18 @@ fun CosplayCard(cosplay: Cosplay, onClick: () -> Unit) {
                 )
                 
                 Surface(
-                    color = Color(0xFFFF8A65),
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        text = "CRAFTING",
-                        color = Color.White,
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, fontSize = 10.sp)
-                    )
-                }
-
-                Surface(
                     color = Color.Black.copy(alpha = 0.2f),
                     shape = CircleShape,
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(16.dp)
-                        .size(36.dp)
+                        .padding(10.dp)
+                        .size(30.dp)
                 ) {
                     Icon(
                         Icons.Default.Share,
                         contentDescription = "Share",
                         tint = Color.White,
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(7.dp)
                     )
                 }
             }
@@ -272,54 +259,33 @@ fun CosplayCard(cosplay: Cosplay, onClick: () -> Unit) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp),
+                    .padding(horizontal = 16.dp, vertical = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = cosplay.characterName,
-                        style = MaterialTheme.typography.titleLarge.copy(
+                        style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
-                            fontSize = 22.sp
+                            fontSize = 17.sp
                         )
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(1.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             Icons.Default.Movie,
                             contentDescription = null,
                             tint = Color.Gray,
-                            modifier = Modifier.size(14.dp)
+                            modifier = Modifier.size(12.dp)
                         )
-                        Spacer(modifier = Modifier.width(6.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = cosplay.series,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodySmall,
                             color = Color.Gray
                         )
                     }
-                }
-
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        "PROGRESS",
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            color = Color(0xFFFF8A65),
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    LinearProgressIndicator(
-                        progress = 0.45f,
-                        modifier = Modifier
-                            .width(80.dp)
-                            .height(6.dp)
-                            .clip(CircleShape),
-                        color = Color(0xFFFF8A65),
-                        trackColor = Color(0xFFF5F5F5)
-                    )
                 }
             }
         }

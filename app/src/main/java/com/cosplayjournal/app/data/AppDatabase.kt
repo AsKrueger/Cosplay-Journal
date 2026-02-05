@@ -13,6 +13,7 @@ import com.cosplayjournal.app.data.entity.*
         Cosplan::class,
         Cosplay::class,
         HandmadePart::class,
+        PartResource::class,
         PurchasedItem::class,
         CharacterReference::class,
         Location::class,
@@ -22,7 +23,7 @@ import com.cosplayjournal.app.data.entity.*
         UserEventData::class,
         EventCosplanSelection::class
     ],
-    version = 3, // Increment version for new DAO
+    version = 4, // Increment version for new PartResource entity
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

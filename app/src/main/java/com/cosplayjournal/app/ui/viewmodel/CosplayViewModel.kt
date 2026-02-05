@@ -3,9 +3,7 @@ package com.cosplayjournal.app.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.cosplayjournal.app.data.entity.Cosplay
-import com.cosplayjournal.app.data.entity.HandmadePart
-import com.cosplayjournal.app.data.entity.PurchasedItem
+import com.cosplayjournal.app.data.entity.*
 import com.cosplayjournal.app.data.repository.CosplayRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,6 +11,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
 
 class CosplayViewModel(private val repository: CosplayRepository) : ViewModel() {
 
@@ -25,7 +25,7 @@ class CosplayViewModel(private val repository: CosplayRepository) : ViewModel() 
     )
 
     val cosplaysForPlan: StateFlow<List<Cosplay>> = _currentCosplanId.flatMapLatest { id ->
-        if (id == -1L) repository.allCosplays else repository.getCosplaysForCosplan(id)
+        if (id == -1L) repository.allCosplays else repository.getCosplaysForPlan(id)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -41,6 +41,10 @@ class CosplayViewModel(private val repository: CosplayRepository) : ViewModel() 
     }
 
     fun insertCosplay(cosplay: Cosplay) = viewModelScope.launch {
+        repository.insertCosplay(cosplay)
+    }
+    
+    suspend fun insertCosplayAndGetId(cosplay: Cosplay): Long = withContext(Dispatchers.IO) {
         repository.insertCosplay(cosplay)
     }
 
@@ -59,6 +63,13 @@ class CosplayViewModel(private val repository: CosplayRepository) : ViewModel() 
         repository.updateHandmadePart(part)
     }
 
+    // Part Resources
+    fun getResourcesForPart(partId: Long) = repository.getResourcesForPart(partId)
+    
+    fun insertPartResource(resource: PartResource) = viewModelScope.launch {
+        repository.insertPartResource(resource)
+    }
+
     // Purchased Items
     fun getPurchasedItems(cosplayId: Long) = repository.getPurchasedItems(cosplayId)
     
@@ -68,6 +79,14 @@ class CosplayViewModel(private val repository: CosplayRepository) : ViewModel() 
 
     fun updatePurchasedItem(item: PurchasedItem) = viewModelScope.launch {
         repository.updatePurchasedItem(item)
+    }
+
+    // Photo Sessions
+    fun getPhotoSessions(cosplayId: Long) = repository.getPhotoSessionsForCosplay(cosplayId)
+
+    fun addPhotoSessionToCosplay(cosplayId: Long, session: PhotoSession) = viewModelScope.launch {
+        val sessionId = repository.insertPhotoSession(session)
+        repository.insertCosplayPhotoSessionCrossRef(CosplayPhotoSessionCrossRef(cosplayId, sessionId))
     }
 }
 

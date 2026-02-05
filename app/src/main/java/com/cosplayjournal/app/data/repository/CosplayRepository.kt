@@ -13,7 +13,7 @@ class CosplayRepository(private val cosplayDao: CosplayDao) {
 
     // Cosplays
     val allCosplays: Flow<List<Cosplay>> = cosplayDao.getAllCosplays()
-    fun getCosplaysForCosplan(cosplanId: Long): Flow<List<Cosplay>> = cosplayDao.getCosplaysForCosplan(cosplanId)
+    fun getCosplaysForPlan(cosplanId: Long): Flow<List<Cosplay>> = cosplayDao.getCosplaysForCosplan(cosplanId)
     suspend fun getCosplayById(id: Long): Cosplay? = cosplayDao.getCosplayById(id)
     suspend fun insertCosplay(cosplay: Cosplay): Long = cosplayDao.insertCosplay(cosplay)
     suspend fun updateCosplay(cosplay: Cosplay) = cosplayDao.updateCosplay(cosplay)
@@ -22,15 +22,26 @@ class CosplayRepository(private val cosplayDao: CosplayDao) {
 
     // Handmade Parts
     fun getHandmadeParts(cosplayId: Long): Flow<List<HandmadePart>> = cosplayDao.getHandmadeParts(cosplayId)
-    suspend fun insertHandmadePart(part: HandmadePart) = cosplayDao.insertHandmadePart(part)
+    suspend fun insertHandmadePart(part: HandmadePart): Long = cosplayDao.insertHandmadePart(part)
     suspend fun updateHandmadePart(part: HandmadePart) = cosplayDao.updateHandmadePart(part)
     suspend fun deleteHandmadePart(part: HandmadePart) = cosplayDao.deleteHandmadePart(part)
+
+    // Part Resources
+    fun getResourcesForPart(partId: Long): Flow<List<PartResource>> = cosplayDao.getResourcesForPart(partId)
+    suspend fun insertPartResource(resource: PartResource) = cosplayDao.insertPartResource(resource)
+    suspend fun updatePartResource(resource: PartResource) = cosplayDao.updatePartResource(resource)
+    suspend fun deletePartResource(resource: PartResource) = cosplayDao.deletePartResource(resource)
 
     // Purchased Items
     fun getPurchasedItems(cosplayId: Long): Flow<List<PurchasedItem>> = cosplayDao.getPurchasedItems(cosplayId)
     suspend fun insertPurchasedItem(item: PurchasedItem) = cosplayDao.insertPurchasedItem(item)
     suspend fun updatePurchasedItem(item: PurchasedItem) = cosplayDao.updatePurchasedItem(item)
     suspend fun deletePurchasedItem(item: PurchasedItem) = cosplayDao.deletePurchasedItem(item)
+
+    // Photo Sessions
+    fun getPhotoSessionsForCosplay(cosplayId: Long): Flow<List<PhotoSession>> = cosplayDao.getPhotoSessionsForCosplay(cosplayId)
+    suspend fun insertPhotoSession(session: PhotoSession): Long = cosplayDao.insertPhotoSession(session)
+    suspend fun insertCosplayPhotoSessionCrossRef(crossRef: CosplayPhotoSessionCrossRef) = cosplayDao.insertCosplayPhotoSessionCrossRef(crossRef)
 
     // User Event Data
     val allUserEventData: Flow<List<UserEventData>> = cosplayDao.getAllUserEventData()

@@ -38,15 +38,17 @@ public final class AppDatabase_Impl extends AppDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(3) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(4) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `cosplans` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `status` TEXT NOT NULL, `tags` TEXT NOT NULL, `season` TEXT NOT NULL, `difficulty` TEXT NOT NULL, `estimatedBudget` REAL NOT NULL, `realBudget` REAL NOT NULL, `notes` TEXT NOT NULL)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS `cosplays` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cosplanId` INTEGER NOT NULL, `characterName` TEXT NOT NULL, `series` TEXT NOT NULL, `wigs` TEXT NOT NULL, `makeup` TEXT NOT NULL, `accessories` TEXT NOT NULL, `notes` TEXT NOT NULL, `isFavorite` INTEGER NOT NULL, `mainImageUri` TEXT, FOREIGN KEY(`cosplanId`) REFERENCES `cosplans`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `cosplays` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cosplanId` INTEGER, `characterName` TEXT NOT NULL, `series` TEXT NOT NULL, `preferredWeather` TEXT NOT NULL, `wigs` TEXT NOT NULL, `makeup` TEXT NOT NULL, `accessories` TEXT NOT NULL, `notes` TEXT NOT NULL, `recognition` TEXT NOT NULL, `isCompleted` INTEGER NOT NULL, `isFavorite` INTEGER NOT NULL, `mainImageUri` TEXT, FOREIGN KEY(`cosplanId`) REFERENCES `cosplans`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_cosplays_cosplanId` ON `cosplays` (`cosplanId`)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS `handmade_parts` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cosplayId` INTEGER NOT NULL, `name` TEXT NOT NULL, `processSteps` TEXT NOT NULL, `materials` TEXT NOT NULL, `estimatedCost` REAL NOT NULL, `isFinished` INTEGER NOT NULL, FOREIGN KEY(`cosplayId`) REFERENCES `cosplays`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `handmade_parts` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cosplayId` INTEGER NOT NULL, `name` TEXT NOT NULL, `imageUris` TEXT NOT NULL, `price` REAL NOT NULL, `timeSpent` TEXT NOT NULL, `processDescription` TEXT NOT NULL, `projectPercentage` INTEGER NOT NULL, `materials` TEXT NOT NULL, `isFinished` INTEGER NOT NULL, FOREIGN KEY(`cosplayId`) REFERENCES `cosplays`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_handmade_parts_cosplayId` ON `handmade_parts` (`cosplayId`)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS `purchased_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cosplayId` INTEGER NOT NULL, `name` TEXT NOT NULL, `storeName` TEXT NOT NULL, `purchaseLink` TEXT NOT NULL, `price` REAL NOT NULL, `isReceived` INTEGER NOT NULL, FOREIGN KEY(`cosplayId`) REFERENCES `cosplays`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `part_resources` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `partId` INTEGER NOT NULL, `name` TEXT NOT NULL, `webLink` TEXT NOT NULL, `price` REAL NOT NULL, FOREIGN KEY(`partId`) REFERENCES `handmade_parts`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_part_resources_partId` ON `part_resources` (`partId`)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `purchased_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cosplayId` INTEGER NOT NULL, `name` TEXT NOT NULL, `purchaseLink` TEXT NOT NULL, `imageUris` TEXT NOT NULL, `adjustmentDescription` TEXT NOT NULL, `projectPercentage` INTEGER NOT NULL, `storeName` TEXT NOT NULL, `price` REAL NOT NULL, `isReceived` INTEGER NOT NULL, FOREIGN KEY(`cosplayId`) REFERENCES `cosplays`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_purchased_items_cosplayId` ON `purchased_items` (`cosplayId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `character_references` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `characterName` TEXT NOT NULL, `series` TEXT NOT NULL, `imageUri` TEXT NOT NULL, `notes` TEXT NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `locations` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `notes` TEXT NOT NULL)");
@@ -59,7 +61,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         db.execSQL("CREATE TABLE IF NOT EXISTS `user_event_data` (`eventId` TEXT NOT NULL, `status` TEXT NOT NULL, `isFavorite` INTEGER NOT NULL, PRIMARY KEY(`eventId`))");
         db.execSQL("CREATE TABLE IF NOT EXISTS `event_cosplan_selection` (`eventId` TEXT NOT NULL, `cosplanId` INTEGER NOT NULL, `day` TEXT NOT NULL, PRIMARY KEY(`eventId`, `cosplanId`, `day`))");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b624a36c8a58459ed06c9c4690c79e47')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '017bbd55e73af5b90020053dd7b9c17a')");
       }
 
       @Override
@@ -67,6 +69,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         db.execSQL("DROP TABLE IF EXISTS `cosplans`");
         db.execSQL("DROP TABLE IF EXISTS `cosplays`");
         db.execSQL("DROP TABLE IF EXISTS `handmade_parts`");
+        db.execSQL("DROP TABLE IF EXISTS `part_resources`");
         db.execSQL("DROP TABLE IF EXISTS `purchased_items`");
         db.execSQL("DROP TABLE IF EXISTS `character_references`");
         db.execSQL("DROP TABLE IF EXISTS `locations`");
@@ -139,19 +142,22 @@ public final class AppDatabase_Impl extends AppDatabase {
                   + " Expected:\n" + _infoCosplans + "\n"
                   + " Found:\n" + _existingCosplans);
         }
-        final HashMap<String, TableInfo.Column> _columnsCosplays = new HashMap<String, TableInfo.Column>(10);
+        final HashMap<String, TableInfo.Column> _columnsCosplays = new HashMap<String, TableInfo.Column>(13);
         _columnsCosplays.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsCosplays.put("cosplanId", new TableInfo.Column("cosplanId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsCosplays.put("cosplanId", new TableInfo.Column("cosplanId", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsCosplays.put("characterName", new TableInfo.Column("characterName", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsCosplays.put("series", new TableInfo.Column("series", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsCosplays.put("preferredWeather", new TableInfo.Column("preferredWeather", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsCosplays.put("wigs", new TableInfo.Column("wigs", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsCosplays.put("makeup", new TableInfo.Column("makeup", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsCosplays.put("accessories", new TableInfo.Column("accessories", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsCosplays.put("notes", new TableInfo.Column("notes", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsCosplays.put("recognition", new TableInfo.Column("recognition", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsCosplays.put("isCompleted", new TableInfo.Column("isCompleted", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsCosplays.put("isFavorite", new TableInfo.Column("isFavorite", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsCosplays.put("mainImageUri", new TableInfo.Column("mainImageUri", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysCosplays = new HashSet<TableInfo.ForeignKey>(1);
-        _foreignKeysCosplays.add(new TableInfo.ForeignKey("cosplans", "CASCADE", "NO ACTION", Arrays.asList("cosplanId"), Arrays.asList("id")));
+        _foreignKeysCosplays.add(new TableInfo.ForeignKey("cosplans", "SET NULL", "NO ACTION", Arrays.asList("cosplanId"), Arrays.asList("id")));
         final HashSet<TableInfo.Index> _indicesCosplays = new HashSet<TableInfo.Index>(1);
         _indicesCosplays.add(new TableInfo.Index("index_cosplays_cosplanId", false, Arrays.asList("cosplanId"), Arrays.asList("ASC")));
         final TableInfo _infoCosplays = new TableInfo("cosplays", _columnsCosplays, _foreignKeysCosplays, _indicesCosplays);
@@ -161,13 +167,16 @@ public final class AppDatabase_Impl extends AppDatabase {
                   + " Expected:\n" + _infoCosplays + "\n"
                   + " Found:\n" + _existingCosplays);
         }
-        final HashMap<String, TableInfo.Column> _columnsHandmadeParts = new HashMap<String, TableInfo.Column>(7);
+        final HashMap<String, TableInfo.Column> _columnsHandmadeParts = new HashMap<String, TableInfo.Column>(10);
         _columnsHandmadeParts.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHandmadeParts.put("cosplayId", new TableInfo.Column("cosplayId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHandmadeParts.put("name", new TableInfo.Column("name", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsHandmadeParts.put("processSteps", new TableInfo.Column("processSteps", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsHandmadeParts.put("imageUris", new TableInfo.Column("imageUris", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsHandmadeParts.put("price", new TableInfo.Column("price", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsHandmadeParts.put("timeSpent", new TableInfo.Column("timeSpent", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsHandmadeParts.put("processDescription", new TableInfo.Column("processDescription", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsHandmadeParts.put("projectPercentage", new TableInfo.Column("projectPercentage", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHandmadeParts.put("materials", new TableInfo.Column("materials", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsHandmadeParts.put("estimatedCost", new TableInfo.Column("estimatedCost", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsHandmadeParts.put("isFinished", new TableInfo.Column("isFinished", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysHandmadeParts = new HashSet<TableInfo.ForeignKey>(1);
         _foreignKeysHandmadeParts.add(new TableInfo.ForeignKey("cosplays", "CASCADE", "NO ACTION", Arrays.asList("cosplayId"), Arrays.asList("id")));
@@ -180,12 +189,32 @@ public final class AppDatabase_Impl extends AppDatabase {
                   + " Expected:\n" + _infoHandmadeParts + "\n"
                   + " Found:\n" + _existingHandmadeParts);
         }
-        final HashMap<String, TableInfo.Column> _columnsPurchasedItems = new HashMap<String, TableInfo.Column>(7);
+        final HashMap<String, TableInfo.Column> _columnsPartResources = new HashMap<String, TableInfo.Column>(5);
+        _columnsPartResources.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPartResources.put("partId", new TableInfo.Column("partId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPartResources.put("name", new TableInfo.Column("name", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPartResources.put("webLink", new TableInfo.Column("webLink", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPartResources.put("price", new TableInfo.Column("price", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysPartResources = new HashSet<TableInfo.ForeignKey>(1);
+        _foreignKeysPartResources.add(new TableInfo.ForeignKey("handmade_parts", "CASCADE", "NO ACTION", Arrays.asList("partId"), Arrays.asList("id")));
+        final HashSet<TableInfo.Index> _indicesPartResources = new HashSet<TableInfo.Index>(1);
+        _indicesPartResources.add(new TableInfo.Index("index_part_resources_partId", false, Arrays.asList("partId"), Arrays.asList("ASC")));
+        final TableInfo _infoPartResources = new TableInfo("part_resources", _columnsPartResources, _foreignKeysPartResources, _indicesPartResources);
+        final TableInfo _existingPartResources = TableInfo.read(db, "part_resources");
+        if (!_infoPartResources.equals(_existingPartResources)) {
+          return new RoomOpenHelper.ValidationResult(false, "part_resources(com.cosplayjournal.app.data.entity.PartResource).\n"
+                  + " Expected:\n" + _infoPartResources + "\n"
+                  + " Found:\n" + _existingPartResources);
+        }
+        final HashMap<String, TableInfo.Column> _columnsPurchasedItems = new HashMap<String, TableInfo.Column>(10);
         _columnsPurchasedItems.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPurchasedItems.put("cosplayId", new TableInfo.Column("cosplayId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPurchasedItems.put("name", new TableInfo.Column("name", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsPurchasedItems.put("storeName", new TableInfo.Column("storeName", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPurchasedItems.put("purchaseLink", new TableInfo.Column("purchaseLink", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPurchasedItems.put("imageUris", new TableInfo.Column("imageUris", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPurchasedItems.put("adjustmentDescription", new TableInfo.Column("adjustmentDescription", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPurchasedItems.put("projectPercentage", new TableInfo.Column("projectPercentage", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPurchasedItems.put("storeName", new TableInfo.Column("storeName", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPurchasedItems.put("price", new TableInfo.Column("price", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPurchasedItems.put("isReceived", new TableInfo.Column("isReceived", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysPurchasedItems = new HashSet<TableInfo.ForeignKey>(1);
@@ -300,7 +329,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "b624a36c8a58459ed06c9c4690c79e47", "2159a10b5d2c5999aee13496b0b56b60");
+    }, "017bbd55e73af5b90020053dd7b9c17a", "d729d15fa64851c76b5084bd1a543bfe");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;
@@ -311,7 +340,7 @@ public final class AppDatabase_Impl extends AppDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     final HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "cosplans","cosplays","handmade_parts","purchased_items","character_references","locations","cosplay_reference_cross_ref","photo_sessions","cosplay_photosession_cross_ref","user_event_data","event_cosplan_selection");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "cosplans","cosplays","handmade_parts","part_resources","purchased_items","character_references","locations","cosplay_reference_cross_ref","photo_sessions","cosplay_photosession_cross_ref","user_event_data","event_cosplan_selection");
   }
 
   @Override
@@ -330,6 +359,7 @@ public final class AppDatabase_Impl extends AppDatabase {
       _db.execSQL("DELETE FROM `cosplans`");
       _db.execSQL("DELETE FROM `cosplays`");
       _db.execSQL("DELETE FROM `handmade_parts`");
+      _db.execSQL("DELETE FROM `part_resources`");
       _db.execSQL("DELETE FROM `purchased_items`");
       _db.execSQL("DELETE FROM `character_references`");
       _db.execSQL("DELETE FROM `locations`");

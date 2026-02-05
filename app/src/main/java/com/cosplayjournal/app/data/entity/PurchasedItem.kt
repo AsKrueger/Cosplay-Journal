@@ -21,8 +21,11 @@ data class PurchasedItem(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val cosplayId: Long,
     val name: String,
-    val storeName: String,
-    val purchaseLink: String,
-    val price: Double,
+    val purchaseLink: String = "",
+    val imageUris: String = "", // Comma-separated URIs
+    val adjustmentDescription: String = "",
+    val projectPercentage: Int = 0,
+    val storeName: String = "", // Keeping for backward compatibility or extra info
+    val price: Double = 0.0,
     val isReceived: Boolean = false
 )
