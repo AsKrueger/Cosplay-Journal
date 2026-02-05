@@ -23,7 +23,7 @@ import com.cosplayjournal.app.data.entity.*
         UserEventData::class,
         EventCosplanSelection::class
     ],
-    version = 4, // Increment version for new PartResource entity
+    version = 5, // Incremented version due to PartResource schema change
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

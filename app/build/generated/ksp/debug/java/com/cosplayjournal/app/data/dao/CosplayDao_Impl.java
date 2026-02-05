@@ -169,7 +169,7 @@ public final class CosplayDao_Impl implements CosplayDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR REPLACE INTO `part_resources` (`id`,`partId`,`name`,`webLink`,`price`) VALUES (nullif(?, 0),?,?,?,?)";
+        return "INSERT OR REPLACE INTO `part_resources` (`id`,`partId`,`name`,`webLink`,`price`,`imageUris`,`usageDescription`) VALUES (nullif(?, 0),?,?,?,?,?,?)";
       }
 
       @Override
@@ -180,6 +180,8 @@ public final class CosplayDao_Impl implements CosplayDao {
         statement.bindString(3, entity.getName());
         statement.bindString(4, entity.getWebLink());
         statement.bindDouble(5, entity.getPrice());
+        statement.bindString(6, entity.getImageUris());
+        statement.bindString(7, entity.getUsageDescription());
       }
     };
     this.__insertionAdapterOfPurchasedItem = new EntityInsertionAdapter<PurchasedItem>(__db) {
@@ -423,7 +425,7 @@ public final class CosplayDao_Impl implements CosplayDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "UPDATE OR ABORT `part_resources` SET `id` = ?,`partId` = ?,`name` = ?,`webLink` = ?,`price` = ? WHERE `id` = ?";
+        return "UPDATE OR ABORT `part_resources` SET `id` = ?,`partId` = ?,`name` = ?,`webLink` = ?,`price` = ?,`imageUris` = ?,`usageDescription` = ? WHERE `id` = ?";
       }
 
       @Override
@@ -434,7 +436,9 @@ public final class CosplayDao_Impl implements CosplayDao {
         statement.bindString(3, entity.getName());
         statement.bindString(4, entity.getWebLink());
         statement.bindDouble(5, entity.getPrice());
-        statement.bindLong(6, entity.getId());
+        statement.bindString(6, entity.getImageUris());
+        statement.bindString(7, entity.getUsageDescription());
+        statement.bindLong(8, entity.getId());
       }
     };
     this.__updateAdapterOfPurchasedItem = new EntityDeletionOrUpdateAdapter<PurchasedItem>(__db) {
@@ -1300,6 +1304,67 @@ public final class CosplayDao_Impl implements CosplayDao {
   }
 
   @Override
+  public Object getHandmadePartById(final long id,
+      final Continuation<? super HandmadePart> $completion) {
+    final String _sql = "SELECT * FROM handmade_parts WHERE id = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, id);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<HandmadePart>() {
+      @Override
+      @Nullable
+      public HandmadePart call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfCosplayId = CursorUtil.getColumnIndexOrThrow(_cursor, "cosplayId");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfImageUris = CursorUtil.getColumnIndexOrThrow(_cursor, "imageUris");
+          final int _cursorIndexOfPrice = CursorUtil.getColumnIndexOrThrow(_cursor, "price");
+          final int _cursorIndexOfTimeSpent = CursorUtil.getColumnIndexOrThrow(_cursor, "timeSpent");
+          final int _cursorIndexOfProcessDescription = CursorUtil.getColumnIndexOrThrow(_cursor, "processDescription");
+          final int _cursorIndexOfProjectPercentage = CursorUtil.getColumnIndexOrThrow(_cursor, "projectPercentage");
+          final int _cursorIndexOfMaterials = CursorUtil.getColumnIndexOrThrow(_cursor, "materials");
+          final int _cursorIndexOfIsFinished = CursorUtil.getColumnIndexOrThrow(_cursor, "isFinished");
+          final HandmadePart _result;
+          if (_cursor.moveToFirst()) {
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpCosplayId;
+            _tmpCosplayId = _cursor.getLong(_cursorIndexOfCosplayId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpImageUris;
+            _tmpImageUris = _cursor.getString(_cursorIndexOfImageUris);
+            final double _tmpPrice;
+            _tmpPrice = _cursor.getDouble(_cursorIndexOfPrice);
+            final String _tmpTimeSpent;
+            _tmpTimeSpent = _cursor.getString(_cursorIndexOfTimeSpent);
+            final String _tmpProcessDescription;
+            _tmpProcessDescription = _cursor.getString(_cursorIndexOfProcessDescription);
+            final int _tmpProjectPercentage;
+            _tmpProjectPercentage = _cursor.getInt(_cursorIndexOfProjectPercentage);
+            final String _tmpMaterials;
+            _tmpMaterials = _cursor.getString(_cursorIndexOfMaterials);
+            final boolean _tmpIsFinished;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsFinished);
+            _tmpIsFinished = _tmp != 0;
+            _result = new HandmadePart(_tmpId,_tmpCosplayId,_tmpName,_tmpImageUris,_tmpPrice,_tmpTimeSpent,_tmpProcessDescription,_tmpProjectPercentage,_tmpMaterials,_tmpIsFinished);
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
   public Flow<List<PartResource>> getResourcesForPart(final long partId) {
     final String _sql = "SELECT * FROM part_resources WHERE partId = ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
@@ -1316,6 +1381,8 @@ public final class CosplayDao_Impl implements CosplayDao {
           final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
           final int _cursorIndexOfWebLink = CursorUtil.getColumnIndexOrThrow(_cursor, "webLink");
           final int _cursorIndexOfPrice = CursorUtil.getColumnIndexOrThrow(_cursor, "price");
+          final int _cursorIndexOfImageUris = CursorUtil.getColumnIndexOrThrow(_cursor, "imageUris");
+          final int _cursorIndexOfUsageDescription = CursorUtil.getColumnIndexOrThrow(_cursor, "usageDescription");
           final List<PartResource> _result = new ArrayList<PartResource>(_cursor.getCount());
           while (_cursor.moveToNext()) {
             final PartResource _item;
@@ -1329,7 +1396,11 @@ public final class CosplayDao_Impl implements CosplayDao {
             _tmpWebLink = _cursor.getString(_cursorIndexOfWebLink);
             final double _tmpPrice;
             _tmpPrice = _cursor.getDouble(_cursorIndexOfPrice);
-            _item = new PartResource(_tmpId,_tmpPartId,_tmpName,_tmpWebLink,_tmpPrice);
+            final String _tmpImageUris;
+            _tmpImageUris = _cursor.getString(_cursorIndexOfImageUris);
+            final String _tmpUsageDescription;
+            _tmpUsageDescription = _cursor.getString(_cursorIndexOfUsageDescription);
+            _item = new PartResource(_tmpId,_tmpPartId,_tmpName,_tmpWebLink,_tmpPrice,_tmpImageUris,_tmpUsageDescription);
             _result.add(_item);
           }
           return _result;
@@ -1406,6 +1477,67 @@ public final class CosplayDao_Impl implements CosplayDao {
         _statement.release();
       }
     });
+  }
+
+  @Override
+  public Object getPurchasedItemById(final long id,
+      final Continuation<? super PurchasedItem> $completion) {
+    final String _sql = "SELECT * FROM purchased_items WHERE id = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, id);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<PurchasedItem>() {
+      @Override
+      @Nullable
+      public PurchasedItem call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfCosplayId = CursorUtil.getColumnIndexOrThrow(_cursor, "cosplayId");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfPurchaseLink = CursorUtil.getColumnIndexOrThrow(_cursor, "purchaseLink");
+          final int _cursorIndexOfImageUris = CursorUtil.getColumnIndexOrThrow(_cursor, "imageUris");
+          final int _cursorIndexOfAdjustmentDescription = CursorUtil.getColumnIndexOrThrow(_cursor, "adjustmentDescription");
+          final int _cursorIndexOfProjectPercentage = CursorUtil.getColumnIndexOrThrow(_cursor, "projectPercentage");
+          final int _cursorIndexOfStoreName = CursorUtil.getColumnIndexOrThrow(_cursor, "storeName");
+          final int _cursorIndexOfPrice = CursorUtil.getColumnIndexOrThrow(_cursor, "price");
+          final int _cursorIndexOfIsReceived = CursorUtil.getColumnIndexOrThrow(_cursor, "isReceived");
+          final PurchasedItem _result;
+          if (_cursor.moveToFirst()) {
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpCosplayId;
+            _tmpCosplayId = _cursor.getLong(_cursorIndexOfCosplayId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpPurchaseLink;
+            _tmpPurchaseLink = _cursor.getString(_cursorIndexOfPurchaseLink);
+            final String _tmpImageUris;
+            _tmpImageUris = _cursor.getString(_cursorIndexOfImageUris);
+            final String _tmpAdjustmentDescription;
+            _tmpAdjustmentDescription = _cursor.getString(_cursorIndexOfAdjustmentDescription);
+            final int _tmpProjectPercentage;
+            _tmpProjectPercentage = _cursor.getInt(_cursorIndexOfProjectPercentage);
+            final String _tmpStoreName;
+            _tmpStoreName = _cursor.getString(_cursorIndexOfStoreName);
+            final double _tmpPrice;
+            _tmpPrice = _cursor.getDouble(_cursorIndexOfPrice);
+            final boolean _tmpIsReceived;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsReceived);
+            _tmpIsReceived = _tmp != 0;
+            _result = new PurchasedItem(_tmpId,_tmpCosplayId,_tmpName,_tmpPurchaseLink,_tmpImageUris,_tmpAdjustmentDescription,_tmpProjectPercentage,_tmpStoreName,_tmpPrice,_tmpIsReceived);
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
   }
 
   @Override

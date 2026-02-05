@@ -55,7 +55,13 @@ class CosplayViewModel(private val repository: CosplayRepository) : ViewModel() 
     // Handmade Parts
     fun getHandmadeParts(cosplayId: Long) = repository.getHandmadeParts(cosplayId)
     
+    suspend fun getHandmadePartById(id: Long): HandmadePart? = repository.getHandmadePartById(id)
+
     fun insertHandmadePart(part: HandmadePart) = viewModelScope.launch {
+        repository.insertHandmadePart(part)
+    }
+    
+    suspend fun insertHandmadePartAndGetId(part: HandmadePart): Long = withContext(Dispatchers.IO) {
         repository.insertHandmadePart(part)
     }
 
@@ -73,6 +79,8 @@ class CosplayViewModel(private val repository: CosplayRepository) : ViewModel() 
     // Purchased Items
     fun getPurchasedItems(cosplayId: Long) = repository.getPurchasedItems(cosplayId)
     
+    suspend fun getPurchasedItemById(id: Long): PurchasedItem? = repository.getPurchasedItemById(id)
+
     fun insertPurchasedItem(item: PurchasedItem) = viewModelScope.launch {
         repository.insertPurchasedItem(item)
     }

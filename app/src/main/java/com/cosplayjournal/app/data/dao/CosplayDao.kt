@@ -54,6 +54,9 @@ interface CosplayDao {
     @Query("SELECT * FROM handmade_parts WHERE cosplayId = :cosplayId")
     fun getHandmadeParts(cosplayId: Long): Flow<List<HandmadePart>>
 
+    @Query("SELECT * FROM handmade_parts WHERE id = :id")
+    suspend fun getHandmadePartById(id: Long): HandmadePart?
+
     // Part Resources
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPartResource(resource: PartResource)
@@ -79,6 +82,9 @@ interface CosplayDao {
 
     @Query("SELECT * FROM purchased_items WHERE cosplayId = :cosplayId")
     fun getPurchasedItems(cosplayId: Long): Flow<List<PurchasedItem>>
+
+    @Query("SELECT * FROM purchased_items WHERE id = :id")
+    suspend fun getPurchasedItemById(id: Long): PurchasedItem?
 
     // Photo Sessions
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -22,6 +22,7 @@ class CosplayRepository(private val cosplayDao: CosplayDao) {
 
     // Handmade Parts
     fun getHandmadeParts(cosplayId: Long): Flow<List<HandmadePart>> = cosplayDao.getHandmadeParts(cosplayId)
+    suspend fun getHandmadePartById(id: Long): HandmadePart? = cosplayDao.getHandmadePartById(id)
     suspend fun insertHandmadePart(part: HandmadePart): Long = cosplayDao.insertHandmadePart(part)
     suspend fun updateHandmadePart(part: HandmadePart) = cosplayDao.updateHandmadePart(part)
     suspend fun deleteHandmadePart(part: HandmadePart) = cosplayDao.deleteHandmadePart(part)
@@ -34,6 +35,7 @@ class CosplayRepository(private val cosplayDao: CosplayDao) {
 
     // Purchased Items
     fun getPurchasedItems(cosplayId: Long): Flow<List<PurchasedItem>> = cosplayDao.getPurchasedItems(cosplayId)
+    suspend fun getPurchasedItemById(id: Long): PurchasedItem? = cosplayDao.getPurchasedItemById(id)
     suspend fun insertPurchasedItem(item: PurchasedItem) = cosplayDao.insertPurchasedItem(item)
     suspend fun updatePurchasedItem(item: PurchasedItem) = cosplayDao.updatePurchasedItem(item)
     suspend fun deletePurchasedItem(item: PurchasedItem) = cosplayDao.deletePurchasedItem(item)

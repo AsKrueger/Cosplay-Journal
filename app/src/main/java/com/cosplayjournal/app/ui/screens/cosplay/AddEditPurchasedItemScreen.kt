@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.cosplayjournal.app.data.entity.PurchasedItem
 import com.cosplayjournal.app.ui.viewmodel.CosplayViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,7 +41,10 @@ fun AddEditPurchasedItemScreen(
     var purchaseLink by remember { mutableStateOf("") }
     var adjustmentDescription by remember { mutableStateOf("") }
     var projectPercentage by remember { mutableFloatStateOf(0f) }
+    var price by remember { mutableStateOf("") }
     var imageUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
+
+    val scope = rememberCoroutineScope()
 
     // Colors
     val primaryPurple = Color(0xFF6750A4)
@@ -50,8 +54,25 @@ fun AddEditPurchasedItemScreen(
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri -> uri?.let { imageUris = imageUris + it } }
+        onResult = { uri -> uri?.let { if (imageUris.size < 6) imageUris = imageUris + it } }
     )
+
+    LaunchedEffect(itemId) {
+        if (itemId != null) {
+            viewModel.getPurchasedItemById(itemId)?.let { item ->
+                name = item.name
+                purchaseLink = item.purchaseLink
+                adjustmentDescription = item.adjustmentDescription
+                projectPercentage = item.projectPercentage.toFloat()
+                price = if (item.price > 0) item.price.toString() else ""
+                imageUris = if (item.imageUris.isNotBlank()) {
+                    item.imageUris.split(",").map { Uri.parse(it) }
+                } else {
+                    emptyList()
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -65,17 +86,24 @@ fun AddEditPurchasedItemScreen(
                 actions = {
                     Button(
                         onClick = {
-                            val item = PurchasedItem(
-                                id = itemId ?: 0,
-                                cosplayId = cosplayId,
-                                name = name,
-                                purchaseLink = purchaseLink,
-                                adjustmentDescription = adjustmentDescription,
-                                projectPercentage = projectPercentage.toInt(),
-                                imageUris = imageUris.joinToString(",") { it.toString() }
-                            )
-                            viewModel.insertPurchasedItem(item)
-                            onNavigateBack()
+                            scope.launch {
+                                val item = PurchasedItem(
+                                    id = itemId ?: 0,
+                                    cosplayId = cosplayId,
+                                    name = name,
+                                    purchaseLink = purchaseLink,
+                                    adjustmentDescription = adjustmentDescription,
+                                    projectPercentage = projectPercentage.toInt(),
+                                    price = price.toDoubleOrNull() ?: 0.0,
+                                    imageUris = imageUris.joinToString(",") { it.toString() }
+                                )
+                                if (itemId == null) {
+                                    viewModel.insertPurchasedItem(item)
+                                } else {
+                                    viewModel.updatePurchasedItem(item)
+                                }
+                                onNavigateBack()
+                            }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = primaryPurple),
                         shape = RoundedCornerShape(20.dp),
@@ -105,7 +133,7 @@ fun AddEditPurchasedItemScreen(
                         .height(200.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .background(Color.White)
-                        .border(1.dp, Color.LightGray, RoundedCornerShape(16.dp)) // Simulating dashed border
+                        .border(1.dp, Color.LightGray, RoundedCornerShape(16.dp))
                         .clickable { launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
                     contentAlignment = Alignment.Center
                 ) {
@@ -121,7 +149,7 @@ fun AddEditPurchasedItemScreen(
                             Icon(Icons.Default.AddAPhoto, contentDescription = null, tint = primaryPurple, modifier = Modifier.size(32.dp))
                             Spacer(modifier = Modifier.height(8.dp))
                             Text("Upload or take photo", fontWeight = FontWeight.Bold)
-                            Text("Add a picture of the item as it arrived", fontSize = 12.sp, color = grayText)
+                            Text("Add a picture of the item", fontSize = 12.sp, color = grayText)
                         }
                     }
                 }
@@ -136,6 +164,24 @@ fun AddEditPurchasedItemScreen(
                     onValueChange = { name = it },
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = { Text("e.g., Red Dragon Gauntlet", color = Color.LightGray) },
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        unfocusedContainerColor = Color.White,
+                        focusedContainerColor = Color.White,
+                        unfocusedBorderColor = Color.LightGray
+                    )
+                )
+            }
+
+            // PRICE
+            Column {
+                Text("Cost (€)", style = MaterialTheme.typography.labelLarge, color = grayText)
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = price,
+                    onValueChange = { price = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("Enter price in €", color = Color.LightGray) },
                     shape = RoundedCornerShape(12.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedContainerColor = Color.White,
@@ -172,7 +218,7 @@ fun AddEditPurchasedItemScreen(
                     value = adjustmentDescription,
                     onValueChange = { adjustmentDescription = it },
                     modifier = Modifier.fillMaxWidth().height(120.dp),
-                    placeholder = { Text("What modifications are needed? (Weathering, resizing, repainting...)", color = Color.LightGray) },
+                    placeholder = { Text("What modifications are needed?", color = Color.LightGray) },
                     shape = RoundedCornerShape(12.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedContainerColor = Color.White,
@@ -192,7 +238,6 @@ fun AddEditPurchasedItemScreen(
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text("Project Completion", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                            Text("How much does this item contribute to the whole?", fontSize = 12.sp, color = grayText)
                         }
                         Text("${projectPercentage.toInt()}%", fontWeight = FontWeight.Bold, fontSize = 24.sp, color = primaryPurple)
                     }
@@ -203,55 +248,37 @@ fun AddEditPurchasedItemScreen(
                         valueRange = 0f..100f,
                         colors = SliderDefaults.colors(thumbColor = primaryPurple, activeTrackColor = primaryPurple)
                     )
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("JUST STARTED", fontSize = 10.sp, color = grayText, fontWeight = FontWeight.Bold)
-                        Text("COMPLETE", fontSize = 10.sp, color = grayText, fontWeight = FontWeight.Bold)
-                    }
                 }
             }
 
-            // PRICING & TRACKING MOCKUP
-            Surface(
-                color = lightPurpleBackground,
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(Icons.Default.LocalOffer, contentDescription = null, tint = primaryPurple)
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text("Pricing & Tracking", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                    Icon(Icons.Default.ChevronRight, contentDescription = null, tint = Color.LightGray)
-                }
-            }
-
-            // ADD TO PROJECT BUTTON
+            // SAVE BUTTON
             Button(
                 onClick = {
-                    val item = PurchasedItem(
-                        id = itemId ?: 0,
-                        cosplayId = cosplayId,
-                        name = name,
-                        purchaseLink = purchaseLink,
-                        adjustmentDescription = adjustmentDescription,
-                        projectPercentage = projectPercentage.toInt(),
-                        imageUris = imageUris.joinToString(",") { it.toString() }
-                    )
-                    viewModel.insertPurchasedItem(item)
-                    onNavigateBack()
+                    scope.launch {
+                        val item = PurchasedItem(
+                            id = itemId ?: 0,
+                            cosplayId = cosplayId,
+                            name = name,
+                            purchaseLink = purchaseLink,
+                            adjustmentDescription = adjustmentDescription,
+                            projectPercentage = projectPercentage.toInt(),
+                            price = price.toDoubleOrNull() ?: 0.0,
+                            imageUris = imageUris.joinToString(",") { it.toString() }
+                        )
+                        if (itemId == null) {
+                            viewModel.insertPurchasedItem(item)
+                        } else {
+                            viewModel.updatePurchasedItem(item)
+                        }
+                        onNavigateBack()
+                    }
                 },
                 modifier = Modifier.fillMaxWidth().height(56.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = primaryPurple),
                 shape = RoundedCornerShape(28.dp),
                 enabled = name.isNotBlank()
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.CheckCircle, contentDescription = null, modifier = Modifier.size(20.dp))
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Add to Project", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                }
+                Text(if (itemId == null) "Add to Project" else "Update Item", fontWeight = FontWeight.Bold, fontSize = 16.sp)
             }
             
             Spacer(modifier = Modifier.height(20.dp))

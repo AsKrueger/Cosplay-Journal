@@ -31,6 +31,7 @@ import coil.compose.AsyncImage
 import com.cosplayjournal.app.data.entity.HandmadePart
 import com.cosplayjournal.app.data.entity.PartResource
 import com.cosplayjournal.app.ui.viewmodel.CosplayViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,8 +45,9 @@ fun AddEditHandmadePartScreen(
     var price by remember { mutableStateOf("") }
     var timeSpent by remember { mutableStateOf("") }
     var processDescription by remember { mutableStateOf("") }
-    var projectPercentage by remember { mutableFloatStateOf(0f) }
     var imageUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
+
+    val scope = rememberCoroutineScope()
 
     // State for materials added during creation (before partId exists)
     val temporaryResources = remember { mutableStateListOf<PartResource>() }
@@ -74,14 +76,24 @@ fun AddEditHandmadePartScreen(
 
     LaunchedEffect(partId) {
         if (partId != null) {
-            // Load existing part data logic here if needed
+            viewModel.getHandmadePartById(partId)?.let { part ->
+                name = part.name
+                price = if (part.price > 0) part.price.toString() else ""
+                timeSpent = part.timeSpent
+                processDescription = part.processDescription
+                imageUris = if (part.imageUris.isNotBlank()) {
+                    part.imageUris.split(",").map { Uri.parse(it) }
+                } else {
+                    emptyList()
+                }
+            }
         }
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Add Handmade Part", fontWeight = FontWeight.Bold, fontSize = 20.sp) },
+                title = { Text(if (partId == null) "Add Handmade Part" else "Edit Handmade Part", fontWeight = FontWeight.Bold, fontSize = 20.sp) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -90,19 +102,28 @@ fun AddEditHandmadePartScreen(
                 actions = {
                     Button(
                         onClick = {
-                            val part = HandmadePart(
-                                id = partId ?: 0,
-                                cosplayId = cosplayId,
-                                name = name,
-                                price = price.toDoubleOrNull() ?: 0.0,
-                                timeSpent = timeSpent,
-                                processDescription = processDescription,
-                                projectPercentage = projectPercentage.toInt(),
-                                imageUris = imageUris.joinToString(",") { it.toString() }
-                            )
-                            // Note: In a production app, we'd handle saving temporary resources here too
-                            viewModel.insertHandmadePart(part)
-                            onNavigateBack()
+                            scope.launch {
+                                val part = HandmadePart(
+                                    id = partId ?: 0,
+                                    cosplayId = cosplayId,
+                                    name = name,
+                                    price = price.toDoubleOrNull() ?: 0.0,
+                                    timeSpent = timeSpent,
+                                    processDescription = processDescription,
+                                    imageUris = imageUris.joinToString(",") { it.toString() }
+                                )
+                                
+                                if (partId == null) {
+                                    val newId = viewModel.insertHandmadePartAndGetId(part)
+                                    // Save temporary resources with the new part ID
+                                    temporaryResources.forEach { res ->
+                                        viewModel.insertPartResource(res.copy(partId = newId))
+                                    }
+                                } else {
+                                    viewModel.updateHandmadePart(part)
+                                }
+                                onNavigateBack()
+                            }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = primaryPurple),
                         shape = RoundedCornerShape(100.dp),
@@ -137,7 +158,7 @@ fun AddEditHandmadePartScreen(
                             .size(100.dp)
                             .clip(RoundedCornerShape(16.dp))
                             .background(Color.White)
-                            .border(1.dp, Color.LightGray, RoundedCornerShape(16.dp)) // Dashed border not native
+                            .border(1.dp, Color.LightGray, RoundedCornerShape(16.dp))
                             .clickable { launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
                         contentAlignment = Alignment.Center
                     ) {
@@ -149,17 +170,20 @@ fun AddEditHandmadePartScreen(
                     }
                     
                     imageUris.forEach { uri ->
-                        AsyncImage(
-                            model = uri,
-                            contentDescription = null,
-                            modifier = Modifier.size(100.dp).clip(RoundedCornerShape(16.dp)),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                    
-                    // Placeholders for empty slots
-                    repeat(maxOf(0, 5 - imageUris.size)) {
-                        Box(modifier = Modifier.size(100.dp).clip(RoundedCornerShape(16.dp)).background(lightPurpleBackground))
+                        Box {
+                            AsyncImage(
+                                model = uri,
+                                contentDescription = null,
+                                modifier = Modifier.size(100.dp).clip(RoundedCornerShape(16.dp)),
+                                contentScale = ContentScale.Crop
+                            )
+                            IconButton(
+                                onClick = { imageUris = imageUris - uri },
+                                modifier = Modifier.size(24.dp).align(Alignment.TopEnd).padding(4.dp).background(Color.Black.copy(alpha = 0.5f), CircleShape)
+                            ) {
+                                Icon(Icons.Default.Close, contentDescription = "Remove", tint = Color.White, modifier = Modifier.size(12.dp))
+                            }
+                        }
                     }
                 }
             }
@@ -169,7 +193,7 @@ fun AddEditHandmadePartScreen(
                 value = name,
                 onValueChange = { name = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Part Name", color = grayText) },
+                placeholder = { Text("Part Name (e.g. Helmet, Cape)", color = grayText) },
                 shape = RoundedCornerShape(4.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = lightPurpleBackground,
@@ -185,7 +209,7 @@ fun AddEditHandmadePartScreen(
                     value = price,
                     onValueChange = { price = it },
                     modifier = Modifier.weight(1f),
-                    placeholder = { Text("Estimated Cost ($)", color = grayText) },
+                    placeholder = { Text("Estimated Cost (€)", color = grayText) },
                     shape = RoundedCornerShape(4.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedContainerColor = lightPurpleBackground,
@@ -205,30 +229,6 @@ fun AddEditHandmadePartScreen(
                         unfocusedBorderColor = fieldBorderColor
                     )
                 )
-            }
-
-            // COMPLETION STATUS SLIDER
-            Surface(
-                color = lightPurpleBackground,
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("Completion Status", fontWeight = FontWeight.Bold, color = primaryPurple)
-                        Text("${projectPercentage.toInt()}%", fontWeight = FontWeight.Bold, color = primaryPurple)
-                    }
-                    Slider(
-                        value = projectPercentage,
-                        onValueChange = { projectPercentage = it },
-                        valueRange = 0f..100f,
-                        colors = SliderDefaults.colors(thumbColor = primaryPurple, activeTrackColor = primaryPurple)
-                    )
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("STARTED", fontSize = 10.sp, color = grayText)
-                        Text("FINISHED", fontSize = 10.sp, color = grayText)
-                    }
-                }
             }
 
             // PROCESS DESCRIPTION
@@ -287,12 +287,19 @@ fun AddEditHandmadePartScreen(
     if (showAddResourceDialog) {
         AddResourceDialog(
             onDismiss = { showAddResourceDialog = false },
-            onSave = { resName, web, priceValue ->
+            onSave = { resName, web, priceValue, images, usage ->
+                val resource = PartResource(
+                    partId = partId ?: 0,
+                    name = resName,
+                    webLink = web,
+                    price = priceValue,
+                    imageUris = images,
+                    usageDescription = usage
+                )
                 if (partId != null) {
-                    viewModel.insertPartResource(PartResource(partId = partId, name = resName, webLink = web, price = priceValue))
+                    viewModel.insertPartResource(resource)
                 } else {
-                    // Temporary addition for new parts
-                    temporaryResources.add(PartResource(partId = 0, name = resName, webLink = web, price = priceValue))
+                    temporaryResources.add(resource)
                 }
                 showAddResourceDialog = false
             }
@@ -308,52 +315,140 @@ fun ResourceItem(resource: PartResource, accentColor: Color) {
         border = BorderStroke(1.dp, Color(0xFFE7E0EC)),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Row(
-            modifier = Modifier.padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier.size(40.dp).background(Color(0xFFF7F2FA), CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(Icons.Default.Link, contentDescription = null, modifier = Modifier.size(20.dp), tint = accentColor)
-            }
-            Spacer(modifier = Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(resource.name, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                if (resource.webLink.isNotBlank()) {
-                    Text(resource.webLink, fontSize = 11.sp, color = Color.Gray)
+        Column(modifier = Modifier.padding(12.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (resource.imageUris.isNotBlank()) {
+                    AsyncImage(
+                        model = resource.imageUris.split(",").first(),
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp).clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier.size(40.dp).background(Color(0xFFF7F2FA), CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(Icons.Default.Link, contentDescription = null, modifier = Modifier.size(20.dp), tint = accentColor)
+                    }
                 }
+                Spacer(modifier = Modifier.width(12.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(resource.name, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    if (resource.webLink.isNotBlank()) {
+                        Text(resource.webLink, fontSize = 11.sp, color = Color.Gray)
+                    }
+                }
+                Text("${resource.price}€", fontWeight = FontWeight.Bold, fontSize = 14.sp)
             }
-            Text("$${resource.price}", fontWeight = FontWeight.Bold, fontSize = 14.sp, modifier = Modifier.padding(end = 4.dp))
+            if (resource.usageDescription.isNotBlank()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = resource.usageDescription,
+                    fontSize = 12.sp,
+                    color = Color.Gray,
+                    lineHeight = 16.sp,
+                    modifier = Modifier.padding(start = 52.dp)
+                )
+            }
         }
     }
 }
 
 @Composable
-fun AddResourceDialog(onDismiss: () -> Unit, onSave: (String, String, Double) -> Unit) {
+fun AddResourceDialog(onDismiss: () -> Unit, onSave: (String, String, Double, String, String) -> Unit) {
     var name by remember { mutableStateOf("") }
     var web by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
+    var usage by remember { mutableStateOf("") }
+    var imageUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri -> uri?.let { if (imageUris.size < 3) imageUris = imageUris + it } }
+    )
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add Material") },
+        title = { Text("Add Material", fontWeight = FontWeight.Bold) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Name") }, modifier = Modifier.fillMaxWidth())
-                OutlinedTextField(value = web, onValueChange = { web = it }, label = { Text("Web/Store") }, modifier = Modifier.fillMaxWidth())
-                OutlinedTextField(value = price, onValueChange = { price = it }, label = { Text("Price") }, modifier = Modifier.fillMaxWidth())
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // Photo section for material
+                Row(modifier = Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color(0xFFF7F2FA))
+                            .clickable { launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(Icons.Default.AddAPhoto, contentDescription = null, tint = Color(0xFF6750A4), modifier = Modifier.size(20.dp))
+                    }
+                    imageUris.forEach { uri ->
+                        Box {
+                            AsyncImage(
+                                model = uri,
+                                contentDescription = null,
+                                modifier = Modifier.size(60.dp).clip(RoundedCornerShape(8.dp)),
+                                contentScale = ContentScale.Crop
+                            )
+                            IconButton(
+                                onClick = { imageUris = imageUris - uri },
+                                modifier = Modifier.size(16.dp).align(Alignment.TopEnd).background(Color.Black.copy(alpha = 0.5f), CircleShape)
+                            ) {
+                                Icon(Icons.Default.Close, contentDescription = null, tint = Color.White, modifier = Modifier.size(10.dp))
+                            }
+                        }
+                    }
+                }
+
+                OutlinedTextField(
+                    value = name, 
+                    onValueChange = { name = it }, 
+                    label = { Text("Material Name") }, 
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp)
+                )
+                OutlinedTextField(
+                    value = web, 
+                    onValueChange = { web = it }, 
+                    label = { Text("Web Link or Store") }, 
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp)
+                )
+                OutlinedTextField(
+                    value = price, 
+                    onValueChange = { price = it }, 
+                    label = { Text("Price (Approx €)") }, 
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp)
+                )
+                OutlinedTextField(
+                    value = usage, 
+                    onValueChange = { usage = it }, 
+                    label = { Text("How was it used?") }, 
+                    modifier = Modifier.fillMaxWidth().height(100.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    placeholder = { Text("Describe techniques, amount used, etc.", fontSize = 12.sp) }
+                )
             }
         },
         confirmButton = {
-            TextButton(onClick = { onSave(name, web, price.toDoubleOrNull() ?: 0.0) }) {
-                Text("Save")
+            Button(
+                onClick = { onSave(name, web, price.toDoubleOrNull() ?: 0.0, imageUris.joinToString(",") { it.toString() }, usage) },
+                enabled = name.isNotBlank(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6750A4))
+            ) {
+                Text("Add Material")
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text("Cancel", color = Color.Gray)
             }
         }
     )

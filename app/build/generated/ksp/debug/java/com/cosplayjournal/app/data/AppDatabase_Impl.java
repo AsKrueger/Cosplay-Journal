@@ -38,7 +38,7 @@ public final class AppDatabase_Impl extends AppDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(4) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(5) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `cosplans` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `status` TEXT NOT NULL, `tags` TEXT NOT NULL, `season` TEXT NOT NULL, `difficulty` TEXT NOT NULL, `estimatedBudget` REAL NOT NULL, `realBudget` REAL NOT NULL, `notes` TEXT NOT NULL)");
@@ -46,7 +46,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_cosplays_cosplanId` ON `cosplays` (`cosplanId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `handmade_parts` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cosplayId` INTEGER NOT NULL, `name` TEXT NOT NULL, `imageUris` TEXT NOT NULL, `price` REAL NOT NULL, `timeSpent` TEXT NOT NULL, `processDescription` TEXT NOT NULL, `projectPercentage` INTEGER NOT NULL, `materials` TEXT NOT NULL, `isFinished` INTEGER NOT NULL, FOREIGN KEY(`cosplayId`) REFERENCES `cosplays`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_handmade_parts_cosplayId` ON `handmade_parts` (`cosplayId`)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS `part_resources` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `partId` INTEGER NOT NULL, `name` TEXT NOT NULL, `webLink` TEXT NOT NULL, `price` REAL NOT NULL, FOREIGN KEY(`partId`) REFERENCES `handmade_parts`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `part_resources` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `partId` INTEGER NOT NULL, `name` TEXT NOT NULL, `webLink` TEXT NOT NULL, `price` REAL NOT NULL, `imageUris` TEXT NOT NULL, `usageDescription` TEXT NOT NULL, FOREIGN KEY(`partId`) REFERENCES `handmade_parts`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_part_resources_partId` ON `part_resources` (`partId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `purchased_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cosplayId` INTEGER NOT NULL, `name` TEXT NOT NULL, `purchaseLink` TEXT NOT NULL, `imageUris` TEXT NOT NULL, `adjustmentDescription` TEXT NOT NULL, `projectPercentage` INTEGER NOT NULL, `storeName` TEXT NOT NULL, `price` REAL NOT NULL, `isReceived` INTEGER NOT NULL, FOREIGN KEY(`cosplayId`) REFERENCES `cosplays`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_purchased_items_cosplayId` ON `purchased_items` (`cosplayId`)");
@@ -61,7 +61,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         db.execSQL("CREATE TABLE IF NOT EXISTS `user_event_data` (`eventId` TEXT NOT NULL, `status` TEXT NOT NULL, `isFavorite` INTEGER NOT NULL, PRIMARY KEY(`eventId`))");
         db.execSQL("CREATE TABLE IF NOT EXISTS `event_cosplan_selection` (`eventId` TEXT NOT NULL, `cosplanId` INTEGER NOT NULL, `day` TEXT NOT NULL, PRIMARY KEY(`eventId`, `cosplanId`, `day`))");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '017bbd55e73af5b90020053dd7b9c17a')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '71e6ee0e65af7506ac176253fa3d2f01')");
       }
 
       @Override
@@ -189,12 +189,14 @@ public final class AppDatabase_Impl extends AppDatabase {
                   + " Expected:\n" + _infoHandmadeParts + "\n"
                   + " Found:\n" + _existingHandmadeParts);
         }
-        final HashMap<String, TableInfo.Column> _columnsPartResources = new HashMap<String, TableInfo.Column>(5);
+        final HashMap<String, TableInfo.Column> _columnsPartResources = new HashMap<String, TableInfo.Column>(7);
         _columnsPartResources.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPartResources.put("partId", new TableInfo.Column("partId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPartResources.put("name", new TableInfo.Column("name", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPartResources.put("webLink", new TableInfo.Column("webLink", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPartResources.put("price", new TableInfo.Column("price", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPartResources.put("imageUris", new TableInfo.Column("imageUris", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPartResources.put("usageDescription", new TableInfo.Column("usageDescription", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysPartResources = new HashSet<TableInfo.ForeignKey>(1);
         _foreignKeysPartResources.add(new TableInfo.ForeignKey("handmade_parts", "CASCADE", "NO ACTION", Arrays.asList("partId"), Arrays.asList("id")));
         final HashSet<TableInfo.Index> _indicesPartResources = new HashSet<TableInfo.Index>(1);
@@ -329,7 +331,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "017bbd55e73af5b90020053dd7b9c17a", "d729d15fa64851c76b5084bd1a543bfe");
+    }, "71e6ee0e65af7506ac176253fa3d2f01", "d1e5369b6842bf321959ef440019f5c1");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;

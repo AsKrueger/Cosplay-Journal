@@ -47,5 +47,7 @@ data class PartResource(
     val partId: Long,
     val name: String,
     val webLink: String = "",
-    val price: Double = 0.0
+    val price: Double = 0.0,
+    val imageUris: String = "", // Comma-separated URIs
+    val usageDescription: String = ""
 )
