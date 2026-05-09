@@ -49,6 +49,18 @@ fun HomeScreen(
     val uiState by profileViewModel.uiState.collectAsState()
     val events by eventViewModel.events.collectAsState()
 
+    val upcomingEvents = remember(events) {
+        val today = LocalDate.now()
+        events.filter {
+            try {
+                val eventDate = LocalDate.parse(it.startDate)
+                !eventDate.isBefore(today)
+            } catch (e: Exception) {
+                false
+            }
+        }.sortedBy { it.startDate }
+    }
+
     val recentItems = remember(uiState.allCosplays, uiState.allCosplans) {
         val list = mutableListOf<Pair<Any, String>>()
         list.addAll(uiState.allCosplays.map { it to "cosplay" })
@@ -140,8 +152,17 @@ fun HomeScreen(
                 SectionHeader(title = "Próximos Eventos", actionText = "Calendario", onActionClick = onCalendarClick)
                 Spacer(modifier = Modifier.height(16.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    events.take(3).forEach { event ->
-                        EventListItem(event, onClick = { onEventClick(event.id) })
+                    if (upcomingEvents.isEmpty()) {
+                        Text(
+                            "No hay eventos próximos programados.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    } else {
+                        upcomingEvents.take(3).forEach { event ->
+                            EventListItem(event, onClick = { onEventClick(event.id) })
+                        }
                     }
                 }
             }
