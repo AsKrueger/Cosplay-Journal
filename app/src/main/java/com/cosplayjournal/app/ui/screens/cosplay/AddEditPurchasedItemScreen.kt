@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,13 +20,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.cosplayjournal.app.data.entity.PurchasedItem
+import com.cosplayjournal.app.ui.theme.NeutralGray
 import com.cosplayjournal.app.ui.viewmodel.CosplayViewModel
 import kotlinx.coroutines.launch
 
@@ -44,10 +48,6 @@ fun AddEditPurchasedItemScreen(
     var imageUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
 
     val scope = rememberCoroutineScope()
-
-    // Colors
-    val primaryPurple = Color(0xFF6750A4)
-    val grayText = Color(0xFF79747E)
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
@@ -72,39 +72,50 @@ fun AddEditPurchasedItemScreen(
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text(if (itemId == null) "New Purchased Item" else "Edit Purchased Item", fontWeight = FontWeight.Bold, fontSize = 18.sp) },
+            TopAppBar(
+                title = { 
+                    Text(
+                        if (itemId == null) "NUEVO ARTÍCULO" else "EDITAR ARTÍCULO", 
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontStyle = FontStyle.Italic
+                    ) 
+                },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.Black)
                     }
                 },
                 actions = {
-                    Button(
+                    TextButton(
                         onClick = {
-                            scope.launch {
-                                val item = PurchasedItem(
-                                    id = itemId ?: 0,
-                                    cosplayId = cosplayId,
-                                    name = name,
-                                    purchaseLink = purchaseLink,
-                                    adjustmentDescription = adjustmentDescription,
-                                    price = price.toDoubleOrNull() ?: 0.0,
-                                    imageUris = imageUris.joinToString(",") { it.toString() }
-                                )
-                                if (itemId == null) {
-                                    viewModel.insertPurchasedItem(item)
-                                } else {
-                                    viewModel.updatePurchasedItem(item)
+                            if (name.isNotBlank()) {
+                                scope.launch {
+                                    val item = PurchasedItem(
+                                        id = itemId ?: 0,
+                                        cosplayId = cosplayId,
+                                        name = name,
+                                        purchaseLink = purchaseLink,
+                                        adjustmentDescription = adjustmentDescription,
+                                        price = price.toDoubleOrNull() ?: 0.0,
+                                        imageUris = imageUris.joinToString(",") { it.toString() }
+                                    )
+                                    if (itemId == null) {
+                                        viewModel.insertPurchasedItem(item)
+                                    } else {
+                                        viewModel.updatePurchasedItem(item)
+                                    }
+                                    onNavigateBack()
                                 }
-                                onNavigateBack()
                             }
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = primaryPurple),
-                        shape = RoundedCornerShape(20.dp),
-                        enabled = name.isNotBlank()
+                        }
                     ) {
-                        Text("Save", fontWeight = FontWeight.Bold)
+                        Text(
+                            "GUARDAR", 
+                            fontWeight = FontWeight.ExtraBold, 
+                            fontStyle = FontStyle.Italic,
+                            color = if (name.isNotBlank()) MaterialTheme.colorScheme.primary else Color.Gray
+                        )
                     }
                 }
             )
@@ -114,21 +125,27 @@ fun AddEditPurchasedItemScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .background(MaterialTheme.colorScheme.background)
                 .verticalScroll(rememberScrollState())
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             // PHOTO REFERENCE
             Column {
-                Text("Photo Reference", style = MaterialTheme.typography.labelLarge, color = grayText)
+                Text(
+                    "FOTO DE REFERENCIA", 
+                    style = MaterialTheme.typography.labelLarge, 
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Italic
+                )
                 Spacer(modifier = Modifier.height(12.dp))
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(Color.White)
-                        .border(1.dp, Color.LightGray, RoundedCornerShape(16.dp))
+                        .shadow(4.dp, RoundedCornerShape(4.dp))
+                        .background(Color.White, RoundedCornerShape(4.dp))
+                        .border(2.dp, Color.Black, RoundedCornerShape(4.dp))
                         .clickable { launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
                     contentAlignment = Alignment.Center
                 ) {
@@ -136,15 +153,14 @@ fun AddEditPurchasedItemScreen(
                         AsyncImage(
                             model = imageUris.last(),
                             contentDescription = null,
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(4.dp)),
                             contentScale = ContentScale.Crop
                         )
                     } else {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(Icons.Default.AddAPhoto, contentDescription = null, tint = primaryPurple, modifier = Modifier.size(32.dp))
+                            Icon(Icons.Default.AddAPhoto, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(32.dp))
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text("Upload or take photo", fontWeight = FontWeight.Bold)
-                            Text("Add a picture of the item", fontSize = 12.sp, color = grayText)
+                            Text("SUBIR FOTO", fontWeight = FontWeight.ExtraBold, fontStyle = FontStyle.Italic)
                         }
                     }
                 }
@@ -152,107 +168,144 @@ fun AddEditPurchasedItemScreen(
 
             // ITEM NAME
             Column {
-                Text("Item Name", style = MaterialTheme.typography.labelLarge, color = grayText)
+                Text(
+                    "NOMBRE DEL ARTÍCULO", 
+                    style = MaterialTheme.typography.labelLarge, 
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Italic
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
+                BrutalistTextField(
                     value = name,
                     onValueChange = { name = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("e.g., Red Dragon Gauntlet", color = Color.LightGray) },
-                    shape = RoundedCornerShape(12.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White,
-                        focusedContainerColor = Color.White,
-                        unfocusedBorderColor = Color.LightGray
-                    )
+                    placeholder = "Ej: Guantelete de Dragón Rojo"
                 )
             }
 
             // PRICE
             Column {
-                Text("Cost (€)", style = MaterialTheme.typography.labelLarge, color = grayText)
+                Text(
+                    "COSTO (€)", 
+                    style = MaterialTheme.typography.labelLarge, 
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Italic
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
+                BrutalistTextField(
                     value = price,
                     onValueChange = { price = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Enter price in €", color = Color.LightGray) },
-                    shape = RoundedCornerShape(12.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White,
-                        focusedContainerColor = Color.White,
-                        unfocusedBorderColor = Color.LightGray
-                    )
+                    placeholder = "0.00"
                 )
             }
 
             // PURCHASE LINK
             Column {
-                Text("Purchase Link", style = MaterialTheme.typography.labelLarge, color = grayText)
+                Text(
+                    "LINK DE COMPRA", 
+                    style = MaterialTheme.typography.labelLarge, 
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Italic
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
+                BrutalistTextField(
                     value = purchaseLink,
                     onValueChange = { purchaseLink = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("https://shop.example.com/...", color = Color.LightGray) },
-                    shape = RoundedCornerShape(12.dp),
-                    leadingIcon = { Icon(Icons.Default.Link, contentDescription = null, tint = Color.LightGray) },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White,
-                        focusedContainerColor = Color.White,
-                        unfocusedBorderColor = Color.LightGray
-                    )
+                    placeholder = "https://tienda.com/...",
+                    leadingIcon = { Icon(Icons.Default.Link, contentDescription = null, tint = Color.Black) }
                 )
             }
 
             // ADJUSTMENTS & NOTES
             Column {
-                Text("Adjustments & Notes", style = MaterialTheme.typography.labelLarge, color = grayText)
+                Text(
+                    "AJUSTES Y NOTAS", 
+                    style = MaterialTheme.typography.labelLarge, 
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Italic
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
+                BrutalistTextField(
                     value = adjustmentDescription,
                     onValueChange = { adjustmentDescription = it },
-                    modifier = Modifier.fillMaxWidth().height(120.dp),
-                    placeholder = { Text("What modifications are needed?", color = Color.LightGray) },
-                    shape = RoundedCornerShape(12.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White,
-                        focusedContainerColor = Color.White,
-                        unfocusedBorderColor = Color.LightGray
-                    )
+                    placeholder = "¿Qué modificaciones necesita?",
+                    modifier = Modifier.height(120.dp),
+                    singleLine = false
                 )
             }
 
             // SAVE BUTTON
-            Button(
-                onClick = {
-                    scope.launch {
-                        val item = PurchasedItem(
-                            id = itemId ?: 0,
-                            cosplayId = cosplayId,
-                            name = name,
-                            purchaseLink = purchaseLink,
-                            adjustmentDescription = adjustmentDescription,
-                            price = price.toDoubleOrNull() ?: 0.0,
-                            imageUris = imageUris.joinToString(",") { it.toString() }
-                        )
-                        if (itemId == null) {
-                            viewModel.insertPurchasedItem(item)
-                        } else {
-                            viewModel.updatePurchasedItem(item)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .shadow(if (name.isNotBlank()) 4.dp else 0.dp, RoundedCornerShape(4.dp))
+                    .background(
+                        if (name.isNotBlank()) MaterialTheme.colorScheme.primary else Color.LightGray, 
+                        RoundedCornerShape(4.dp)
+                    )
+                    .border(2.dp, Color.Black, RoundedCornerShape(4.dp))
+                    .clickable(enabled = name.isNotBlank()) {
+                        scope.launch {
+                            val item = PurchasedItem(
+                                id = itemId ?: 0,
+                                cosplayId = cosplayId,
+                                name = name,
+                                purchaseLink = purchaseLink,
+                                adjustmentDescription = adjustmentDescription,
+                                price = price.toDoubleOrNull() ?: 0.0,
+                                imageUris = imageUris.joinToString(",") { it.toString() }
+                            )
+                            if (itemId == null) {
+                                viewModel.insertPurchasedItem(item)
+                            } else {
+                                viewModel.updatePurchasedItem(item)
+                            }
+                            onNavigateBack()
                         }
-                        onNavigateBack()
-                    }
-                },
-                modifier = Modifier.fillMaxWidth().height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = primaryPurple),
-                shape = RoundedCornerShape(28.dp),
-                enabled = name.isNotBlank()
+                    },
+                contentAlignment = Alignment.Center
             ) {
-                Text(if (itemId == null) "Add to Project" else "Update Item", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text(
+                    if (itemId == null) "AÑADIR AL PROYECTO" else "ACTUALIZAR ARTÍCULO", 
+                    fontWeight = FontWeight.ExtraBold, 
+                    fontStyle = FontStyle.Italic,
+                    color = Color.White,
+                    fontSize = 16.sp
+                )
             }
             
             Spacer(modifier = Modifier.height(20.dp))
         }
     }
+}
+
+@Composable
+fun BrutalistTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    modifier: Modifier = Modifier,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    singleLine: Boolean = true
+) {
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier
+            .fillMaxWidth()
+            .border(2.dp, Color.Black, RoundedCornerShape(4.dp)),
+        placeholder = { Text(placeholder, color = Color.Gray, style = MaterialTheme.typography.bodyMedium) },
+        leadingIcon = leadingIcon,
+        singleLine = singleLine,
+        shape = RoundedCornerShape(4.dp),
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            disabledContainerColor = Color.White,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            cursorColor = Color.Black
+        ),
+        textStyle = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium)
+    )
 }
