@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -88,9 +89,15 @@ fun HomeScreen(
                         Surface(
                             modifier = Modifier.size(40.dp),
                             shape = CircleShape,
-                            border = BorderStroke(2.dp, Color.Black)
+                            border = BorderStroke(2.dp, MaterialTheme.colorScheme.outline),
+                            color = MaterialTheme.colorScheme.surface
                         ) {
-                            Icon(Icons.Default.Person, contentDescription = null, modifier = Modifier.padding(4.dp))
+                            Icon(
+                                Icons.Default.Person, 
+                                contentDescription = null, 
+                                modifier = Modifier.padding(4.dp),
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
                         }
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
@@ -103,7 +110,11 @@ fun HomeScreen(
                 },
                 actions = {
                     IconButton(onClick = { /* Notificaciones */ }) {
-                        Icon(Icons.Default.NotificationsNone, contentDescription = null, tint = Color.Black)
+                        Icon(
+                            Icons.Default.NotificationsNone, 
+                            contentDescription = null, 
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 }
             )
@@ -126,16 +137,17 @@ fun HomeScreen(
                     Text(
                         "VISTAS RECIENTES",
                         style = MaterialTheme.typography.titleLarge,
-                        fontStyle = FontStyle.Italic
+                        fontStyle = FontStyle.Italic,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                     Surface(
                         color = MaterialTheme.colorScheme.primary,
                         shape = RoundedCornerShape(4.dp),
-                        border = BorderStroke(2.dp, Color.Black)
+                        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outline)
                     ) {
                         Text(
                             "LIVE",
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold
@@ -158,7 +170,8 @@ fun HomeScreen(
                 Text(
                     "HERRAMIENTAS RÁPIDAS",
                     style = MaterialTheme.typography.titleLarge,
-                    fontStyle = FontStyle.Italic
+                    fontStyle = FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -166,21 +179,21 @@ fun HomeScreen(
                         icon = Icons.Default.EditNote,
                         label = "NUEVO COSPLAN",
                         containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = Color.White,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
                         onClick = onAddCosplanClick
                     )
                     ToolButton(
                         icon = Icons.Default.Checkroom,
                         label = "NUEVO COSPLAY",
-                        containerColor = Color(0xFFB5C7F7), // Un azul claro complementario
-                        contentColor = SecondaryBlue,
+                        containerColor = if (isSystemInDarkTheme()) Color(0xFF3A4A7A) else Color(0xFFB5C7F7),
+                        contentColor = if (isSystemInDarkTheme()) Color.White else SecondaryBlue,
                         onClick = onAddCosplayClick
                     )
                     ToolButton(
                         icon = Icons.Default.PhotoCamera,
                         label = "AÑADIR SESIÓN",
-                        containerColor = Color(0xFFE0E0E0),
-                        contentColor = NeutralGray,
+                        containerColor = if (isSystemInDarkTheme()) Color(0xFF333333) else Color(0xFFE0E0E0),
+                        contentColor = if (isSystemInDarkTheme()) Color.LightGray else NeutralGray,
                         onClick = onAddSessionClick
                     )
                 }
@@ -190,7 +203,8 @@ fun HomeScreen(
                 Text(
                     "PRÓXIMOS EVENTOS",
                     style = MaterialTheme.typography.titleLarge,
-                    fontStyle = FontStyle.Italic
+                    fontStyle = FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -216,7 +230,7 @@ fun RecentItemCard(item: Any, type: String, onClick: () -> Unit) {
         modifier = Modifier
             .width(150.dp)
             .height(200.dp)
-            .border(2.dp, Color.Black)
+            .border(2.dp, MaterialTheme.colorScheme.outline)
             .clickable(onClick = onClick)
     ) {
         if (imageUri != null) {
@@ -227,7 +241,7 @@ fun RecentItemCard(item: Any, type: String, onClick: () -> Unit) {
                 contentScale = ContentScale.Crop
             )
         } else {
-            Box(Modifier.fillMaxSize().background(Color.DarkGray))
+            Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceVariant))
         }
         
         Box(
@@ -263,7 +277,7 @@ fun ToolButton(
             .height(60.dp)
             .shadow(4.dp, shape = RoundedCornerShape(4.dp))
             .background(containerColor, RoundedCornerShape(4.dp))
-            .border(2.dp, Color.Black, RoundedCornerShape(4.dp))
+            .border(2.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(4.dp))
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp),
         contentAlignment = Alignment.CenterStart
@@ -296,23 +310,25 @@ fun EventListItem(event: Event, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
-            .border(2.dp, Color.Black)
-            .background(Color.White)
+            .border(2.dp, MaterialTheme.colorScheme.outline)
+            .background(MaterialTheme.colorScheme.surface)
             .clickable(onClick = onClick)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxHeight()
                 .width(80.dp)
-                .background(accentColor)
-                .border(end = BorderStroke(2.dp, Color.Black)),
+                .background(accentColor),
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(day, color = Color.White, style = MaterialTheme.typography.headlineSmall)
-                Text(month, color = Color.White, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+                Text(day, color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.headlineSmall)
+                Text(month, color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
             }
         }
+
+        // Separador vertical brutalista
+        Box(modifier = Modifier.fillMaxHeight().width(2.dp).background(MaterialTheme.colorScheme.outline))
 
         Column(
             modifier = Modifier
@@ -325,18 +341,28 @@ fun EventListItem(event: Event, onClick: () -> Unit) {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.ExtraBold,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 event.venue,
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.LocationOn, contentDescription = null, modifier = Modifier.size(14.dp), tint = Color.Gray)
+                Icon(
+                    Icons.Default.LocationOn, 
+                    contentDescription = null, 
+                    modifier = Modifier.size(14.dp), 
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(event.city, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                Text(
+                    event.city, 
+                    style = MaterialTheme.typography.bodySmall, 
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }
