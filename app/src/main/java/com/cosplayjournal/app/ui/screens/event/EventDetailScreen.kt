@@ -59,7 +59,7 @@ fun EventDetailScreen(
                         Icon(
                             if (eventUserData?.isFavorite == true) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription = "Favorite",
-                            tint = if (eventUserData?.isFavorite == true) Color.Red else Color.Gray
+                            tint = if (eventUserData?.isFavorite == true) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                     IconButton(onClick = { /* Share */ }) {
@@ -74,7 +74,7 @@ fun EventDetailScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
-                    .background(Color(0xFF003366)) // Dark blue background as per design
+                    .background(MaterialTheme.colorScheme.background)
             ) {
                 item {
                     if (e.image != null) {
@@ -85,18 +85,17 @@ fun EventDetailScreen(
                             contentScale = ContentScale.Crop
                         )
                     } else {
-                        // Placeholder image from your screenshot
-                        Box(modifier = Modifier.fillMaxWidth().height(250.dp).background(Color.Gray))
+                        Box(modifier = Modifier.fillMaxWidth().height(250.dp).background(MaterialTheme.colorScheme.surfaceVariant))
                     }
                 }
 
                 item {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text(e.name, style = MaterialTheme.typography.headlineMedium, color = Color.White, fontWeight = FontWeight.Bold)
-                        Text("Del ${e.startDate} al ${e.endDate}", style = MaterialTheme.typography.bodyMedium, color = Color.LightGray)
+                        Text(e.name, style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.onBackground, fontWeight = FontWeight.Bold)
+                        Text("Del ${e.startDate} al ${e.endDate}", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(e.venue, style = MaterialTheme.typography.bodyLarge, color = Color.White)
+                        Text(e.venue, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onBackground)
                         
                         Spacer(modifier = Modifier.height(24.dp))
                         DetailSection("HORARIO", e.schedule)
@@ -105,31 +104,29 @@ fun EventDetailScreen(
                         
                         Spacer(modifier = Modifier.height(24.dp))
                         
-                        Button(
+                        OutlinedButton(
                             onClick = { 
                                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(e.website))
                                 context.startActivity(intent)
                             },
                             modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = Color.White),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, Color.White)
+                            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                         ) {
-                            Text("Visitar Página Web")
+                            Text("Visitar Página Web", color = MaterialTheme.colorScheme.primary)
                         }
                     }
                 }
 
                 item {
-                    Column(modifier = Modifier.padding(16.dp).background(Color.White.copy(alpha = 0.1f), RoundedCornerShape(16.dp)).padding(16.dp)) {
+                    Column(modifier = Modifier.padding(16.dp).background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f), RoundedCornerShape(16.dp)).padding(16.dp)) {
                         StatusSelector(
                             currentStatus = eventUserData?.status ?: "NONE",
                             onStatusSelected = { eventViewModel.updateEventStatus(eventId, it) }
                         )
                         
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("Mis Cosplans", style = MaterialTheme.typography.titleLarge, color = Color.White, fontWeight = FontWeight.Bold)
+                        Text("Mis Cosplans", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
                         
-                        // Parse logic for days would go here
                         val days = listOf("Día 1", "Día 2")
                         days.forEach { day ->
                             DayCosplanSelector(
@@ -159,8 +156,8 @@ fun EventDetailScreen(
 fun DetailSection(title: String, content: String) {
     if (content.isNotBlank()) {
         Column(modifier = Modifier.padding(vertical = 8.dp)) {
-            Text(title, style = MaterialTheme.typography.labelLarge, color = Color.LightGray, fontWeight = FontWeight.Bold)
-            Text(content, style = MaterialTheme.typography.bodyLarge, color = Color.White)
+            Text(title, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+            Text(content, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onBackground)
         }
     }
 }
@@ -170,7 +167,7 @@ fun DetailSection(title: String, content: String) {
 fun StatusSelector(currentStatus: String, onStatusSelected: (String) -> Unit) {
     val statuses = listOf("ATTENDING", "INTERESTED", "PLANNING")
     Column {
-        Text("Mi Estado", style = MaterialTheme.typography.titleMedium, color = Color.White, fontWeight = FontWeight.Bold)
+        Text("Mi Estado", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             statuses.forEach { status ->
                 val isSelected = currentStatus == status
@@ -179,9 +176,9 @@ fun StatusSelector(currentStatus: String, onStatusSelected: (String) -> Unit) {
                     onClick = { onStatusSelected(if (isSelected) "NONE" else status) },
                     label = { Text(status) },
                     colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = Color(0xFF00ACC1),
-                        selectedLabelColor = Color.White,
-                        labelColor = Color.LightGray
+                        selectedContainerColor = MaterialTheme.colorScheme.primary,
+                        selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                        labelColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
             }
@@ -198,10 +195,10 @@ fun DayCosplanSelector(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.05f))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
-            Text(day, fontWeight = FontWeight.Bold, color = Color.White)
+            Text(day, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
             Spacer(modifier = Modifier.height(8.dp))
             availableCosplans.forEach { cosplan ->
                 val isSelected = selectedSelections.any { it.cosplanId == cosplan.id }
@@ -212,9 +209,9 @@ fun DayCosplanSelector(
                     Checkbox(
                         checked = isSelected,
                         onCheckedChange = { onCosplanToggle(cosplan.id, it) },
-                        colors = CheckboxDefaults.colors(checkedColor = Color(0xFF00ACC1), uncheckedColor = Color.White)
+                        colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.primary)
                     )
-                    Text(cosplan.name, color = Color.White)
+                    Text(cosplan.name, color = MaterialTheme.colorScheme.onSurface)
                 }
             }
         }

@@ -38,15 +38,20 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CosplayJournalTheme {
-                MainScreen()
+            val context = LocalContext.current
+            val app = context.applicationContext as CosplayJournalApplication
+            val settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModelFactory(app.settingsRepository))
+            val darkModeEnabled by settingsViewModel.darkModeEnabled.collectAsState()
+
+            CosplayJournalTheme(darkTheme = darkModeEnabled) {
+                MainScreen(settingsViewModel)
             }
         }
     }
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(settingsViewModel: SettingsViewModel) {
     val navController = rememberNavController()
     val context = LocalContext.current
     val app = context.applicationContext as CosplayJournalApplication
@@ -74,7 +79,7 @@ fun MainScreen() {
 
             if (showBottomBar) {
                 NavigationBar(
-                    containerColor = Color.White,
+                    containerColor = MaterialTheme.colorScheme.surface,
                     tonalElevation = 8.dp
                 ) {
                     bottomNavItems.forEach { screen ->
@@ -92,8 +97,11 @@ fun MainScreen() {
                                 }
                             },
                             colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = Color(0xFF00ACC1),
-                                indicatorColor = Color.Transparent
+                                selectedIconColor = MaterialTheme.colorScheme.primary,
+                                selectedTextColor = MaterialTheme.colorScheme.primary,
+                                unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
                             )
                         )
                     }
@@ -256,7 +264,7 @@ fun MainScreen() {
             }
 
             composable(Screen.Favorites.route) { FavoritesScreen(viewModel = profileViewModel, onEventClick = { id -> navController.navigate("event_detail/$id") }, onCosplayClick = { id -> navController.navigate("cosplay_detail/$id") }, onNavigateBack = { navController.popBackStack() }) }
-            composable(Screen.Settings.route) { SettingsScreen(onNavigateBack = { navController.popBackStack() }) }
+            composable(Screen.Settings.route) { SettingsScreen(viewModel = settingsViewModel, onNavigateBack = { navController.popBackStack() }) }
         }
     }
 }

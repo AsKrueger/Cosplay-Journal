@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.cosplayjournal.app-mergeDebugResources-69:/values-hr/values-hr.xml",
+            "outputFile": "com.cosplayjournal.app-mergeDebugResources-72:/values-hr/values-hr.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\52e687bc40775d570d97e88c8ae97776\\transformed\\appcompat-1.7.0\\res\\values-hr\\values-hr.xml",
+                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\33af2973e2f00d8b8ef1e8b990d4fecd\\transformed\\appcompat-1.7.0\\res\\values-hr\\values-hr.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -21,41 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\4bd65994d233de5d515320bd87a3643d\\transformed\\core-1.13.1\\res\\values-hr\\values-hr.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,153,260,357,456,560,664,781",
-                        "endColumns": "97,106,96,98,103,103,116,100",
-                        "endOffsets": "148,255,352,451,555,659,776,877"
-                    },
-                    "to": {
-                        "startLines": "39,40,41,42,43,44,45,187",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "3512,3610,3717,3814,3913,4017,4121,17408",
-                        "endColumns": "97,106,96,98,103,103,116,100",
-                        "endOffsets": "3605,3712,3809,3908,4012,4116,4233,17504"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\f670de9ae943200d2db0f4398bfc7e52\\transformed\\jetified-foundation-release\\res\\values-hr\\values-hr.xml",
-                    "from": {
-                        "startLines": "2,3",
-                        "startColumns": "4,4",
-                        "startOffsets": "55,138",
-                        "endColumns": "82,84",
-                        "endOffsets": "133,218"
-                    },
-                    "to": {
-                        "startLines": "191,192",
-                        "startColumns": "4,4",
-                        "startOffsets": "17776,17859",
-                        "endColumns": "82,84",
-                        "endOffsets": "17854,17939"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\0202f0d3a4f980eddb2fa2d54d43728d\\transformed\\jetified-material3-release\\res\\values-hr\\values-hr.xml",
+                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\72d3f9448275dee605bd64f5b0fe1980\\transformed\\jetified-material3-release\\res\\values-hr\\values-hr.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -72,7 +38,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\f540ee62bef2c72f9d39309343e51e22\\transformed\\material-1.12.0\\res\\values-hr\\values-hr.xml",
+                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\ed6ba681e449dc1be54058eb24c2ccf9\\transformed\\material-1.12.0\\res\\values-hr\\values-hr.xml",
                     "from": {
                         "startLines": "2,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -91,7 +57,41 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\75f99380143022173ff2d68d5ea49707\\transformed\\jetified-ui-release\\res\\values-hr\\values-hr.xml",
+                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\e7a665aabb85024163405de3e040af4e\\transformed\\jetified-foundation-release\\res\\values-hr\\values-hr.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,138",
+                        "endColumns": "82,84",
+                        "endOffsets": "133,218"
+                    },
+                    "to": {
+                        "startLines": "191,192",
+                        "startColumns": "4,4",
+                        "startOffsets": "17776,17859",
+                        "endColumns": "82,84",
+                        "endOffsets": "17854,17939"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\8978b08e148f2c2b5e89e5c3b78fde1a\\transformed\\core-1.13.1\\res\\values-hr\\values-hr.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,153,260,357,456,560,664,781",
+                        "endColumns": "97,106,96,98,103,103,116,100",
+                        "endOffsets": "148,255,352,451,555,659,776,877"
+                    },
+                    "to": {
+                        "startLines": "39,40,41,42,43,44,45,187",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "3512,3610,3717,3814,3913,4017,4121,17408",
+                        "endColumns": "97,106,96,98,103,103,116,100",
+                        "endOffsets": "3605,3712,3809,3908,4012,4116,4233,17504"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\122db9488f57f59db5be8846c344e5d7\\transformed\\jetified-ui-release\\res\\values-hr\\values-hr.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",

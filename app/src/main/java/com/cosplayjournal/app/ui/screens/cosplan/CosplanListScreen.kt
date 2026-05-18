@@ -53,7 +53,7 @@ fun CosplanListScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(top = 8.dp)
             ) {
                 Box(
@@ -69,7 +69,7 @@ fun CosplanListScreen(
                         Icon(
                             imageVector = Icons.Default.Menu,
                             contentDescription = "Menú",
-                            tint = Color(0xFF00ACC1),
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(28.dp)
                         )
                     }
@@ -79,7 +79,8 @@ fun CosplanListScreen(
                         style = MaterialTheme.typography.headlineMedium.copy(
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
-                        )
+                        ),
+                        color = MaterialTheme.colorScheme.onSurface
                     )
 
                     IconButton(
@@ -90,7 +91,7 @@ fun CosplanListScreen(
                             imageVector = Icons.Default.Settings,
                             contentDescription = "Ajustes",
                             modifier = Modifier.size(28.dp),
-                            tint = Color.Gray
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -101,13 +102,13 @@ fun CosplanListScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 12.dp),
-                    placeholder = { Text("Search projects...", color = Color.Gray) },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Color.LightGray) },
-                    trailingIcon = { Icon(Icons.Default.Tune, contentDescription = null, tint = Color.LightGray) },
+                    placeholder = { Text("Search projects...", color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
+                    trailingIcon = { Icon(Icons.Default.Tune, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                     shape = RoundedCornerShape(24.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFFF9F9F9),
-                        unfocusedContainerColor = Color(0xFFF9F9F9),
+                        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
                         focusedBorderColor = Color.Transparent,
                         unfocusedBorderColor = Color.Transparent
                     ),
@@ -127,13 +128,14 @@ fun CosplanListScreen(
                             enabled = true,
                             shape = RoundedCornerShape(12.dp),
                             colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = Color(0xFFFF8A80),
-                                selectedLabelColor = Color.White
+                                selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                                labelColor = MaterialTheme.colorScheme.onSurfaceVariant
                             ),
                             border = FilterChipDefaults.filterChipBorder(
                                 enabled = true,
                                 selected = selectedFilter == filter,
-                                borderColor = Color(0xFFEEEEEE),
+                                borderColor = MaterialTheme.colorScheme.outlineVariant,
                                 selectedBorderColor = Color.Transparent
                             )
                         )
@@ -142,55 +144,52 @@ fun CosplanListScreen(
             }
         },
         bottomBar = {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(70.dp),
-                color = Color(0xFFE0F7FA).copy(alpha = 0.5f),
-                tonalElevation = 0.dp
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                tonalElevation = 8.dp
             ) {
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    IconButton(onClick = onNavigateToHome, modifier = Modifier.padding(horizontal = 20.dp)) {
-                        Icon(Icons.Default.Home, contentDescription = "Home", tint = Color.Gray, modifier = Modifier.size(28.dp))
-                    }
-                    IconButton(onClick = onNavigateToSelection, modifier = Modifier.padding(horizontal = 20.dp)) {
-                        Icon(Icons.Default.Checkroom, contentDescription = "Cosplays", tint = Color(0xFF00ACC1), modifier = Modifier.size(30.dp))
-                    }
-                    IconButton(onClick = onNavigateToProfile, modifier = Modifier.padding(horizontal = 20.dp)) {
-                        Icon(Icons.Default.Person, contentDescription = "Profile", tint = Color.Gray, modifier = Modifier.size(28.dp))
-                    }
-                    Spacer(modifier = Modifier.width(60.dp)) 
-                }
+                NavigationBarItem(
+                    selected = false,
+                    onClick = onNavigateToHome,
+                    icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+                    label = { Text("Home") }
+                )
+                NavigationBarItem(
+                    selected = true,
+                    onClick = onNavigateToSelection,
+                    icon = { Icon(Icons.Default.Checkroom, contentDescription = "Cosplays") },
+                    label = { Text("Cosplans") }
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = onNavigateToProfile,
+                    icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
+                    label = { Text("Profile") }
+                )
             }
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onAddCosplanClick,
-                containerColor = Color(0xFF00ACC1),
-                contentColor = Color.White,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
                 shape = CircleShape,
-                modifier = Modifier
-                    .size(60.dp)
-                    .offset(y = 30.dp)
+                modifier = Modifier.size(60.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add Cosplan", modifier = Modifier.size(30.dp))
             }
-        },
-        floatingActionButtonPosition = FabPosition.End
+        }
     ) { padding ->
         if (filteredCosplans.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-                Text("No cosplans found.", color = Color.Gray)
+            Box(modifier = Modifier.fillMaxSize().padding(padding).background(MaterialTheme.colorScheme.background), contentAlignment = Alignment.Center) {
+                Text("No cosplans found.", color = MaterialTheme.colorScheme.onBackground)
             }
         } else {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding),
+                    .padding(padding)
+                    .background(MaterialTheme.colorScheme.background),
                 contentPadding = PaddingValues(bottom = 20.dp)
             ) {
                 items(filteredCosplans) { cosplan ->
@@ -212,7 +211,7 @@ fun CosplanCard(cosplan: Cosplan, onClick: () -> Unit) {
             .padding(horizontal = 16.dp, vertical = 10.dp)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(28.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
@@ -221,23 +220,23 @@ fun CosplanCard(cosplan: Cosplan, onClick: () -> Unit) {
                     .fillMaxWidth()
                     .height(200.dp)
                     .clip(RoundedCornerShape(28.dp))
-                    .background(Color(0xFFF5F5F5))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Icon(
                         Icons.Default.Assignment, 
                         contentDescription = null, 
                         modifier = Modifier.size(64.dp),
-                        tint = Color.LightGray
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                     )
                 }
                 
                 Surface(
                     color = when(cosplan.status) {
                         "Finished" -> Color(0xFF00BFA5)
-                        "In Progress" -> Color(0xFFFF8A80)
+                        "In Progress" -> MaterialTheme.colorScheme.primary
                         "Paused" -> Color(0xFFFFA726)
-                        else -> Color(0xFFBDBDBD)
+                        else -> MaterialTheme.colorScheme.outline
                     },
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.padding(16.dp)
@@ -264,21 +263,22 @@ fun CosplanCard(cosplan: Cosplan, onClick: () -> Unit) {
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold,
                             fontSize = 22.sp
-                        )
+                        ),
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             Icons.Default.Tag,
                             contentDescription = null,
-                            tint = Color.Gray,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(14.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = cosplan.tags,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 1
                         )
                     }
@@ -288,7 +288,7 @@ fun CosplanCard(cosplan: Cosplan, onClick: () -> Unit) {
                     Text(
                         cosplan.difficulty.uppercase(),
                         style = MaterialTheme.typography.labelSmall.copy(
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontWeight = FontWeight.Bold
                         )
                     )
@@ -296,7 +296,7 @@ fun CosplanCard(cosplan: Cosplan, onClick: () -> Unit) {
                     Text(
                         text = "$${cosplan.estimatedBudget}",
                         style = MaterialTheme.typography.titleMedium.copy(
-                            color = Color(0xFF00ACC1),
+                            color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold
                         )
                     )

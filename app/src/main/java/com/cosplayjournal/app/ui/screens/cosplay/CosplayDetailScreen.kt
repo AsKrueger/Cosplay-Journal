@@ -71,7 +71,13 @@ fun CosplayDetailScreen(
                     IconButton(onClick = { onEditClick(cosplayId) }) {
                         Icon(Icons.Default.Edit, contentDescription = "Edit")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                    actionIconContentColor = MaterialTheme.colorScheme.onSurface
+                )
             )
         }
     ) { paddingValues ->
@@ -79,7 +85,7 @@ fun CosplayDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(Color(0xFFF8F9FA))
+                .background(MaterialTheme.colorScheme.background)
         ) {
             item {
                 Box(modifier = Modifier.fillMaxWidth().height(220.dp)) {
@@ -125,16 +131,16 @@ fun CosplayDetailScreen(
             item {
                 Surface(
                     modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp).fillMaxWidth(),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(20.dp),
-                    border = BorderStroke(1.dp, Color(0xFFF1F3F4))
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
                 ) {
                     Column(modifier = Modifier.padding(20.dp)) {
                         Text(
                             text = cosplay?.notes ?: "No notes yet.", 
                             fontSize = 14.sp, 
                             lineHeight = 20.sp,
-                            color = if (cosplay?.notes.isNullOrBlank()) Color.LightGray else Color.Black
+                            color = if (cosplay?.notes.isNullOrBlank()) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -142,7 +148,7 @@ fun CosplayDetailScreen(
 
             item {
                 Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)) {
-                    Text("BUILD DETAILS", style = MaterialTheme.typography.labelLarge, color = Color.Gray, fontWeight = FontWeight.Bold)
+                    Text("BUILD DETAILS", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(10.dp))
                     
                     val wigMakeupSubtitle = remember(cosplay?.wigs, cosplay?.makeup) {
@@ -171,7 +177,7 @@ fun CosplayDetailScreen(
                             icon = Icons.Default.Handyman,
                             title = "Handmade",
                             subtitle = "${handmadeParts.size} Items",
-                            iconColor = Color(0xFFF07D3E),
+                            iconColor = MaterialTheme.colorScheme.primary,
                             onClick = { 
                                 currentDetailType = DetailType.HANDMADE
                                 showSheet = true
@@ -182,7 +188,7 @@ fun CosplayDetailScreen(
                             icon = Icons.Default.ShoppingBag,
                             title = "Purchased",
                             subtitle = "${purchasedItems.size} Items",
-                            iconColor = Color(0xFF34A853),
+                            iconColor = Color(0xFF34A853), // Green for success/purchased
                             onClick = { 
                                 currentDetailType = DetailType.PURCHASED
                                 showSheet = true
@@ -196,18 +202,18 @@ fun CosplayDetailScreen(
                 item {
                     Surface(
                         modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp).fillMaxWidth(),
-                        color = Color(0xFFFFF7E6),
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
                         shape = RoundedCornerShape(16.dp),
-                        border = BorderStroke(1.dp, Color(0xFFFFD591))
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary)
                     ) {
                         Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Box(modifier = Modifier.size(36.dp).background(Color(0xFFFFE58F), CircleShape), contentAlignment = Alignment.Center) {
-                                Icon(Icons.Default.EmojiEvents, contentDescription = null, tint = Color(0xFFD48806), modifier = Modifier.size(20.dp))
+                            Box(modifier = Modifier.size(36.dp).background(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f), CircleShape), contentAlignment = Alignment.Center) {
+                                Icon(Icons.Default.EmojiEvents, contentDescription = null, tint = MaterialTheme.colorScheme.tertiary, modifier = Modifier.size(20.dp))
                             }
                             Spacer(modifier = Modifier.width(12.dp))
                             Column {
-                                Text("RECOGNITION", fontSize = 9.sp, color = Color(0xFFD48806), fontWeight = FontWeight.Bold)
-                                Text(cosplay?.recognition ?: "", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                                Text("RECOGNITION", fontSize = 9.sp, color = MaterialTheme.colorScheme.tertiary, fontWeight = FontWeight.Bold)
+                                Text(cosplay?.recognition ?: "", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = MaterialTheme.colorScheme.onTertiaryContainer)
                             }
                         }
                     }
@@ -223,7 +229,7 @@ fun CosplayDetailScreen(
                 currentDetailType = null
             },
             sheetState = sheetState,
-            containerColor = Color.White
+            containerColor = MaterialTheme.colorScheme.surface
         ) {
             ItemDetailPanel(
                 type = currentDetailType,
@@ -290,17 +296,15 @@ fun ItemDetailPanel(
     onEditCosplay: () -> Unit,
     onClose: () -> Unit
 ) {
-    val primaryPurple = Color(0xFF6750A4)
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.6f)
+            .fillMaxHeight(0.7f)
             .padding(horizontal = 20.dp)
             .verticalScroll(rememberScrollState())
     ) {
         Row(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onClose) { Icon(Icons.Default.Close, contentDescription = "Close") }
+            IconButton(onClick = onClose) { Icon(Icons.Default.Close, contentDescription = "Close", tint = MaterialTheme.colorScheme.onSurface) }
             Text(
                 text = when(type) {
                     DetailType.WIG_MAKEUP -> "Wig & Makeup"
@@ -309,7 +313,8 @@ fun ItemDetailPanel(
                     null -> ""
                 },
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
             )
             IconButton(
                 onClick = {
@@ -320,7 +325,7 @@ fun ItemDetailPanel(
                     }
                 }
             ) { 
-                Icon(Icons.Default.Edit, contentDescription = "Edit", tint = primaryPurple) 
+                Icon(Icons.Default.Edit, contentDescription = "Edit", tint = MaterialTheme.colorScheme.primary) 
             }
         }
 
@@ -339,7 +344,7 @@ fun ItemDetailPanel(
                     handmadeParts.forEach { part ->
                         HandmadePartDetailContent(part, viewModel)
                         Spacer(modifier = Modifier.height(20.dp))
-                        HorizontalDivider(color = Color.LightGray.copy(alpha = 0.3f))
+                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                         Spacer(modifier = Modifier.height(20.dp))
                     }
                 }
@@ -351,7 +356,7 @@ fun ItemDetailPanel(
                     purchasedItems.forEach { item ->
                         PurchasedItemDetailContent(item)
                         Spacer(modifier = Modifier.height(20.dp))
-                        HorizontalDivider(color = Color.LightGray.copy(alpha = 0.3f))
+                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                         Spacer(modifier = Modifier.height(20.dp))
                     }
                 }
@@ -366,9 +371,9 @@ fun ItemDetailPanel(
 fun EmptyStatePanel(message: String) {
     Box(modifier = Modifier.fillMaxWidth().height(150.dp), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(Icons.Default.Inbox, contentDescription = null, modifier = Modifier.size(40.dp), tint = Color.LightGray)
+            Icon(Icons.Default.Inbox, contentDescription = null, modifier = Modifier.size(40.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
             Spacer(modifier = Modifier.height(8.dp))
-            Text(message, color = Color.Gray, fontSize = 14.sp)
+            Text(message, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
         }
     }
 }
@@ -387,14 +392,14 @@ fun HandmadePartDetailContent(part: HandmadePart, viewModel: CosplayViewModel) {
             )
         }
         
-        Surface(color = Color(0xFFFFF7E6), shape = RoundedCornerShape(4.dp)) {
-            Text("HANDMADE", color = Color(0xFFD48806), fontSize = 9.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 4.dp))
+        Surface(color = MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(4.dp)) {
+            Text("HANDMADE", color = MaterialTheme.colorScheme.onPrimaryContainer, fontSize = 9.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 4.dp))
         }
         
-        Text(part.name, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+        Text(part.name, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, color = MaterialTheme.colorScheme.onSurface)
         DetailSection("HOW IT WAS MADE", part.processDescription, Icons.Default.Handyman)
         
-        Text("MATERIALS USED", style = MaterialTheme.typography.labelLarge, color = Color.Gray, fontWeight = FontWeight.Bold)
+        Text("MATERIALS USED", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
         Column {
             resources.chunked(2).forEach { rowResources ->
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -423,7 +428,7 @@ fun PurchasedItemDetailContent(item: PurchasedItem) {
                 contentScale = ContentScale.Crop
             )
         }
-        Text(item.name, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+        Text(item.name, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, color = MaterialTheme.colorScheme.onSurface)
         DetailSection("WHERE IT WAS BOUGHT", item.purchaseLink, Icons.Default.ShoppingCart)
         DetailSection("ADJUSTMENTS MADE", item.adjustmentDescription, Icons.Default.AutoFixNormal)
         StatBox(Modifier.fillMaxWidth(), Icons.Default.Payments, "COST", "${item.price}€")
@@ -434,25 +439,32 @@ fun PurchasedItemDetailContent(item: PurchasedItem) {
 fun ResourceMiniCard(resource: PartResource, modifier: Modifier) {
     Surface(
         modifier = modifier,
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(1.dp, Color(0xFFF1F3F4))
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
-            Text(resource.name, fontSize = 10.sp, color = Color.Gray)
-            Text(resource.webLink.take(if(resource.webLink.length > 15) 15 else resource.webLink.length) + "...", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+            Text(resource.name, fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                resource.webLink.take(if(resource.webLink.length > 20) 20 else resource.webLink.length), 
+                fontWeight = FontWeight.Bold, 
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.primary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
 
 @Composable
 fun StatBox(modifier: Modifier, icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, value: String) {
-    Surface(modifier = modifier, color = Color(0xFFF7F2FA), shape = RoundedCornerShape(12.dp)) {
+    Surface(modifier = modifier, color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f), shape = RoundedCornerShape(12.dp)) {
         Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(icon, contentDescription = null, tint = Color(0xFF6750A4), modifier = Modifier.size(18.dp))
+            Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
             Spacer(modifier = Modifier.height(6.dp))
-            Text(label, fontSize = 8.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
-            Text(value, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color(0xFF6750A4))
+            Text(label, fontSize = 8.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
+            Text(value, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
         }
     }
 }
@@ -461,51 +473,19 @@ fun StatBox(modifier: Modifier, icon: androidx.compose.ui.graphics.vector.ImageV
 fun DetailSection(label: String, content: String, icon: androidx.compose.ui.graphics.vector.ImageVector) {
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(icon, contentDescription = null, tint = Color(0xFF6750A4), modifier = Modifier.size(14.dp))
+            Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(14.dp))
             Spacer(modifier = Modifier.width(8.dp))
-            Text(label, fontSize = 9.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
+            Text(label, fontSize = 9.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
         }
         Spacer(modifier = Modifier.height(6.dp))
-        Surface(color = Color(0xFFF8F9FA), shape = RoundedCornerShape(10.dp)) {
+        Surface(color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f), shape = RoundedCornerShape(10.dp)) {
             Text(
                 text = content.ifBlank { "No info provided." }, 
                 modifier = Modifier.padding(12.dp).fillMaxWidth(), 
                 fontSize = 12.sp, 
                 lineHeight = 16.sp,
-                color = if (content.isBlank()) Color.Gray else Color.Black
+                color = if (content.isBlank()) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
             )
-        }
-    }
-}
-
-@Composable
-fun PortfolioStatCard(
-    modifier: Modifier,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    label: String,
-    value: String,
-    showArrow: Boolean = false,
-    iconColor: Color,
-    onClick: () -> Unit = {}
-) {
-    Card(
-        modifier = modifier.clickable(onClick = onClick),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, Color(0xFFF1F3F4)),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(icon, contentDescription = null, tint = iconColor, modifier = Modifier.size(14.dp))
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(label, fontSize = 9.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
-            }
-            Spacer(modifier = Modifier.height(6.dp))
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Text(value, fontWeight = FontWeight.Bold, color = Color(0xFF1967D2), fontSize = 14.sp)
-                if (showArrow) Icon(Icons.Default.ChevronRight, contentDescription = null, tint = Color.LightGray, modifier = Modifier.size(14.dp))
-            }
         }
     }
 }
@@ -514,26 +494,26 @@ fun PortfolioStatCard(
 fun DetailNavigationRow(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, subtitle: String, onClick: () -> Unit) {
     Surface(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, Color(0xFFF1F3F4))
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-            Box(modifier = Modifier.size(38.dp).background(Color(0xFFFDE7E9), CircleShape), contentAlignment = Alignment.Center) {
-                Icon(icon, contentDescription = null, tint = Color(0xFFE91E63), modifier = Modifier.size(20.dp))
+            Box(modifier = Modifier.size(38.dp).background(MaterialTheme.colorScheme.primaryContainer, CircleShape), contentAlignment = Alignment.Center) {
+                Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer, modifier = Modifier.size(20.dp))
             }
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(title, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                Text(title, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
                 Text(
                     text = subtitle, 
                     fontSize = 11.sp, 
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
             }
-            Icon(Icons.Default.ChevronRight, contentDescription = null, tint = Color.LightGray, modifier = Modifier.size(20.dp))
+            Icon(Icons.Default.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(20.dp))
         }
     }
 }
@@ -542,19 +522,19 @@ fun DetailNavigationRow(icon: androidx.compose.ui.graphics.vector.ImageVector, t
 fun SquareDetailCard(modifier: Modifier, icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, subtitle: String, iconColor: Color, onClick: () -> Unit) {
     Surface(
         modifier = modifier.clickable(onClick = onClick),
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, Color(0xFFF1F3F4))
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             Box(modifier = Modifier.size(36.dp).background(iconColor.copy(alpha = 0.1f), CircleShape), contentAlignment = Alignment.Center) {
                 Icon(icon, contentDescription = null, tint = iconColor, modifier = Modifier.size(20.dp))
             }
             Spacer(modifier = Modifier.height(12.dp))
-            Text(title, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-            Text(subtitle, fontSize = 10.sp, color = Color.Gray)
+            Text(title, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
+            Text(subtitle, fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Spacer(modifier = Modifier.height(6.dp))
-            Icon(Icons.Default.OpenInNew, contentDescription = null, tint = Color.LightGray, modifier = Modifier.size(12.dp).align(Alignment.End))
+            Icon(Icons.Default.OpenInNew, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f), modifier = Modifier.size(12.dp).align(Alignment.End))
         }
     }
 }

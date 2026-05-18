@@ -49,12 +49,6 @@ fun AddEditWigMakeupScreen(
 
     val scope = rememberCoroutineScope()
 
-    // Design Colors (Pink/Purple Theme for Wig & Makeup)
-    val accentColor = Color(0xFFE91E63)
-    val lightBackground = Color(0xFFFDE7E9)
-    val fieldBorderColor = Color(0xFFF8BBD0)
-    val grayText = Color(0xFF79747E)
-
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri -> uri?.let { if (imageUris.size < 6) imageUris = imageUris + it } }
@@ -78,6 +72,7 @@ fun AddEditWigMakeupScreen(
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text(if (itemId == null) "Add ${if (isWig) "Wig" else "Makeup"}" else "Edit Details", fontWeight = FontWeight.Bold, fontSize = 20.sp) },
@@ -109,14 +104,22 @@ fun AddEditWigMakeupScreen(
                                 onNavigateBack()
                             }
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = accentColor),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
                         shape = RoundedCornerShape(100.dp),
                         enabled = name.isNotBlank(),
                         modifier = Modifier.padding(end = 8.dp)
                     ) {
                         Text("Save", fontWeight = FontWeight.Bold)
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                )
             )
         }
     ) { padding ->
@@ -128,11 +131,22 @@ fun AddEditWigMakeupScreen(
                 .padding(horizontal = 20.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
+            val fieldColors = OutlinedTextFieldDefaults.colors(
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                focusedLabelColor = MaterialTheme.colorScheme.primary
+            )
+
             // PHOTOS SECTION
             Column {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("PHOTOS", style = MaterialTheme.typography.labelLarge, color = grayText, fontWeight = FontWeight.Bold)
-                    Text("${imageUris.size} / 6", style = MaterialTheme.typography.labelSmall, color = grayText)
+                    Text("PHOTOS", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
+                    Text("${imageUris.size} / 6", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(modifier = Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -140,15 +154,15 @@ fun AddEditWigMakeupScreen(
                         modifier = Modifier
                             .size(100.dp)
                             .clip(RoundedCornerShape(16.dp))
-                            .background(Color.White)
-                            .border(1.dp, Color.LightGray, RoundedCornerShape(16.dp))
+                            .background(MaterialTheme.colorScheme.surface)
+                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
                             .clickable { launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
                         contentAlignment = Alignment.Center
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(Icons.Default.AddAPhoto, contentDescription = null, tint = accentColor, modifier = Modifier.size(24.dp))
+                            Icon(Icons.Default.AddAPhoto, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text("Add Photo", fontSize = 10.sp, color = accentColor)
+                            Text("Add Photo", fontSize = 10.sp, color = MaterialTheme.colorScheme.primary)
                         }
                     }
                     
@@ -176,14 +190,9 @@ fun AddEditWigMakeupScreen(
                 value = name,
                 onValueChange = { name = it },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Name / Reference", color = grayText) },
+                label = { Text("Name / Reference") },
                 shape = RoundedCornerShape(4.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedContainerColor = lightBackground,
-                    focusedContainerColor = lightBackground,
-                    unfocusedBorderColor = fieldBorderColor,
-                    focusedBorderColor = accentColor
-                )
+                colors = fieldColors
             )
 
             // PRODUCTS USED
@@ -191,13 +200,9 @@ fun AddEditWigMakeupScreen(
                 value = productsUsed,
                 onValueChange = { productsUsed = it },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text(if (isWig) "Wig Brand / Model" else "Products Used", color = grayText) },
+                label = { Text(if (isWig) "Wig Brand / Model" else "Products Used") },
                 shape = RoundedCornerShape(4.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedContainerColor = lightBackground,
-                    focusedContainerColor = lightBackground,
-                    unfocusedBorderColor = fieldBorderColor
-                )
+                colors = fieldColors
             )
 
             // PRICE & TIME
@@ -206,25 +211,17 @@ fun AddEditWigMakeupScreen(
                     value = price,
                     onValueChange = { price = it },
                     modifier = Modifier.weight(1f),
-                    label = { Text("Cost (€)", color = grayText) },
+                    label = { Text("Cost (€)") },
                     shape = RoundedCornerShape(4.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = lightBackground,
-                        focusedContainerColor = lightBackground,
-                        unfocusedBorderColor = fieldBorderColor
-                    )
+                    colors = fieldColors
                 )
                 OutlinedTextField(
                     value = timeSpent,
                     onValueChange = { timeSpent = it },
                     modifier = Modifier.weight(1f),
-                    label = { Text("Time Spent", color = grayText) },
+                    label = { Text("Time Spent") },
                     shape = RoundedCornerShape(4.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = lightBackground,
-                        focusedContainerColor = lightBackground,
-                        unfocusedBorderColor = fieldBorderColor
-                    )
+                    colors = fieldColors
                 )
             }
 
@@ -234,15 +231,11 @@ fun AddEditWigMakeupScreen(
                     value = description,
                     onValueChange = { description = it },
                     modifier = Modifier.fillMaxWidth().height(150.dp),
-                    label = { Text(if (isWig) "Styling Notes" else "Application Steps", color = grayText) },
+                    label = { Text(if (isWig) "Styling Notes" else "Application Steps") },
                     shape = RoundedCornerShape(4.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = lightBackground,
-                        focusedContainerColor = lightBackground,
-                        unfocusedBorderColor = fieldBorderColor
-                    )
+                    colors = fieldColors
                 )
-                Text("Techniques, contacts used, or styling steps...", style = MaterialTheme.typography.bodySmall, color = grayText, modifier = Modifier.padding(top = 4.dp))
+                Text("Techniques, contacts used, or styling steps...", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
             }
             Spacer(modifier = Modifier.height(20.dp))
         }

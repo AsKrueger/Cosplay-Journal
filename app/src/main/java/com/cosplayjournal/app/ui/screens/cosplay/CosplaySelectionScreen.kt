@@ -46,7 +46,6 @@ fun CosplaySelectionScreen(
     val lastCosplay = cosplays.lastOrNull()
     val lastCosplan = cosplans.lastOrNull()
 
-    // Buscamos la imagen del cosplay más reciente asociado al último plan si existe
     val lastCosplanImage = cosplays.findLast { it.cosplanId == lastCosplan?.id }?.mainImageUri
 
     Scaffold(
@@ -59,7 +58,8 @@ fun CosplaySelectionScreen(
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp
-                            )
+                            ),
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 },
@@ -68,7 +68,7 @@ fun CosplaySelectionScreen(
                         Icon(
                             imageVector = Icons.Default.Menu,
                             contentDescription = "Menú",
-                            tint = Color(0xFF00ACC1),
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(28.dp)
                         )
                     }
@@ -78,11 +78,14 @@ fun CosplaySelectionScreen(
                         Icon(
                             imageVector = Icons.Default.Settings, 
                             contentDescription = "Ajustes", 
-                            modifier = Modifier.size(28.dp)
+                            modifier = Modifier.size(28.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             )
         }
     ) { padding ->
@@ -90,10 +93,10 @@ fun CosplaySelectionScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // CARD COSPLAYS
             SelectionCard(
                 title = "Mis Cosplays",
                 subtitle = lastCosplay?.let { "${it.characterName} - ${it.series}" } ?: "Empieza a registrar tus trajes",
@@ -107,7 +110,6 @@ fun CosplaySelectionScreen(
                 modifier = Modifier.weight(1f)
             )
 
-            // CARD COSPLANS
             SelectionCard(
                 title = "Mis Cosplans",
                 subtitle = lastCosplan?.let { "${it.name}" } ?: "Planifica tu próximo proyecto",
@@ -144,7 +146,8 @@ fun SelectionCard(
             .fillMaxWidth()
             .clip(RoundedCornerShape(32.dp))
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(32.dp)
+        shape = RoundedCornerShape(32.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
@@ -162,7 +165,7 @@ fun SelectionCard(
                     .background(
                         Brush.verticalGradient(
                             colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.8f)),
-                            startY = 400f
+                            startY = 300f
                         )
                     )
             )
@@ -186,7 +189,7 @@ fun SelectionCard(
                         )
                     }
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text("Hace 2 semanas", color = Color.White.copy(alpha = 0.7f), fontSize = 12.sp)
+                    Text("Reciente", color = Color.White.copy(alpha = 0.7f), fontSize = 12.sp)
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -250,13 +253,13 @@ fun SelectionCard(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(16.dp)
-                        .background(Color(0xFF00BFA5).copy(alpha = 0.9f), CircleShape)
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.9f), CircleShape)
                         .size(40.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add, 
                         contentDescription = "Añadir", 
-                        tint = Color.White
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }

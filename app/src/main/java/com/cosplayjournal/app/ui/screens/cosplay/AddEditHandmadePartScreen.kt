@@ -63,12 +63,6 @@ fun AddEditHandmadePartScreen(
 
     var showAddResourceDialog by remember { mutableStateOf(false) }
 
-    // Design Colors (Purple Theme)
-    val primaryPurple = Color(0xFF6750A4)
-    val lightPurpleBackground = Color(0xFFF7F2FA)
-    val fieldBorderColor = Color(0xFFE7E0EC)
-    val grayText = Color(0xFF79747E)
-
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri -> uri?.let { if (imageUris.size < 6) imageUris = imageUris + it } }
@@ -91,6 +85,7 @@ fun AddEditHandmadePartScreen(
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text(if (partId == null) "Add Handmade Part" else "Edit Handmade Part", fontWeight = FontWeight.Bold, fontSize = 20.sp) },
@@ -125,14 +120,22 @@ fun AddEditHandmadePartScreen(
                                 onNavigateBack()
                             }
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = primaryPurple),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
                         shape = RoundedCornerShape(100.dp),
                         enabled = name.isNotBlank(),
                         modifier = Modifier.padding(end = 8.dp)
                     ) {
                         Text("Save", fontWeight = FontWeight.Bold)
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                )
             )
         }
     ) { padding ->
@@ -144,11 +147,22 @@ fun AddEditHandmadePartScreen(
                 .padding(horizontal = 20.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
+            val fieldColors = OutlinedTextFieldDefaults.colors(
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                focusedLabelColor = MaterialTheme.colorScheme.primary
+            )
+
             // PHOTOS SECTION
             Column {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("PHOTOS", style = MaterialTheme.typography.labelLarge, color = grayText, fontWeight = FontWeight.Bold)
-                    Text("${imageUris.size} / 6", style = MaterialTheme.typography.labelSmall, color = grayText)
+                    Text("PHOTOS", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
+                    Text("${imageUris.size} / 6", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(modifier = Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -157,15 +171,15 @@ fun AddEditHandmadePartScreen(
                         modifier = Modifier
                             .size(100.dp)
                             .clip(RoundedCornerShape(16.dp))
-                            .background(Color.White)
-                            .border(1.dp, Color.LightGray, RoundedCornerShape(16.dp))
+                            .background(MaterialTheme.colorScheme.surface)
+                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
                             .clickable { launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
                         contentAlignment = Alignment.Center
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(Icons.Default.AddAPhoto, contentDescription = null, tint = primaryPurple, modifier = Modifier.size(24.dp))
+                            Icon(Icons.Default.AddAPhoto, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text("Add Photo", fontSize = 10.sp, color = primaryPurple)
+                            Text("Add Photo", fontSize = 10.sp, color = MaterialTheme.colorScheme.primary)
                         }
                     }
                     
@@ -193,14 +207,9 @@ fun AddEditHandmadePartScreen(
                 value = name,
                 onValueChange = { name = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Part Name (e.g. Helmet, Cape)", color = grayText) },
+                placeholder = { Text("Part Name (e.g. Helmet, Cape)", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)) },
                 shape = RoundedCornerShape(4.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedContainerColor = lightPurpleBackground,
-                    focusedContainerColor = lightPurpleBackground,
-                    unfocusedBorderColor = fieldBorderColor,
-                    focusedBorderColor = primaryPurple
-                )
+                colors = fieldColors
             )
 
             // PRICE & TIME
@@ -209,25 +218,17 @@ fun AddEditHandmadePartScreen(
                     value = price,
                     onValueChange = { price = it },
                     modifier = Modifier.weight(1f),
-                    placeholder = { Text("Estimated Cost (€)", color = grayText) },
+                    placeholder = { Text("Estimated Cost (€)", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)) },
                     shape = RoundedCornerShape(4.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = lightPurpleBackground,
-                        focusedContainerColor = lightPurpleBackground,
-                        unfocusedBorderColor = fieldBorderColor
-                    )
+                    colors = fieldColors
                 )
                 OutlinedTextField(
                     value = timeSpent,
                     onValueChange = { timeSpent = it },
                     modifier = Modifier.weight(1f),
-                    placeholder = { Text("Time Spent (hrs)", color = grayText) },
+                    placeholder = { Text("Time Spent (hrs)", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)) },
                     shape = RoundedCornerShape(4.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = lightPurpleBackground,
-                        focusedContainerColor = lightPurpleBackground,
-                        unfocusedBorderColor = fieldBorderColor
-                    )
+                    colors = fieldColors
                 )
             }
 
@@ -237,25 +238,21 @@ fun AddEditHandmadePartScreen(
                     value = processDescription,
                     onValueChange = { processDescription = it },
                     modifier = Modifier.fillMaxWidth().height(120.dp),
-                    placeholder = { Text("Process Description", color = grayText) },
+                    placeholder = { Text("Process Description", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)) },
                     shape = RoundedCornerShape(4.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = lightPurpleBackground,
-                        focusedContainerColor = lightPurpleBackground,
-                        unfocusedBorderColor = fieldBorderColor
-                    )
+                    colors = fieldColors
                 )
-                Text("Notes about techniques, failures, or successes...", style = MaterialTheme.typography.bodySmall, color = grayText, modifier = Modifier.padding(top = 4.dp))
+                Text("Notes about techniques, failures, or successes...", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
             }
 
             // RESOURCES USED
             Column {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text("RESOURCES USED", style = MaterialTheme.typography.labelLarge, color = grayText, fontWeight = FontWeight.Bold)
+                    Text("RESOURCES USED", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
                     TextButton(onClick = { showAddResourceDialog = true }) {
-                        Icon(Icons.Default.AddCircle, contentDescription = null, modifier = Modifier.size(20.dp), tint = primaryPurple)
+                        Icon(Icons.Default.AddCircle, contentDescription = null, modifier = Modifier.size(20.dp), tint = MaterialTheme.colorScheme.primary)
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Add Material", color = primaryPurple, fontWeight = FontWeight.Bold)
+                        Text("Add Material", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                     }
                 }
                 
@@ -264,18 +261,18 @@ fun AddEditHandmadePartScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(120.dp)
-                            .border(1.dp, fieldBorderColor, RoundedCornerShape(16.dp)),
+                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp)),
                         contentAlignment = Alignment.Center
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(Icons.Default.ShoppingBasket, contentDescription = null, tint = Color.LightGray, modifier = Modifier.size(32.dp))
+                            Icon(Icons.Default.ShoppingBasket, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f), modifier = Modifier.size(32.dp))
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text("No more materials added yet", color = Color.LightGray, fontSize = 12.sp)
+                            Text("No more materials added yet", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f), fontSize = 12.sp)
                         }
                     }
                 } else {
                     allResources.forEach { resource ->
-                        ResourceItem(resource, primaryPurple)
+                        ResourceItem(resource, MaterialTheme.colorScheme.primary)
                         Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
@@ -312,8 +309,8 @@ fun ResourceItem(resource: PartResource, accentColor: Color) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
-        border = BorderStroke(1.dp, Color(0xFFE7E0EC)),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -326,7 +323,7 @@ fun ResourceItem(resource: PartResource, accentColor: Color) {
                     )
                 } else {
                     Box(
-                        modifier = Modifier.size(40.dp).background(Color(0xFFF7F2FA), CircleShape),
+                        modifier = Modifier.size(40.dp).background(MaterialTheme.colorScheme.surfaceVariant, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(Icons.Default.Link, contentDescription = null, modifier = Modifier.size(20.dp), tint = accentColor)
@@ -334,19 +331,19 @@ fun ResourceItem(resource: PartResource, accentColor: Color) {
                 }
                 Spacer(modifier = Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(resource.name, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    Text(resource.name, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
                     if (resource.webLink.isNotBlank()) {
-                        Text(resource.webLink, fontSize = 11.sp, color = Color.Gray)
+                        Text(resource.webLink, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
-                Text("${resource.price}€", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                Text("${resource.price}€", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
             }
             if (resource.usageDescription.isNotBlank()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = resource.usageDescription,
                     fontSize = 12.sp,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 16.sp,
                     modifier = Modifier.padding(start = 52.dp)
                 )
@@ -370,7 +367,8 @@ fun AddResourceDialog(onDismiss: () -> Unit, onSave: (String, String, Double, St
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add Material", fontWeight = FontWeight.Bold) },
+        containerColor = MaterialTheme.colorScheme.surface,
+        title = { Text("Add Material", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface) },
         text = {
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
@@ -382,11 +380,11 @@ fun AddResourceDialog(onDismiss: () -> Unit, onSave: (String, String, Double, St
                         modifier = Modifier
                             .size(60.dp)
                             .clip(RoundedCornerShape(8.dp))
-                            .background(Color(0xFFF7F2FA))
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
                             .clickable { launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(Icons.Default.AddAPhoto, contentDescription = null, tint = Color(0xFF6750A4), modifier = Modifier.size(20.dp))
+                        Icon(Icons.Default.AddAPhoto, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
                     }
                     imageUris.forEach { uri ->
                         Box {
@@ -406,26 +404,38 @@ fun AddResourceDialog(onDismiss: () -> Unit, onSave: (String, String, Double, St
                     }
                 }
 
+                val fieldColors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedLabelColor = MaterialTheme.colorScheme.primary,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
                 OutlinedTextField(
                     value = name, 
                     onValueChange = { name = it }, 
                     label = { Text("Material Name") }, 
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
+                    colors = fieldColors
                 )
                 OutlinedTextField(
                     value = web, 
                     onValueChange = { web = it }, 
                     label = { Text("Web Link or Store") }, 
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
+                    colors = fieldColors
                 )
                 OutlinedTextField(
                     value = price, 
                     onValueChange = { price = it }, 
                     label = { Text("Price (Approx €)") }, 
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
+                    colors = fieldColors
                 )
                 OutlinedTextField(
                     value = usage, 
@@ -433,7 +443,8 @@ fun AddResourceDialog(onDismiss: () -> Unit, onSave: (String, String, Double, St
                     label = { Text("How was it used?") }, 
                     modifier = Modifier.fillMaxWidth().height(100.dp),
                     shape = RoundedCornerShape(8.dp),
-                    placeholder = { Text("Describe techniques, amount used, etc.", fontSize = 12.sp) }
+                    placeholder = { Text("Describe techniques, amount used, etc.", fontSize = 12.sp) },
+                    colors = fieldColors
                 )
             }
         },
@@ -441,14 +452,17 @@ fun AddResourceDialog(onDismiss: () -> Unit, onSave: (String, String, Double, St
             Button(
                 onClick = { onSave(name, web, price.toDoubleOrNull() ?: 0.0, imageUris.joinToString(",") { it.toString() }, usage) },
                 enabled = name.isNotBlank(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6750A4))
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
             ) {
                 Text("Add Material")
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = Color.Gray)
+                Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     )

@@ -12,7 +12,13 @@ private val DarkColorScheme = darkColorScheme(
     secondary = SecondaryBlue,
     tertiary = TertiaryRed,
     background = Color(0xFF121212),
-    surface = Color(0xFF1E1E1E)
+    surface = Color(0xFF1E1E1E),
+    onPrimary = Color.Black, // Para que resalte sobre el naranja
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color(0xFFE6E1E5),
+    onSurface = Color(0xFFE6E1E5),
+    outline = Color(0xFFE6E1E5) // Usaremos esto para los bordes brutalistas en modo oscuro
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -25,7 +31,8 @@ private val LightColorScheme = lightColorScheme(
     onSecondary = Color.White,
     onTertiary = Color.White,
     onBackground = Color.Black,
-    onSurface = Color.Black
+    onSurface = Color.Black,
+    outline = Color.Black // Bordes negros en modo claro
 )
 
 @Composable

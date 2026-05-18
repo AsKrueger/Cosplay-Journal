@@ -51,10 +51,6 @@ fun AddEditCosplayScreen(
     
     val scope = rememberCoroutineScope()
     
-    val primaryOrange = Color(0xFFF07D3E)
-    val lightBackground = Color(0xFFFFF9F6)
-    val fieldBorderColor = Color(0xFFFEECE2)
-
     var showWeatherDialog by remember { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(
@@ -75,14 +71,19 @@ fun AddEditCosplayScreen(
     }
 
     Scaffold(
-        containerColor = lightBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White),
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.primary,
+                    actionIconContentColor = MaterialTheme.colorScheme.primary
+                ),
                 title = { Text(if (currentCosplayId == null) "New Cosplay" else "Edit Cosplay", fontWeight = FontWeight.Bold, fontSize = 18.sp) },
                 navigationIcon = {
                     TextButton(onClick = onNavigateBack) {
-                        Text("Cancel", color = primaryOrange, fontWeight = FontWeight.SemiBold)
+                        Text("Cancel", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
                     }
                 },
                 actions = {
@@ -104,7 +105,11 @@ fun AddEditCosplayScreen(
                         },
                         enabled = characterName.isNotBlank()
                     ) {
-                        Text("Save", color = if (characterName.isNotBlank()) primaryOrange else Color.Gray, fontWeight = FontWeight.Bold)
+                        Text(
+                            "Save", 
+                            color = if (characterName.isNotBlank()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant, 
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             )
@@ -118,50 +123,51 @@ fun AddEditCosplayScreen(
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
+            val fieldColors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                focusedLabelColor = MaterialTheme.colorScheme.primary
+            )
+
             Column {
-                Text("CHARACTER NAME", style = MaterialTheme.typography.labelLarge, color = Color.Gray, fontWeight = FontWeight.Bold)
+                Text("CHARACTER NAME", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = characterName,
                     onValueChange = { characterName = it },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedBorderColor = fieldBorderColor,
-                        focusedBorderColor = primaryOrange,
-                        unfocusedContainerColor = Color.White,
-                        focusedContainerColor = Color.White
-                    ),
-                    placeholder = { Text("Enter character name...", color = Color.LightGray) }
+                    colors = fieldColors,
+                    placeholder = { Text("Enter character name...", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)) }
                 )
             }
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("SERIES / GAME", style = MaterialTheme.typography.labelLarge, color = Color.Gray, fontWeight = FontWeight.Bold)
+                    Text("SERIES / GAME", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = series,
                         onValueChange = { series = it },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = fieldBorderColor,
-                            focusedBorderColor = primaryOrange,
-                            unfocusedContainerColor = Color.White,
-                            focusedContainerColor = Color.White
-                        )
+                        colors = fieldColors
                     )
                 }
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("PREFERRED WEATHER", style = MaterialTheme.typography.labelLarge, color = Color.Gray, fontWeight = FontWeight.Bold)
+                    Text("PREFERRED WEATHER", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(8.dp))
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(56.dp)
-                            .border(1.dp, fieldBorderColor, RoundedCornerShape(24.dp))
-                            .background(Color.White, RoundedCornerShape(24.dp))
+                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(24.dp))
+                            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(24.dp))
                             .clickable { showWeatherDialog = true }
                             .padding(horizontal = 16.dp),
                         contentAlignment = Alignment.CenterStart
@@ -169,35 +175,30 @@ fun AddEditCosplayScreen(
                         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
                             Text(
                                 text = preferredWeather.ifBlank { "Select weather..." },
-                                color = if (preferredWeather.isBlank()) Color.LightGray else Color.Black,
+                                color = if (preferredWeather.isBlank()) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.weight(1f),
                                 maxLines = 1
                             )
-                            Icon(Icons.Default.CloudQueue, contentDescription = null, tint = primaryOrange)
+                            Icon(Icons.Default.CloudQueue, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                         }
                     }
                 }
             }
 
             Column {
-                Text("NOTES / DESCRIPTION", style = MaterialTheme.typography.labelLarge, color = Color.Gray, fontWeight = FontWeight.Bold)
+                Text("NOTES / DESCRIPTION", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = notes,
                     onValueChange = { notes = it },
                     modifier = Modifier.fillMaxWidth().heightIn(min = 100.dp),
                     shape = RoundedCornerShape(24.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedBorderColor = fieldBorderColor,
-                        focusedBorderColor = primaryOrange,
-                        unfocusedContainerColor = Color.White,
-                        focusedContainerColor = Color.White
-                    )
+                    colors = fieldColors
                 )
             }
 
             Column {
-                Text("COVER PHOTO", style = MaterialTheme.typography.labelLarge, color = Color.Gray, fontWeight = FontWeight.Bold)
+                Text("COVER PHOTO", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     if (imageUri != null) {
@@ -212,21 +213,21 @@ fun AddEditCosplayScreen(
                         modifier = Modifier
                             .size(100.dp)
                             .clip(RoundedCornerShape(16.dp))
-                            .background(Color.White)
-                            .border(1.dp, primaryOrange.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
+                            .background(MaterialTheme.colorScheme.surface)
+                            .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
                             .clickable { launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
                         contentAlignment = Alignment.Center
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(Icons.Default.AddAPhoto, contentDescription = null, tint = primaryOrange)
-                            Text("ADD PHOTO", fontSize = 10.sp, color = primaryOrange, fontWeight = FontWeight.Bold)
+                            Icon(Icons.Default.AddAPhoto, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                            Text("ADD PHOTO", fontSize = 10.sp, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
             }
 
             Column {
-                Text("COSPLAY ARTICLES", style = MaterialTheme.typography.labelLarge, color = Color.Gray, fontWeight = FontWeight.Bold)
+                Text("COSPLAY ARTICLES", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(12.dp))
                 
                 var showAddMenu by remember { mutableStateOf(false) }
@@ -234,7 +235,10 @@ fun AddEditCosplayScreen(
                 Box {
                     Button(
                         onClick = { if (characterName.isNotBlank()) showAddMenu = true },
-                        colors = ButtonDefaults.buttonColors(containerColor = primaryOrange),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
                         shape = RoundedCornerShape(20.dp)
                     ) {
                         Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
@@ -242,9 +246,13 @@ fun AddEditCosplayScreen(
                         Text("Add Article", fontWeight = FontWeight.Bold)
                     }
                     
-                    DropdownMenu(expanded = showAddMenu, onDismissRequest = { showAddMenu = false }) {
+                    DropdownMenu(
+                        expanded = showAddMenu, 
+                        onDismissRequest = { showAddMenu = false },
+                        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+                    ) {
                         DropdownMenuItem(
-                            text = { Text("Peluca (Wig)") },
+                            text = { Text("Peluca (Wig)", color = MaterialTheme.colorScheme.onSurface) },
                             onClick = { 
                                 showAddMenu = false
                                 scope.launch {
@@ -255,10 +263,10 @@ fun AddEditCosplayScreen(
                                     onAddWig(id)
                                 }
                             },
-                            leadingIcon = { Icon(Icons.Default.Face, contentDescription = null) }
+                            leadingIcon = { Icon(Icons.Default.Face, contentDescription = null, tint = MaterialTheme.colorScheme.primary) }
                         )
                         DropdownMenuItem(
-                            text = { Text("Maquillaje (Makeup)") },
+                            text = { Text("Maquillaje (Makeup)", color = MaterialTheme.colorScheme.onSurface) },
                             onClick = { 
                                 showAddMenu = false
                                 scope.launch {
@@ -269,11 +277,11 @@ fun AddEditCosplayScreen(
                                     onAddMakeup(id)
                                 }
                             },
-                            leadingIcon = { Icon(Icons.Default.AutoFixHigh, contentDescription = null) }
+                            leadingIcon = { Icon(Icons.Default.AutoFixHigh, contentDescription = null, tint = MaterialTheme.colorScheme.primary) }
                         )
-                        HorizontalDivider()
+                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                         DropdownMenuItem(
-                            text = { Text("A Mano (Handmade)") },
+                            text = { Text("A Mano (Handmade)", color = MaterialTheme.colorScheme.onSurface) },
                             onClick = { 
                                 showAddMenu = false
                                 scope.launch {
@@ -284,10 +292,10 @@ fun AddEditCosplayScreen(
                                     onAddHandmadePart(id)
                                 }
                             },
-                            leadingIcon = { Icon(Icons.Default.Handyman, contentDescription = null) }
+                            leadingIcon = { Icon(Icons.Default.Handyman, contentDescription = null, tint = MaterialTheme.colorScheme.primary) }
                         )
                         DropdownMenuItem(
-                            text = { Text("Comprado (Purchased)") },
+                            text = { Text("Comprado (Purchased)", color = MaterialTheme.colorScheme.onSurface) },
                             onClick = { 
                                 showAddMenu = false
                                 scope.launch {
@@ -298,7 +306,7 @@ fun AddEditCosplayScreen(
                                     onAddPurchasedItem(id)
                                 }
                             },
-                            leadingIcon = { Icon(Icons.Default.ShoppingCart, contentDescription = null) }
+                            leadingIcon = { Icon(Icons.Default.ShoppingCart, contentDescription = null, tint = MaterialTheme.colorScheme.primary) }
                         )
                     }
                 }
@@ -315,7 +323,10 @@ fun AddEditCosplayScreen(
                     }
                 },
                 modifier = Modifier.fillMaxWidth().height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = primaryOrange),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
                 shape = RoundedCornerShape(28.dp),
                 enabled = characterName.isNotBlank()
             ) {
@@ -352,7 +363,8 @@ fun WeatherSelectionDialog(
     
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Select Preferred Weather", fontWeight = FontWeight.Bold) },
+        containerColor = MaterialTheme.colorScheme.surface,
+        title = { Text("Select Preferred Weather", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 seasons.forEach { season ->
@@ -372,10 +384,10 @@ fun WeatherSelectionDialog(
                         Checkbox(
                             checked = season in selectedSeasons,
                             onCheckedChange = null,
-                            colors = CheckboxDefaults.colors(checkedColor = Color(0xFFF07D3E))
+                            colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.primary)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(season)
+                        Text(season, color = MaterialTheme.colorScheme.onSurface)
                     }
                 }
                 
@@ -386,8 +398,12 @@ fun WeatherSelectionDialog(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFFF07D3E),
-                        unfocusedBorderColor = Color.LightGray
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
             }
@@ -398,12 +414,12 @@ fun WeatherSelectionDialog(
                     .joinToString(", ")
                 onConfirm(result)
             }) {
-                Text("Confirm", color = Color(0xFFF07D3E), fontWeight = FontWeight.Bold)
+                Text("Confirm", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = Color.Gray)
+                Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     )

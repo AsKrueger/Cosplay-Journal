@@ -40,7 +40,7 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
                     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 16.dp)) {
                         Box(modifier = Modifier.size(12.dp).background(Color(0xFF4DB6AC), CircleShape))
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("OFFLINE", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                        Text("OFFLINE", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 },
                 actions = {
@@ -51,7 +51,7 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
             )
         }
     ) { padding ->
-        Column(modifier = Modifier.padding(padding).fillMaxSize()) {
+        Column(modifier = Modifier.padding(padding).fillMaxSize().background(MaterialTheme.colorScheme.background)) {
             CalendarSection()
             
             Spacer(modifier = Modifier.height(16.dp))
@@ -60,7 +60,8 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
                 text = "Upcoming Conventions",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp),
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             LazyColumn(
@@ -106,7 +107,8 @@ fun CalendarSection() {
             Text(
                 text = "${currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${currentMonth.year}",
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface
             )
             
             IconButton(
@@ -119,7 +121,7 @@ fun CalendarSection() {
         
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             listOf("S", "M", "T", "W", "T", "F", "S").forEach { day ->
-                Text(day, modifier = Modifier.weight(1f), style = MaterialTheme.typography.labelSmall, color = Color.Gray, textAlign = TextAlign.Center)
+                Text(day, modifier = Modifier.weight(1f), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center)
             }
         }
         
@@ -148,13 +150,13 @@ fun CalendarSection() {
                             
                             if (isToday) {
                                 Box(
-                                    modifier = Modifier.size(32.dp).background(Color(0xFF00ACC1), CircleShape),
+                                    modifier = Modifier.size(32.dp).background(MaterialTheme.colorScheme.primary, CircleShape),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Text(day, color = Color.White, fontWeight = FontWeight.Bold)
+                                    Text(day, color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Bold)
                                 }
                             } else {
-                                Text(day)
+                                Text(day, color = MaterialTheme.colorScheme.onSurface)
                             }
                         }
                     }
@@ -166,7 +168,7 @@ fun CalendarSection() {
         }
         
         Spacer(modifier = Modifier.height(8.dp))
-        Box(modifier = Modifier.width(40.dp).height(4.dp).background(Color.LightGray, RoundedCornerShape(2.dp)).align(Alignment.CenterHorizontally))
+        Box(modifier = Modifier.width(40.dp).height(4.dp).background(MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(2.dp)).align(Alignment.CenterHorizontally))
     }
 }
 
@@ -179,20 +181,20 @@ fun EventCard(
     onFavoriteClick: () -> Unit
 ) {
     val statusColor = when(status) {
-        "ATTENDING" -> Color(0xFFE0F2F1)
-        "INTERESTED" -> Color(0xFFF5F5F5)
-        else -> Color(0xFFFFF3E0)
+        "ATTENDING" -> MaterialTheme.colorScheme.primaryContainer
+        "INTERESTED" -> MaterialTheme.colorScheme.secondaryContainer
+        else -> MaterialTheme.colorScheme.tertiaryContainer
     }
     val statusTextColor = when(status) {
-        "ATTENDING" -> Color(0xFF00897B)
-        "INTERESTED" -> Color(0xFF757575)
-        else -> Color(0xFFFB8C00)
+        "ATTENDING" -> MaterialTheme.colorScheme.onPrimaryContainer
+        "INTERESTED" -> MaterialTheme.colorScheme.onSecondaryContainer
+        else -> MaterialTheme.colorScheme.onTertiaryContainer
     }
 
     Card(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -200,7 +202,7 @@ fun EventCard(
                 modifier = Modifier
                     .size(80.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Color.LightGray)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             )
             
             Spacer(modifier = Modifier.width(16.dp))
@@ -218,12 +220,12 @@ fun EventCard(
                         fontWeight = FontWeight.Bold
                     )
                 }
-                Text(text = event.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                Text(text = event.city, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                Text(text = event.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = event.city, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text(
                     text = "${event.startDate} - ${event.endDate}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF00ACC1),
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -233,11 +235,11 @@ fun EventCard(
                     Icon(
                         if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder, 
                         contentDescription = "Favorite", 
-                        tint = if (isFavorite) Color.Red else Color.LightGray
+                        tint = if (isFavorite) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 IconButton(onClick = { /* Share */ }) {
-                    Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.LightGray)
+                    Icon(Icons.Default.Share, contentDescription = "Share", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }

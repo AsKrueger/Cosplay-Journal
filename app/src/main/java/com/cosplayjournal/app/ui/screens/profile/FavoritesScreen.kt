@@ -35,7 +35,12 @@ fun FavoritesScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                )
             )
         }
     ) { padding ->
@@ -43,7 +48,7 @@ fun FavoritesScreen(
 
         if (!hasFavorites) {
             EmptyState(
-                modifier = Modifier.padding(padding),
+                modifier = Modifier.padding(padding).background(MaterialTheme.colorScheme.background),
                 icon = Icons.Default.Favorite,
                 title = "No favorites yet",
                 description = "Events and cosplays you mark with a heart will appear here."
@@ -53,13 +58,18 @@ fun FavoritesScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
-                    .background(Color(0xFFF8F9FA)),
+                    .background(MaterialTheme.colorScheme.background),
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 if (uiState.favoriteEvents.isNotEmpty()) {
                     item {
-                        Text("Favorite Events", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Text(
+                            "Favorite Events", 
+                            style = MaterialTheme.typography.titleMedium, 
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     }
                     items(uiState.favoriteEvents) { event ->
                         EventCard(
@@ -74,17 +84,30 @@ fun FavoritesScreen(
 
                 if (uiState.favoriteCosplays.isNotEmpty()) {
                     item {
-                        Text("Favorite Cosplays", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Text(
+                            "Favorite Cosplays", 
+                            style = MaterialTheme.typography.titleMedium, 
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     }
                     items(uiState.favoriteCosplays) { cosplay ->
                         Card(
                             modifier = Modifier.fillMaxWidth(),
-                            onClick = { onCosplayClick(cosplay.id) }
+                            onClick = { onCosplayClick(cosplay.id) },
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                         ) {
                             Row(modifier = Modifier.padding(16.dp)) {
-                                Text(cosplay.characterName, fontWeight = FontWeight.Bold)
+                                Text(
+                                    cosplay.characterName, 
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
                                 Spacer(modifier = Modifier.weight(1f))
-                                Text(cosplay.series, color = Color.Gray)
+                                Text(
+                                    cosplay.series, 
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             }
                         }
                     }

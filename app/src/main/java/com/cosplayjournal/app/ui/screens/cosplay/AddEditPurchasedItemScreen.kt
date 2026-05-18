@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -29,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.cosplayjournal.app.data.entity.PurchasedItem
-import com.cosplayjournal.app.ui.theme.NeutralGray
 import com.cosplayjournal.app.ui.viewmodel.CosplayViewModel
 import kotlinx.coroutines.launch
 
@@ -83,7 +81,7 @@ fun AddEditPurchasedItemScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.Black)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onSurface)
                     }
                 },
                 actions = {
@@ -114,10 +112,14 @@ fun AddEditPurchasedItemScreen(
                             "GUARDAR", 
                             fontWeight = FontWeight.ExtraBold, 
                             fontStyle = FontStyle.Italic,
-                            color = if (name.isNotBlank()) MaterialTheme.colorScheme.primary else Color.Gray
+                            color = if (name.isNotBlank()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
+                )
             )
         }
     ) { padding ->
@@ -136,7 +138,8 @@ fun AddEditPurchasedItemScreen(
                     "FOTO DE REFERENCIA", 
                     style = MaterialTheme.typography.labelLarge, 
                     fontWeight = FontWeight.Bold,
-                    fontStyle = FontStyle.Italic
+                    fontStyle = FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Box(
@@ -144,8 +147,8 @@ fun AddEditPurchasedItemScreen(
                         .fillMaxWidth()
                         .height(200.dp)
                         .shadow(4.dp, RoundedCornerShape(4.dp))
-                        .background(Color.White, RoundedCornerShape(4.dp))
-                        .border(2.dp, Color.Black, RoundedCornerShape(4.dp))
+                        .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(4.dp))
+                        .border(2.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(4.dp))
                         .clickable { launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
                     contentAlignment = Alignment.Center
                 ) {
@@ -160,7 +163,12 @@ fun AddEditPurchasedItemScreen(
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Icon(Icons.Default.AddAPhoto, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(32.dp))
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text("SUBIR FOTO", fontWeight = FontWeight.ExtraBold, fontStyle = FontStyle.Italic)
+                            Text(
+                                "SUBIR FOTO", 
+                                fontWeight = FontWeight.ExtraBold, 
+                                fontStyle = FontStyle.Italic,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
                         }
                     }
                 }
@@ -172,7 +180,8 @@ fun AddEditPurchasedItemScreen(
                     "NOMBRE DEL ARTÍCULO", 
                     style = MaterialTheme.typography.labelLarge, 
                     fontWeight = FontWeight.Bold,
-                    fontStyle = FontStyle.Italic
+                    fontStyle = FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 BrutalistTextField(
@@ -188,7 +197,8 @@ fun AddEditPurchasedItemScreen(
                     "COSTO (€)", 
                     style = MaterialTheme.typography.labelLarge, 
                     fontWeight = FontWeight.Bold,
-                    fontStyle = FontStyle.Italic
+                    fontStyle = FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 BrutalistTextField(
@@ -204,14 +214,15 @@ fun AddEditPurchasedItemScreen(
                     "LINK DE COMPRA", 
                     style = MaterialTheme.typography.labelLarge, 
                     fontWeight = FontWeight.Bold,
-                    fontStyle = FontStyle.Italic
+                    fontStyle = FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 BrutalistTextField(
                     value = purchaseLink,
                     onValueChange = { purchaseLink = it },
                     placeholder = "https://tienda.com/...",
-                    leadingIcon = { Icon(Icons.Default.Link, contentDescription = null, tint = Color.Black) }
+                    leadingIcon = { Icon(Icons.Default.Link, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface) }
                 )
             }
 
@@ -221,7 +232,8 @@ fun AddEditPurchasedItemScreen(
                     "AJUSTES Y NOTAS", 
                     style = MaterialTheme.typography.labelLarge, 
                     fontWeight = FontWeight.Bold,
-                    fontStyle = FontStyle.Italic
+                    fontStyle = FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 BrutalistTextField(
@@ -240,10 +252,10 @@ fun AddEditPurchasedItemScreen(
                     .height(56.dp)
                     .shadow(if (name.isNotBlank()) 4.dp else 0.dp, RoundedCornerShape(4.dp))
                     .background(
-                        if (name.isNotBlank()) MaterialTheme.colorScheme.primary else Color.LightGray, 
+                        if (name.isNotBlank()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant, 
                         RoundedCornerShape(4.dp)
                     )
-                    .border(2.dp, Color.Black, RoundedCornerShape(4.dp))
+                    .border(2.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(4.dp))
                     .clickable(enabled = name.isNotBlank()) {
                         scope.launch {
                             val item = PurchasedItem(
@@ -269,7 +281,7 @@ fun AddEditPurchasedItemScreen(
                     if (itemId == null) "AÑADIR AL PROYECTO" else "ACTUALIZAR ARTÍCULO", 
                     fontWeight = FontWeight.ExtraBold, 
                     fontStyle = FontStyle.Italic,
-                    color = Color.White,
+                    color = if (name.isNotBlank()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 16.sp
                 )
             }
@@ -293,18 +305,20 @@ fun BrutalistTextField(
         onValueChange = onValueChange,
         modifier = modifier
             .fillMaxWidth()
-            .border(2.dp, Color.Black, RoundedCornerShape(4.dp)),
-        placeholder = { Text(placeholder, color = Color.Gray, style = MaterialTheme.typography.bodyMedium) },
+            .border(2.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(4.dp)),
+        placeholder = { Text(placeholder, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium) },
         leadingIcon = leadingIcon,
         singleLine = singleLine,
         shape = RoundedCornerShape(4.dp),
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
-            disabledContainerColor = Color.White,
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            disabledContainerColor = MaterialTheme.colorScheme.surface,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            cursorColor = Color.Black
+            cursorColor = MaterialTheme.colorScheme.onSurface,
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
         ),
         textStyle = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium)
     )
