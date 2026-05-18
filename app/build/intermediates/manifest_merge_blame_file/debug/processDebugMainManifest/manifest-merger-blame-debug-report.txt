@@ -19,49 +19,49 @@
 13-->C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:6:22-77
 14
 15    <permission
-15-->[androidx.core:core:1.13.1] C:\Users\lovei\.gradle\caches\transforms-4\4bd65994d233de5d515320bd87a3643d\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
+15-->[androidx.core:core:1.13.1] C:\Users\lovei\.gradle\caches\transforms-4\8978b08e148f2c2b5e89e5c3b78fde1a\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
 16        android:name="com.cosplayjournal.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-16-->[androidx.core:core:1.13.1] C:\Users\lovei\.gradle\caches\transforms-4\4bd65994d233de5d515320bd87a3643d\transformed\core-1.13.1\AndroidManifest.xml:23:9-81
+16-->[androidx.core:core:1.13.1] C:\Users\lovei\.gradle\caches\transforms-4\8978b08e148f2c2b5e89e5c3b78fde1a\transformed\core-1.13.1\AndroidManifest.xml:23:9-81
 17        android:protectionLevel="signature" />
-17-->[androidx.core:core:1.13.1] C:\Users\lovei\.gradle\caches\transforms-4\4bd65994d233de5d515320bd87a3643d\transformed\core-1.13.1\AndroidManifest.xml:24:9-44
+17-->[androidx.core:core:1.13.1] C:\Users\lovei\.gradle\caches\transforms-4\8978b08e148f2c2b5e89e5c3b78fde1a\transformed\core-1.13.1\AndroidManifest.xml:24:9-44
 18
 19    <uses-permission android:name="com.cosplayjournal.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-19-->[androidx.core:core:1.13.1] C:\Users\lovei\.gradle\caches\transforms-4\4bd65994d233de5d515320bd87a3643d\transformed\core-1.13.1\AndroidManifest.xml:26:5-97
-19-->[androidx.core:core:1.13.1] C:\Users\lovei\.gradle\caches\transforms-4\4bd65994d233de5d515320bd87a3643d\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
+19-->[androidx.core:core:1.13.1] C:\Users\lovei\.gradle\caches\transforms-4\8978b08e148f2c2b5e89e5c3b78fde1a\transformed\core-1.13.1\AndroidManifest.xml:26:5-97
+19-->[androidx.core:core:1.13.1] C:\Users\lovei\.gradle\caches\transforms-4\8978b08e148f2c2b5e89e5c3b78fde1a\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
 20
 21    <supports-screens
-21-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:9:5-12:40
+21-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:9:5-12:40
 22        android:anyDensity="true"
-22-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:10:9-34
+22-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:10:9-34
 23        android:largeScreens="true"
-23-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:11:9-36
+23-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:11:9-36
 24        android:normalScreens="true" />
-24-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:12:9-37
+24-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:12:9-37
 25
 26    <uses-feature
-26-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:14:5-16:36
+26-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:14:5-16:36
 27        android:name="android.hardware.location.network"
-27-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:15:9-57
+27-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:15:9-57
 28        android:required="false" />
-28-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:16:9-33
+28-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:16:9-33
 29    <uses-feature
-29-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:17:5-19:36
+29-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:17:5-19:36
 30        android:name="android.hardware.location.gps"
-30-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:18:9-53
+30-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:18:9-53
 31        android:required="false" />
-31-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:19:9-33
+31-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:19:9-33
 32    <uses-feature
-32-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:20:5-22:36
+32-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:20:5-22:36
 33        android:name="android.hardware.telephony"
-33-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:21:9-50
+33-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:21:9-50
 34        android:required="false" />
-34-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:22:9-33
+34-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:22:9-33
 35    <uses-feature
-35-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:23:5-25:36
+35-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:23:5-25:36
 36        android:name="android.hardware.wifi"
-36-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:24:9-45
+36-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:24:9-45
 37        android:required="false" />
-37-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\1b0b5269cb946f481baf0ecf53eebf62\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:25:9-33
+37-->[org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\463c5fe753b65f9db808659cfa549368\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:25:9-33
 38
 39    <application
 39-->C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:8:5-25:19
@@ -70,7 +70,7 @@
 41        android:allowBackup="true"
 41-->C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:10:9-35
 42        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-42-->[androidx.core:core:1.13.1] C:\Users\lovei\.gradle\caches\transforms-4\4bd65994d233de5d515320bd87a3643d\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
+42-->[androidx.core:core:1.13.1] C:\Users\lovei\.gradle\caches\transforms-4\8978b08e148f2c2b5e89e5c3b78fde1a\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
 43        android:debuggable="true"
 44        android:extractNativeLibs="false"
 45        android:icon="@mipmap/ic_launcher"
@@ -104,90 +104,90 @@
 59            </intent-filter>
 60        </activity>
 61        <activity
-61-->[androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\lovei\.gradle\caches\transforms-4\460bdd5df17eb7e271de1f4e38f5073b\transformed\jetified-ui-tooling-release\AndroidManifest.xml:23:9-25:39
+61-->[androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\lovei\.gradle\caches\transforms-4\027d56531f1c850e15f017a8e2a29685\transformed\jetified-ui-tooling-release\AndroidManifest.xml:23:9-25:39
 62            android:name="androidx.compose.ui.tooling.PreviewActivity"
-62-->[androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\lovei\.gradle\caches\transforms-4\460bdd5df17eb7e271de1f4e38f5073b\transformed\jetified-ui-tooling-release\AndroidManifest.xml:24:13-71
+62-->[androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\lovei\.gradle\caches\transforms-4\027d56531f1c850e15f017a8e2a29685\transformed\jetified-ui-tooling-release\AndroidManifest.xml:24:13-71
 63            android:exported="true" />
-63-->[androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\lovei\.gradle\caches\transforms-4\460bdd5df17eb7e271de1f4e38f5073b\transformed\jetified-ui-tooling-release\AndroidManifest.xml:25:13-36
+63-->[androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\lovei\.gradle\caches\transforms-4\027d56531f1c850e15f017a8e2a29685\transformed\jetified-ui-tooling-release\AndroidManifest.xml:25:13-36
 64        <activity
-64-->[androidx.compose.ui:ui-test-manifest:1.6.8] C:\Users\lovei\.gradle\caches\transforms-4\d075c76d9065e6f071663118cc3340b5\transformed\jetified-ui-test-manifest-1.6.8\AndroidManifest.xml:23:9-25:39
+64-->[androidx.compose.ui:ui-test-manifest:1.6.8] C:\Users\lovei\.gradle\caches\transforms-4\64e810ea3b4ec1f8981a667002e6cff6\transformed\jetified-ui-test-manifest-1.6.8\AndroidManifest.xml:23:9-25:39
 65            android:name="androidx.activity.ComponentActivity"
-65-->[androidx.compose.ui:ui-test-manifest:1.6.8] C:\Users\lovei\.gradle\caches\transforms-4\d075c76d9065e6f071663118cc3340b5\transformed\jetified-ui-test-manifest-1.6.8\AndroidManifest.xml:24:13-63
+65-->[androidx.compose.ui:ui-test-manifest:1.6.8] C:\Users\lovei\.gradle\caches\transforms-4\64e810ea3b4ec1f8981a667002e6cff6\transformed\jetified-ui-test-manifest-1.6.8\AndroidManifest.xml:24:13-63
 66            android:exported="true" />
-66-->[androidx.compose.ui:ui-test-manifest:1.6.8] C:\Users\lovei\.gradle\caches\transforms-4\d075c76d9065e6f071663118cc3340b5\transformed\jetified-ui-test-manifest-1.6.8\AndroidManifest.xml:25:13-36
+66-->[androidx.compose.ui:ui-test-manifest:1.6.8] C:\Users\lovei\.gradle\caches\transforms-4\64e810ea3b4ec1f8981a667002e6cff6\transformed\jetified-ui-test-manifest-1.6.8\AndroidManifest.xml:25:13-36
 67
 68        <provider
-68-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\lovei\.gradle\caches\transforms-4\1cbd12d4350afc1fea8d5e9f68ba8173\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:24:9-32:20
+68-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\lovei\.gradle\caches\transforms-4\ca2d3d0dcd23dc19ac6f6a78ccb101ca\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:24:9-32:20
 69            android:name="androidx.startup.InitializationProvider"
-69-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\lovei\.gradle\caches\transforms-4\1cbd12d4350afc1fea8d5e9f68ba8173\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:25:13-67
+69-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\lovei\.gradle\caches\transforms-4\ca2d3d0dcd23dc19ac6f6a78ccb101ca\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:25:13-67
 70            android:authorities="com.cosplayjournal.app.androidx-startup"
-70-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\lovei\.gradle\caches\transforms-4\1cbd12d4350afc1fea8d5e9f68ba8173\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:26:13-68
+70-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\lovei\.gradle\caches\transforms-4\ca2d3d0dcd23dc19ac6f6a78ccb101ca\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:26:13-68
 71            android:exported="false" >
-71-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\lovei\.gradle\caches\transforms-4\1cbd12d4350afc1fea8d5e9f68ba8173\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:27:13-37
+71-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\lovei\.gradle\caches\transforms-4\ca2d3d0dcd23dc19ac6f6a78ccb101ca\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:27:13-37
 72            <meta-data
-72-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\lovei\.gradle\caches\transforms-4\1cbd12d4350afc1fea8d5e9f68ba8173\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:29:13-31:52
+72-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\lovei\.gradle\caches\transforms-4\ca2d3d0dcd23dc19ac6f6a78ccb101ca\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:29:13-31:52
 73                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-73-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\lovei\.gradle\caches\transforms-4\1cbd12d4350afc1fea8d5e9f68ba8173\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:30:17-78
+73-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\lovei\.gradle\caches\transforms-4\ca2d3d0dcd23dc19ac6f6a78ccb101ca\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:30:17-78
 74                android:value="androidx.startup" />
-74-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\lovei\.gradle\caches\transforms-4\1cbd12d4350afc1fea8d5e9f68ba8173\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:31:17-49
+74-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\lovei\.gradle\caches\transforms-4\ca2d3d0dcd23dc19ac6f6a78ccb101ca\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:31:17-49
 75            <meta-data
-75-->[androidx.emoji2:emoji2:1.3.0] C:\Users\lovei\.gradle\caches\transforms-4\a8cbb6daf7e2b25f44d8eb76471d299a\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+75-->[androidx.emoji2:emoji2:1.3.0] C:\Users\lovei\.gradle\caches\transforms-4\70f28c95b147657789d701f042f737dd\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
 76                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-76-->[androidx.emoji2:emoji2:1.3.0] C:\Users\lovei\.gradle\caches\transforms-4\a8cbb6daf7e2b25f44d8eb76471d299a\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:30:17-75
+76-->[androidx.emoji2:emoji2:1.3.0] C:\Users\lovei\.gradle\caches\transforms-4\70f28c95b147657789d701f042f737dd\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:30:17-75
 77                android:value="androidx.startup" />
-77-->[androidx.emoji2:emoji2:1.3.0] C:\Users\lovei\.gradle\caches\transforms-4\a8cbb6daf7e2b25f44d8eb76471d299a\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:31:17-49
+77-->[androidx.emoji2:emoji2:1.3.0] C:\Users\lovei\.gradle\caches\transforms-4\70f28c95b147657789d701f042f737dd\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:31:17-49
 78            <meta-data
-78-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
+78-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
 79                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-79-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
+79-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
 80                android:value="androidx.startup" />
-80-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
+80-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
 81        </provider>
 82
 83        <service
-83-->[androidx.room:room-runtime:2.6.1] C:\Users\lovei\.gradle\caches\transforms-4\a5e491aebf032823a2b19d046bb524ac\transformed\room-runtime-2.6.1\AndroidManifest.xml:24:9-28:63
+83-->[androidx.room:room-runtime:2.6.1] C:\Users\lovei\.gradle\caches\transforms-4\220e4e778c543ea8db415f41b6d3179f\transformed\room-runtime-2.6.1\AndroidManifest.xml:24:9-28:63
 84            android:name="androidx.room.MultiInstanceInvalidationService"
-84-->[androidx.room:room-runtime:2.6.1] C:\Users\lovei\.gradle\caches\transforms-4\a5e491aebf032823a2b19d046bb524ac\transformed\room-runtime-2.6.1\AndroidManifest.xml:25:13-74
+84-->[androidx.room:room-runtime:2.6.1] C:\Users\lovei\.gradle\caches\transforms-4\220e4e778c543ea8db415f41b6d3179f\transformed\room-runtime-2.6.1\AndroidManifest.xml:25:13-74
 85            android:directBootAware="true"
-85-->[androidx.room:room-runtime:2.6.1] C:\Users\lovei\.gradle\caches\transforms-4\a5e491aebf032823a2b19d046bb524ac\transformed\room-runtime-2.6.1\AndroidManifest.xml:26:13-43
+85-->[androidx.room:room-runtime:2.6.1] C:\Users\lovei\.gradle\caches\transforms-4\220e4e778c543ea8db415f41b6d3179f\transformed\room-runtime-2.6.1\AndroidManifest.xml:26:13-43
 86            android:exported="false" />
-86-->[androidx.room:room-runtime:2.6.1] C:\Users\lovei\.gradle\caches\transforms-4\a5e491aebf032823a2b19d046bb524ac\transformed\room-runtime-2.6.1\AndroidManifest.xml:27:13-37
+86-->[androidx.room:room-runtime:2.6.1] C:\Users\lovei\.gradle\caches\transforms-4\220e4e778c543ea8db415f41b6d3179f\transformed\room-runtime-2.6.1\AndroidManifest.xml:27:13-37
 87
 88        <receiver
-88-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
+88-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
 89            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-89-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
+89-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
 90            android:directBootAware="false"
-90-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
+90-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
 91            android:enabled="true"
-91-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
+91-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
 92            android:exported="true"
-92-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
+92-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
 93            android:permission="android.permission.DUMP" >
-93-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
+93-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
 94            <intent-filter>
-94-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
+94-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
 95                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-95-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
-95-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
+95-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
+95-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
 96            </intent-filter>
 97            <intent-filter>
-97-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
+97-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
 98                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-98-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
-98-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
+98-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
+98-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
 99            </intent-filter>
 100            <intent-filter>
-100-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
+100-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
 101                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-101-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
-101-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
+101-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
+101-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
 102            </intent-filter>
 103            <intent-filter>
-103-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
+103-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
 104                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-104-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
-104-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\c00cf5836aa5e574d3a8c554bd3042c3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
+104-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
+104-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\lovei\.gradle\caches\transforms-4\bd119247b45003d627a4df61f6630ec3\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
 105            </intent-filter>
 106        </receiver>
 107    </application>

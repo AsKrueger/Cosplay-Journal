@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.cosplayjournal.app-mergeDebugResources-69:/values-sw600dp-v13/values-sw600dp-v13.xml",
+            "outputFile": "com.cosplayjournal.app-mergeDebugResources-72:/values-sw600dp-v13/values-sw600dp-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\f540ee62bef2c72f9d39309343e51e22\\transformed\\material-1.12.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\ed6ba681e449dc1be54058eb24c2ccf9\\transformed\\material-1.12.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,10,11,12,13,14",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\52e687bc40775d570d97e88c8ae97776\\transformed\\appcompat-1.7.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\33af2973e2f00d8b8ef1e8b990d4fecd\\transformed\\appcompat-1.7.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",

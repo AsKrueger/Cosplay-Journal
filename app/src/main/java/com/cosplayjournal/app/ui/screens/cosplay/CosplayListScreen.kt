@@ -31,6 +31,9 @@ fun CosplayListScreen(
     cosplanId: Long? = null,
     onCosplayClick: (Long) -> Unit,
     onAddCosplayClick: (Long) -> Unit,
+    onNavigateToHome: () -> Unit = {},
+    onNavigateToSelection: () -> Unit = {},
+    onNavigateToProfile: () -> Unit = {},
     onMenuClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
     onNavigateBack: (() -> Unit)? = null
@@ -55,10 +58,9 @@ fun CosplayListScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(top = 8.dp)
             ) {
-                // Centered Header with Menu and Settings
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -72,7 +74,7 @@ fun CosplayListScreen(
                         Icon(
                             imageVector = Icons.Default.Menu,
                             contentDescription = "Menú",
-                            tint = Color(0xFF00ACC1),
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(28.dp)
                         )
                     }
@@ -82,7 +84,8 @@ fun CosplayListScreen(
                         style = MaterialTheme.typography.headlineMedium.copy(
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
-                        )
+                        ),
+                        color = MaterialTheme.colorScheme.onSurface
                     )
 
                     IconButton(
@@ -93,36 +96,34 @@ fun CosplayListScreen(
                             imageVector = Icons.Default.Settings,
                             contentDescription = "Ajustes",
                             modifier = Modifier.size(28.dp),
-                            tint = Color.Gray
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
 
-                // Search Bar
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 12.dp),
-                    placeholder = { Text("Search characters or series...", color = Color.Gray) },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Color.LightGray) },
-                    trailingIcon = { Icon(Icons.Default.Tune, contentDescription = null, tint = Color.LightGray) },
+                    placeholder = { Text("Search characters or series...", color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
+                    trailingIcon = { Icon(Icons.Default.Tune, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                     shape = RoundedCornerShape(24.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFFF9F9F9),
-                        unfocusedContainerColor = Color(0xFFF9F9F9),
+                        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
                         focusedBorderColor = Color.Transparent,
                         unfocusedBorderColor = Color.Transparent
                     ),
                     singleLine = true
                 )
 
-                // Filter Chips
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    modifier = Modifier.padding(bottom = 8.dp)
                 ) {
                     items(filters) { filter ->
                         FilterChip(
@@ -137,14 +138,15 @@ fun CosplayListScreen(
                             },
                             shape = RoundedCornerShape(12.dp),
                             colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = Color(0xFF00ACC1),
-                                selectedLabelColor = Color.White,
-                                selectedLeadingIconColor = Color.White
+                                selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                                selectedLeadingIconColor = MaterialTheme.colorScheme.onPrimary,
+                                labelColor = MaterialTheme.colorScheme.onSurfaceVariant
                             ),
                             border = FilterChipDefaults.filterChipBorder(
                                 enabled = true,
                                 selected = selectedFilter == filter,
-                                borderColor = Color(0xFFEEEEEE),
+                                borderColor = MaterialTheme.colorScheme.outlineVariant,
                                 selectedBorderColor = Color.Transparent
                             )
                         )
@@ -152,29 +154,54 @@ fun CosplayListScreen(
                 }
             }
         },
+        bottomBar = {
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                tonalElevation = 8.dp
+            ) {
+                NavigationBarItem(
+                    selected = false,
+                    onClick = onNavigateToHome,
+                    icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+                    label = { Text("Home") }
+                )
+                NavigationBarItem(
+                    selected = true,
+                    onClick = onNavigateToSelection,
+                    icon = { Icon(Icons.Default.Checkroom, contentDescription = "Cosplays") },
+                    label = { Text("Cosplays") }
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = onNavigateToProfile,
+                    icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
+                    label = { Text("Profile") }
+                )
+            }
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onAddCosplayClick(cosplanId ?: 0L) },
-                containerColor = Color(0xFF00ACC1),
-                contentColor = Color.White,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
                 shape = CircleShape,
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier.size(56.dp)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add Cosplay", modifier = Modifier.size(32.dp))
+                Icon(Icons.Default.Add, contentDescription = "Add Cosplay", modifier = Modifier.size(28.dp))
             }
-        },
-        floatingActionButtonPosition = FabPosition.Center
+        }
     ) { padding ->
         if (filteredCosplays.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-                Text("No cosplays found.", color = Color.Gray)
+            Box(modifier = Modifier.fillMaxSize().padding(padding).background(MaterialTheme.colorScheme.background), contentAlignment = Alignment.Center) {
+                Text("No cosplays found.", color = MaterialTheme.colorScheme.onBackground)
             }
         } else {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding),
-                contentPadding = PaddingValues(bottom = 100.dp) // Space for the centered FAB
+                    .padding(padding)
+                    .background(MaterialTheme.colorScheme.background),
+                contentPadding = PaddingValues(bottom = 16.dp)
             ) {
                 items(filteredCosplays) { cosplay ->
                     CosplayCard(
@@ -192,18 +219,18 @@ fun CosplayCard(cosplay: Cosplay, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 10.dp)
+            .padding(horizontal = 16.dp, vertical = 5.dp)
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(28.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Column {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(220.dp)
-                    .clip(RoundedCornerShape(28.dp))
+                    .height(120.dp)
+                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
             ) {
                 AsyncImage(
                     model = cosplay.mainImageUri ?: "https://images.unsplash.com/photo-1514328537558-630b978dba33?q=80&w=1000&auto=format&fit=crop",
@@ -212,34 +239,19 @@ fun CosplayCard(cosplay: Cosplay, onClick: () -> Unit) {
                     contentScale = ContentScale.Crop
                 )
                 
-                // Status Badge (Top-Left)
-                Surface(
-                    color = Color(0xFFFF8A65), // Crafting Color
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        text = "CRAFTING",
-                        color = Color.White,
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, fontSize = 10.sp)
-                    )
-                }
-
-                // Share button (Top-Right)
                 Surface(
                     color = Color.Black.copy(alpha = 0.2f),
                     shape = CircleShape,
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(16.dp)
-                        .size(36.dp)
+                        .padding(10.dp)
+                        .size(30.dp)
                 ) {
                     Icon(
                         Icons.Default.Share,
                         contentDescription = "Share",
                         tint = Color.White,
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(7.dp)
                     )
                 }
             }
@@ -247,55 +259,34 @@ fun CosplayCard(cosplay: Cosplay, onClick: () -> Unit) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp),
+                    .padding(horizontal = 16.dp, vertical = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = cosplay.characterName,
-                        style = MaterialTheme.typography.titleLarge.copy(
+                        style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
-                            fontSize = 22.sp
-                        )
+                            fontSize = 17.sp
+                        ),
+                        color = MaterialTheme.colorScheme.onSurface
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(1.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             Icons.Default.Movie,
                             contentDescription = null,
-                            tint = Color.Gray,
-                            modifier = Modifier.size(14.dp)
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(12.dp)
                         )
-                        Spacer(modifier = Modifier.width(6.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = cosplay.series,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Gray
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                }
-
-                // Progress Info (Right Side)
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        "PROGRESS",
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            color = Color(0xFFFF8A65),
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    LinearProgressIndicator(
-                        progress = 0.45f, // Placeholder progress
-                        modifier = Modifier
-                            .width(80.dp)
-                            .height(6.dp)
-                            .clip(CircleShape),
-                        color = Color(0xFFFF8A65),
-                        trackColor = Color(0xFFF5F5F5)
-                    )
                 }
             }
         }

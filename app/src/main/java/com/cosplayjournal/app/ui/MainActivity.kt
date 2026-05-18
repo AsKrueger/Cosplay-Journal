@@ -24,12 +24,7 @@ import com.cosplayjournal.app.ui.navigation.Screen
 import com.cosplayjournal.app.ui.screens.cosplan.AddEditCosplanScreen
 import com.cosplayjournal.app.ui.screens.cosplan.CosplanDetailScreen
 import com.cosplayjournal.app.ui.screens.cosplan.CosplanListScreen
-import com.cosplayjournal.app.ui.screens.cosplay.AddEditCosplayScreen
-import com.cosplayjournal.app.ui.screens.cosplay.AddEditHandmadePartScreen
-import com.cosplayjournal.app.ui.screens.cosplay.AddEditPurchasedItemScreen
-import com.cosplayjournal.app.ui.screens.cosplay.CosplayDetailScreen
-import com.cosplayjournal.app.ui.screens.cosplay.CosplayListScreen
-import com.cosplayjournal.app.ui.screens.cosplay.CosplaySelectionScreen
+import com.cosplayjournal.app.ui.screens.cosplay.*
 import com.cosplayjournal.app.ui.screens.event.EventDetailScreen
 import com.cosplayjournal.app.ui.screens.event.EventListScreen
 import com.cosplayjournal.app.ui.screens.home.HomeScreen
@@ -43,15 +38,20 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CosplayJournalTheme {
-                MainScreen()
+            val context = LocalContext.current
+            val app = context.applicationContext as CosplayJournalApplication
+            val settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModelFactory(app.settingsRepository))
+            val darkModeEnabled by settingsViewModel.darkModeEnabled.collectAsState()
+
+            CosplayJournalTheme(darkTheme = darkModeEnabled) {
+                MainScreen(settingsViewModel)
             }
         }
     }
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(settingsViewModel: SettingsViewModel) {
     val navController = rememberNavController()
     val context = LocalContext.current
     val app = context.applicationContext as CosplayJournalApplication
@@ -79,7 +79,7 @@ fun MainScreen() {
 
             if (showBottomBar) {
                 NavigationBar(
-                    containerColor = Color.White,
+                    containerColor = MaterialTheme.colorScheme.surface,
                     tonalElevation = 8.dp
                 ) {
                     bottomNavItems.forEach { screen ->
@@ -97,8 +97,11 @@ fun MainScreen() {
                                 }
                             },
                             colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = Color(0xFF00ACC1),
-                                indicatorColor = Color.Transparent
+                                selectedIconColor = MaterialTheme.colorScheme.primary,
+                                selectedTextColor = MaterialTheme.colorScheme.primary,
+                                unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
                             )
                         )
                     }
@@ -197,13 +200,33 @@ fun MainScreen() {
 
             composable(Screen.CosplayDetail.route, arguments = listOf(navArgument("cosplayId") { type = NavType.LongType })) { backStackEntry ->
                 val cosplayId = backStackEntry.arguments?.getLong("cosplayId") ?: return@composable
-                CosplayDetailScreen(viewModel = cosplayViewModel, cosplayId = cosplayId, onEditClick = { id -> navController.navigate("add_edit_cosplay/0?cosplayId=$id") }, onAddHandmadePart = { id -> navController.navigate("add_handmade_part/$id") }, onAddPurchasedItem = { id -> navController.navigate("add_purchased_item/$id") }, onNavigateBack = { navController.popBackStack() })
+                CosplayDetailScreen(
+                    viewModel = cosplayViewModel, 
+                    cosplayId = cosplayId, 
+                    onEditClick = { id -> navController.navigate("add_edit_cosplay/0?cosplayId=$id") }, 
+                    onAddHandmadePart = { id -> navController.navigate("add_handmade_part/$id") }, 
+                    onAddPurchasedItem = { id -> navController.navigate("add_purchased_item/$id") },
+                    onAddWig = { id -> navController.navigate("add_wig/$id") },
+                    onAddMakeup = { id -> navController.navigate("add_makeup/$id") },
+                    onEditWigMakeup = { cosplayId, itemId, isWig -> navController.navigate("edit_wig_makeup/$cosplayId/$itemId?isWig=$isWig") },
+                    onNavigateBack = { navController.popBackStack() }
+                )
             }
 
             composable("add_edit_cosplay/{cosplanId}?cosplayId={cosplayId}", arguments = listOf(navArgument("cosplanId") { type = NavType.LongType }, navArgument("cosplayId") { type = NavType.LongType; defaultValue = -1L })) { backStackEntry ->
-                val cosplanId = backStackEntry.arguments?.getLong("cosplanId") ?: return@composable
+                val cosplanIdArg = backStackEntry.arguments?.getLong("cosplanId") ?: 0L
+                val cosplanId = if (cosplanIdArg == 0L) null else cosplanIdArg
                 val cosplayId = backStackEntry.arguments?.getLong("cosplayId").takeIf { it != -1L }
-                AddEditCosplayScreen(viewModel = cosplayViewModel, cosplanId = cosplanId, cosplayId = cosplayId, onNavigateBack = { navController.popBackStack() })
+                AddEditCosplayScreen(
+                    viewModel = cosplayViewModel,
+                    cosplanId = cosplanId,
+                    cosplayId = cosplayId,
+                    onAddHandmadePart = { id -> navController.navigate("add_handmade_part/$id") },
+                    onAddPurchasedItem = { id -> navController.navigate("add_purchased_item/$id") },
+                    onAddWig = { id -> navController.navigate("add_wig/$id") },
+                    onAddMakeup = { id -> navController.navigate("add_makeup/$id") },
+                    onNavigateBack = { navController.popBackStack() }
+                )
             }
 
             composable("add_handmade_part/{cosplayId}", arguments = listOf(navArgument("cosplayId") { type = NavType.LongType })) { backStackEntry ->
@@ -216,8 +239,32 @@ fun MainScreen() {
                 AddEditPurchasedItemScreen(viewModel = cosplayViewModel, cosplayId = cosplayId, onNavigateBack = { navController.popBackStack() })
             }
 
+            composable("add_wig/{cosplayId}", arguments = listOf(navArgument("cosplayId") { type = NavType.LongType })) { backStackEntry ->
+                val cosplayId = backStackEntry.arguments?.getLong("cosplayId") ?: return@composable
+                AddEditWigMakeupScreen(viewModel = cosplayViewModel, cosplayId = cosplayId, isWig = true, onNavigateBack = { navController.popBackStack() })
+            }
+
+            composable("add_makeup/{cosplayId}", arguments = listOf(navArgument("cosplayId") { type = NavType.LongType })) { backStackEntry ->
+                val cosplayId = backStackEntry.arguments?.getLong("cosplayId") ?: return@composable
+                AddEditWigMakeupScreen(viewModel = cosplayViewModel, cosplayId = cosplayId, isWig = false, onNavigateBack = { navController.popBackStack() })
+            }
+
+            composable(
+                "edit_wig_makeup/{cosplayId}/{itemId}?isWig={isWig}", 
+                arguments = listOf(
+                    navArgument("cosplayId") { type = NavType.LongType },
+                    navArgument("itemId") { type = NavType.LongType },
+                    navArgument("isWig") { type = NavType.BoolType; defaultValue = true }
+                )
+            ) { backStackEntry ->
+                val cosplayId = backStackEntry.arguments?.getLong("cosplayId") ?: return@composable
+                val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
+                val isWig = backStackEntry.arguments?.getBoolean("isWig") ?: true
+                AddEditWigMakeupScreen(viewModel = cosplayViewModel, cosplayId = cosplayId, itemId = itemId, isWig = isWig, onNavigateBack = { navController.popBackStack() })
+            }
+
             composable(Screen.Favorites.route) { FavoritesScreen(viewModel = profileViewModel, onEventClick = { id -> navController.navigate("event_detail/$id") }, onCosplayClick = { id -> navController.navigate("cosplay_detail/$id") }, onNavigateBack = { navController.popBackStack() }) }
-            composable(Screen.Settings.route) { SettingsScreen(onNavigateBack = { navController.popBackStack() }) }
+            composable(Screen.Settings.route) { SettingsScreen(viewModel = settingsViewModel, onNavigateBack = { navController.popBackStack() }) }
         }
     }
 }

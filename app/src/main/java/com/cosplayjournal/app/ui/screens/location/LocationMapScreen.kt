@@ -1,5 +1,6 @@
 package com.cosplayjournal.app.ui.screens.location
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -10,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.cosplayjournal.app.data.entity.Location
@@ -40,30 +42,44 @@ fun LocationMapScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Photo Locations") },
+                title = { Text("Photo Locations", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                )
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { 
-                val center = mapView.mapCenter
-                viewModel.insertLocation(
-                    Location(
-                        name = "New Location",
-                        latitude = center.latitude,
-                        longitude = center.longitude
+            FloatingActionButton(
+                onClick = { 
+                    val center = mapView.mapCenter
+                    viewModel.insertLocation(
+                        Location(
+                            name = "New Location",
+                            latitude = center.latitude,
+                            longitude = center.longitude
+                        )
                     )
-                )
-            }) {
+                },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ) {
                 Icon(Icons.Default.AddLocation, contentDescription = "Add Location")
             }
         }
     ) { padding ->
-        Box(modifier = Modifier.padding(padding).fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
             AndroidView(
                 factory = { mapView },
                 modifier = Modifier.fillMaxSize(),
@@ -84,13 +100,16 @@ fun LocationMapScreen(
             
             Surface(
                 modifier = Modifier.align(Alignment.TopCenter).padding(16.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
-                shape = RoundedCornerShape(8.dp)
+                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f),
+                shape = RoundedCornerShape(12.dp),
+                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
             ) {
                 Text(
                     "Center the map and press + to save a spot",
-                    modifier = Modifier.padding(8.dp),
-                    style = MaterialTheme.typography.labelSmall
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Medium
                 )
             }
         }

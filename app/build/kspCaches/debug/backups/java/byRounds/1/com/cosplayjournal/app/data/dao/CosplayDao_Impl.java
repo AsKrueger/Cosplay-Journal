@@ -15,10 +15,14 @@ import androidx.room.util.DBUtil;
 import androidx.sqlite.db.SupportSQLiteStatement;
 import com.cosplayjournal.app.data.entity.Cosplan;
 import com.cosplayjournal.app.data.entity.Cosplay;
+import com.cosplayjournal.app.data.entity.CosplayPhotoSessionCrossRef;
 import com.cosplayjournal.app.data.entity.EventCosplanSelection;
 import com.cosplayjournal.app.data.entity.HandmadePart;
+import com.cosplayjournal.app.data.entity.PartResource;
+import com.cosplayjournal.app.data.entity.PhotoSession;
 import com.cosplayjournal.app.data.entity.PurchasedItem;
 import com.cosplayjournal.app.data.entity.UserEventData;
+import com.cosplayjournal.app.data.entity.WigMakeup;
 import java.lang.Class;
 import java.lang.Exception;
 import java.lang.Long;
@@ -46,7 +50,15 @@ public final class CosplayDao_Impl implements CosplayDao {
 
   private final EntityInsertionAdapter<HandmadePart> __insertionAdapterOfHandmadePart;
 
+  private final EntityInsertionAdapter<WigMakeup> __insertionAdapterOfWigMakeup;
+
+  private final EntityInsertionAdapter<PartResource> __insertionAdapterOfPartResource;
+
   private final EntityInsertionAdapter<PurchasedItem> __insertionAdapterOfPurchasedItem;
+
+  private final EntityInsertionAdapter<PhotoSession> __insertionAdapterOfPhotoSession;
+
+  private final EntityInsertionAdapter<CosplayPhotoSessionCrossRef> __insertionAdapterOfCosplayPhotoSessionCrossRef;
 
   private final EntityInsertionAdapter<UserEventData> __insertionAdapterOfUserEventData;
 
@@ -58,6 +70,10 @@ public final class CosplayDao_Impl implements CosplayDao {
 
   private final EntityDeletionOrUpdateAdapter<HandmadePart> __deletionAdapterOfHandmadePart;
 
+  private final EntityDeletionOrUpdateAdapter<WigMakeup> __deletionAdapterOfWigMakeup;
+
+  private final EntityDeletionOrUpdateAdapter<PartResource> __deletionAdapterOfPartResource;
+
   private final EntityDeletionOrUpdateAdapter<PurchasedItem> __deletionAdapterOfPurchasedItem;
 
   private final EntityDeletionOrUpdateAdapter<Cosplan> __updateAdapterOfCosplan;
@@ -65,6 +81,10 @@ public final class CosplayDao_Impl implements CosplayDao {
   private final EntityDeletionOrUpdateAdapter<Cosplay> __updateAdapterOfCosplay;
 
   private final EntityDeletionOrUpdateAdapter<HandmadePart> __updateAdapterOfHandmadePart;
+
+  private final EntityDeletionOrUpdateAdapter<WigMakeup> __updateAdapterOfWigMakeup;
+
+  private final EntityDeletionOrUpdateAdapter<PartResource> __updateAdapterOfPartResource;
 
   private final EntityDeletionOrUpdateAdapter<PurchasedItem> __updateAdapterOfPurchasedItem;
 
@@ -98,26 +118,34 @@ public final class CosplayDao_Impl implements CosplayDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR REPLACE INTO `cosplays` (`id`,`cosplanId`,`characterName`,`series`,`wigs`,`makeup`,`accessories`,`notes`,`isFavorite`,`mainImageUri`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?)";
+        return "INSERT OR REPLACE INTO `cosplays` (`id`,`cosplanId`,`characterName`,`series`,`preferredWeather`,`wigs`,`makeup`,`accessories`,`notes`,`recognition`,`isCompleted`,`isFavorite`,`mainImageUri`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
       protected void bind(@NonNull final SupportSQLiteStatement statement,
           @NonNull final Cosplay entity) {
         statement.bindLong(1, entity.getId());
-        statement.bindLong(2, entity.getCosplanId());
+        if (entity.getCosplanId() == null) {
+          statement.bindNull(2);
+        } else {
+          statement.bindLong(2, entity.getCosplanId());
+        }
         statement.bindString(3, entity.getCharacterName());
         statement.bindString(4, entity.getSeries());
-        statement.bindString(5, entity.getWigs());
-        statement.bindString(6, entity.getMakeup());
-        statement.bindString(7, entity.getAccessories());
-        statement.bindString(8, entity.getNotes());
-        final int _tmp = entity.isFavorite() ? 1 : 0;
-        statement.bindLong(9, _tmp);
+        statement.bindString(5, entity.getPreferredWeather());
+        statement.bindString(6, entity.getWigs());
+        statement.bindString(7, entity.getMakeup());
+        statement.bindString(8, entity.getAccessories());
+        statement.bindString(9, entity.getNotes());
+        statement.bindString(10, entity.getRecognition());
+        final int _tmp = entity.isCompleted() ? 1 : 0;
+        statement.bindLong(11, _tmp);
+        final int _tmp_1 = entity.isFavorite() ? 1 : 0;
+        statement.bindLong(12, _tmp_1);
         if (entity.getMainImageUri() == null) {
-          statement.bindNull(10);
+          statement.bindNull(13);
         } else {
-          statement.bindString(10, entity.getMainImageUri());
+          statement.bindString(13, entity.getMainImageUri());
         }
       }
     };
@@ -125,7 +153,7 @@ public final class CosplayDao_Impl implements CosplayDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR REPLACE INTO `handmade_parts` (`id`,`cosplayId`,`name`,`processSteps`,`materials`,`estimatedCost`,`isFinished`) VALUES (nullif(?, 0),?,?,?,?,?,?)";
+        return "INSERT OR REPLACE INTO `handmade_parts` (`id`,`cosplayId`,`name`,`imageUris`,`price`,`timeSpent`,`processDescription`,`projectPercentage`,`materials`,`isFinished`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -134,18 +162,62 @@ public final class CosplayDao_Impl implements CosplayDao {
         statement.bindLong(1, entity.getId());
         statement.bindLong(2, entity.getCosplayId());
         statement.bindString(3, entity.getName());
-        statement.bindString(4, entity.getProcessSteps());
-        statement.bindString(5, entity.getMaterials());
-        statement.bindDouble(6, entity.getEstimatedCost());
+        statement.bindString(4, entity.getImageUris());
+        statement.bindDouble(5, entity.getPrice());
+        statement.bindString(6, entity.getTimeSpent());
+        statement.bindString(7, entity.getProcessDescription());
+        statement.bindLong(8, entity.getProjectPercentage());
+        statement.bindString(9, entity.getMaterials());
         final int _tmp = entity.isFinished() ? 1 : 0;
-        statement.bindLong(7, _tmp);
+        statement.bindLong(10, _tmp);
+      }
+    };
+    this.__insertionAdapterOfWigMakeup = new EntityInsertionAdapter<WigMakeup>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "INSERT OR REPLACE INTO `wig_makeup_items` (`id`,`cosplayId`,`name`,`imageUris`,`price`,`timeSpent`,`description`,`productsUsed`,`isFinished`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?)";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final WigMakeup entity) {
+        statement.bindLong(1, entity.getId());
+        statement.bindLong(2, entity.getCosplayId());
+        statement.bindString(3, entity.getName());
+        statement.bindString(4, entity.getImageUris());
+        statement.bindDouble(5, entity.getPrice());
+        statement.bindString(6, entity.getTimeSpent());
+        statement.bindString(7, entity.getDescription());
+        statement.bindString(8, entity.getProductsUsed());
+        final int _tmp = entity.isFinished() ? 1 : 0;
+        statement.bindLong(9, _tmp);
+      }
+    };
+    this.__insertionAdapterOfPartResource = new EntityInsertionAdapter<PartResource>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "INSERT OR REPLACE INTO `part_resources` (`id`,`partId`,`name`,`webLink`,`price`,`imageUris`,`usageDescription`) VALUES (nullif(?, 0),?,?,?,?,?,?)";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final PartResource entity) {
+        statement.bindLong(1, entity.getId());
+        statement.bindLong(2, entity.getPartId());
+        statement.bindString(3, entity.getName());
+        statement.bindString(4, entity.getWebLink());
+        statement.bindDouble(5, entity.getPrice());
+        statement.bindString(6, entity.getImageUris());
+        statement.bindString(7, entity.getUsageDescription());
       }
     };
     this.__insertionAdapterOfPurchasedItem = new EntityInsertionAdapter<PurchasedItem>(__db) {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR REPLACE INTO `purchased_items` (`id`,`cosplayId`,`name`,`storeName`,`purchaseLink`,`price`,`isReceived`) VALUES (nullif(?, 0),?,?,?,?,?,?)";
+        return "INSERT OR REPLACE INTO `purchased_items` (`id`,`cosplayId`,`name`,`purchaseLink`,`imageUris`,`adjustmentDescription`,`projectPercentage`,`storeName`,`price`,`isReceived`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -154,11 +226,49 @@ public final class CosplayDao_Impl implements CosplayDao {
         statement.bindLong(1, entity.getId());
         statement.bindLong(2, entity.getCosplayId());
         statement.bindString(3, entity.getName());
-        statement.bindString(4, entity.getStoreName());
-        statement.bindString(5, entity.getPurchaseLink());
-        statement.bindDouble(6, entity.getPrice());
+        statement.bindString(4, entity.getPurchaseLink());
+        statement.bindString(5, entity.getImageUris());
+        statement.bindString(6, entity.getAdjustmentDescription());
+        statement.bindLong(7, entity.getProjectPercentage());
+        statement.bindString(8, entity.getStoreName());
+        statement.bindDouble(9, entity.getPrice());
         final int _tmp = entity.isReceived() ? 1 : 0;
-        statement.bindLong(7, _tmp);
+        statement.bindLong(10, _tmp);
+      }
+    };
+    this.__insertionAdapterOfPhotoSession = new EntityInsertionAdapter<PhotoSession>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "INSERT OR REPLACE INTO `photo_sessions` (`id`,`date`,`photographer`,`notes`,`locationId`) VALUES (nullif(?, 0),?,?,?,?)";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final PhotoSession entity) {
+        statement.bindLong(1, entity.getId());
+        statement.bindLong(2, entity.getDate());
+        statement.bindString(3, entity.getPhotographer());
+        statement.bindString(4, entity.getNotes());
+        if (entity.getLocationId() == null) {
+          statement.bindNull(5);
+        } else {
+          statement.bindLong(5, entity.getLocationId());
+        }
+      }
+    };
+    this.__insertionAdapterOfCosplayPhotoSessionCrossRef = new EntityInsertionAdapter<CosplayPhotoSessionCrossRef>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "INSERT OR REPLACE INTO `cosplay_photosession_cross_ref` (`cosplayId`,`photoSessionId`) VALUES (?,?)";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final CosplayPhotoSessionCrossRef entity) {
+        statement.bindLong(1, entity.getCosplayId());
+        statement.bindLong(2, entity.getPhotoSessionId());
       }
     };
     this.__insertionAdapterOfUserEventData = new EntityInsertionAdapter<UserEventData>(__db) {
@@ -231,6 +341,32 @@ public final class CosplayDao_Impl implements CosplayDao {
         statement.bindLong(1, entity.getId());
       }
     };
+    this.__deletionAdapterOfWigMakeup = new EntityDeletionOrUpdateAdapter<WigMakeup>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "DELETE FROM `wig_makeup_items` WHERE `id` = ?";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final WigMakeup entity) {
+        statement.bindLong(1, entity.getId());
+      }
+    };
+    this.__deletionAdapterOfPartResource = new EntityDeletionOrUpdateAdapter<PartResource>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "DELETE FROM `part_resources` WHERE `id` = ?";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final PartResource entity) {
+        statement.bindLong(1, entity.getId());
+      }
+    };
     this.__deletionAdapterOfPurchasedItem = new EntityDeletionOrUpdateAdapter<PurchasedItem>(__db) {
       @Override
       @NonNull
@@ -271,35 +407,43 @@ public final class CosplayDao_Impl implements CosplayDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "UPDATE OR ABORT `cosplays` SET `id` = ?,`cosplanId` = ?,`characterName` = ?,`series` = ?,`wigs` = ?,`makeup` = ?,`accessories` = ?,`notes` = ?,`isFavorite` = ?,`mainImageUri` = ? WHERE `id` = ?";
+        return "UPDATE OR ABORT `cosplays` SET `id` = ?,`cosplanId` = ?,`characterName` = ?,`series` = ?,`preferredWeather` = ?,`wigs` = ?,`makeup` = ?,`accessories` = ?,`notes` = ?,`recognition` = ?,`isCompleted` = ?,`isFavorite` = ?,`mainImageUri` = ? WHERE `id` = ?";
       }
 
       @Override
       protected void bind(@NonNull final SupportSQLiteStatement statement,
           @NonNull final Cosplay entity) {
         statement.bindLong(1, entity.getId());
-        statement.bindLong(2, entity.getCosplanId());
+        if (entity.getCosplanId() == null) {
+          statement.bindNull(2);
+        } else {
+          statement.bindLong(2, entity.getCosplanId());
+        }
         statement.bindString(3, entity.getCharacterName());
         statement.bindString(4, entity.getSeries());
-        statement.bindString(5, entity.getWigs());
-        statement.bindString(6, entity.getMakeup());
-        statement.bindString(7, entity.getAccessories());
-        statement.bindString(8, entity.getNotes());
-        final int _tmp = entity.isFavorite() ? 1 : 0;
-        statement.bindLong(9, _tmp);
+        statement.bindString(5, entity.getPreferredWeather());
+        statement.bindString(6, entity.getWigs());
+        statement.bindString(7, entity.getMakeup());
+        statement.bindString(8, entity.getAccessories());
+        statement.bindString(9, entity.getNotes());
+        statement.bindString(10, entity.getRecognition());
+        final int _tmp = entity.isCompleted() ? 1 : 0;
+        statement.bindLong(11, _tmp);
+        final int _tmp_1 = entity.isFavorite() ? 1 : 0;
+        statement.bindLong(12, _tmp_1);
         if (entity.getMainImageUri() == null) {
-          statement.bindNull(10);
+          statement.bindNull(13);
         } else {
-          statement.bindString(10, entity.getMainImageUri());
+          statement.bindString(13, entity.getMainImageUri());
         }
-        statement.bindLong(11, entity.getId());
+        statement.bindLong(14, entity.getId());
       }
     };
     this.__updateAdapterOfHandmadePart = new EntityDeletionOrUpdateAdapter<HandmadePart>(__db) {
       @Override
       @NonNull
       protected String createQuery() {
-        return "UPDATE OR ABORT `handmade_parts` SET `id` = ?,`cosplayId` = ?,`name` = ?,`processSteps` = ?,`materials` = ?,`estimatedCost` = ?,`isFinished` = ? WHERE `id` = ?";
+        return "UPDATE OR ABORT `handmade_parts` SET `id` = ?,`cosplayId` = ?,`name` = ?,`imageUris` = ?,`price` = ?,`timeSpent` = ?,`processDescription` = ?,`projectPercentage` = ?,`materials` = ?,`isFinished` = ? WHERE `id` = ?";
       }
 
       @Override
@@ -308,11 +452,57 @@ public final class CosplayDao_Impl implements CosplayDao {
         statement.bindLong(1, entity.getId());
         statement.bindLong(2, entity.getCosplayId());
         statement.bindString(3, entity.getName());
-        statement.bindString(4, entity.getProcessSteps());
-        statement.bindString(5, entity.getMaterials());
-        statement.bindDouble(6, entity.getEstimatedCost());
+        statement.bindString(4, entity.getImageUris());
+        statement.bindDouble(5, entity.getPrice());
+        statement.bindString(6, entity.getTimeSpent());
+        statement.bindString(7, entity.getProcessDescription());
+        statement.bindLong(8, entity.getProjectPercentage());
+        statement.bindString(9, entity.getMaterials());
         final int _tmp = entity.isFinished() ? 1 : 0;
-        statement.bindLong(7, _tmp);
+        statement.bindLong(10, _tmp);
+        statement.bindLong(11, entity.getId());
+      }
+    };
+    this.__updateAdapterOfWigMakeup = new EntityDeletionOrUpdateAdapter<WigMakeup>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "UPDATE OR ABORT `wig_makeup_items` SET `id` = ?,`cosplayId` = ?,`name` = ?,`imageUris` = ?,`price` = ?,`timeSpent` = ?,`description` = ?,`productsUsed` = ?,`isFinished` = ? WHERE `id` = ?";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final WigMakeup entity) {
+        statement.bindLong(1, entity.getId());
+        statement.bindLong(2, entity.getCosplayId());
+        statement.bindString(3, entity.getName());
+        statement.bindString(4, entity.getImageUris());
+        statement.bindDouble(5, entity.getPrice());
+        statement.bindString(6, entity.getTimeSpent());
+        statement.bindString(7, entity.getDescription());
+        statement.bindString(8, entity.getProductsUsed());
+        final int _tmp = entity.isFinished() ? 1 : 0;
+        statement.bindLong(9, _tmp);
+        statement.bindLong(10, entity.getId());
+      }
+    };
+    this.__updateAdapterOfPartResource = new EntityDeletionOrUpdateAdapter<PartResource>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "UPDATE OR ABORT `part_resources` SET `id` = ?,`partId` = ?,`name` = ?,`webLink` = ?,`price` = ?,`imageUris` = ?,`usageDescription` = ? WHERE `id` = ?";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final PartResource entity) {
+        statement.bindLong(1, entity.getId());
+        statement.bindLong(2, entity.getPartId());
+        statement.bindString(3, entity.getName());
+        statement.bindString(4, entity.getWebLink());
+        statement.bindDouble(5, entity.getPrice());
+        statement.bindString(6, entity.getImageUris());
+        statement.bindString(7, entity.getUsageDescription());
         statement.bindLong(8, entity.getId());
       }
     };
@@ -320,7 +510,7 @@ public final class CosplayDao_Impl implements CosplayDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "UPDATE OR ABORT `purchased_items` SET `id` = ?,`cosplayId` = ?,`name` = ?,`storeName` = ?,`purchaseLink` = ?,`price` = ?,`isReceived` = ? WHERE `id` = ?";
+        return "UPDATE OR ABORT `purchased_items` SET `id` = ?,`cosplayId` = ?,`name` = ?,`purchaseLink` = ?,`imageUris` = ?,`adjustmentDescription` = ?,`projectPercentage` = ?,`storeName` = ?,`price` = ?,`isReceived` = ? WHERE `id` = ?";
       }
 
       @Override
@@ -329,12 +519,15 @@ public final class CosplayDao_Impl implements CosplayDao {
         statement.bindLong(1, entity.getId());
         statement.bindLong(2, entity.getCosplayId());
         statement.bindString(3, entity.getName());
-        statement.bindString(4, entity.getStoreName());
-        statement.bindString(5, entity.getPurchaseLink());
-        statement.bindDouble(6, entity.getPrice());
+        statement.bindString(4, entity.getPurchaseLink());
+        statement.bindString(5, entity.getImageUris());
+        statement.bindString(6, entity.getAdjustmentDescription());
+        statement.bindLong(7, entity.getProjectPercentage());
+        statement.bindString(8, entity.getStoreName());
+        statement.bindDouble(9, entity.getPrice());
         final int _tmp = entity.isReceived() ? 1 : 0;
-        statement.bindLong(7, _tmp);
-        statement.bindLong(8, entity.getId());
+        statement.bindLong(10, _tmp);
+        statement.bindLong(11, entity.getId());
       }
     };
     this.__preparedStmtOfDeleteCosplanSelection = new SharedSQLiteStatement(__db) {
@@ -385,6 +578,44 @@ public final class CosplayDao_Impl implements CosplayDao {
 
   @Override
   public Object insertHandmadePart(final HandmadePart part,
+      final Continuation<? super Long> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
+      @Override
+      @NonNull
+      public Long call() throws Exception {
+        __db.beginTransaction();
+        try {
+          final Long _result = __insertionAdapterOfHandmadePart.insertAndReturnId(part);
+          __db.setTransactionSuccessful();
+          return _result;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object insertWigMakeup(final WigMakeup item,
+      final Continuation<? super Long> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
+      @Override
+      @NonNull
+      public Long call() throws Exception {
+        __db.beginTransaction();
+        try {
+          final Long _result = __insertionAdapterOfWigMakeup.insertAndReturnId(item);
+          __db.setTransactionSuccessful();
+          return _result;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object insertPartResource(final PartResource resource,
       final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
@@ -392,7 +623,7 @@ public final class CosplayDao_Impl implements CosplayDao {
       public Unit call() throws Exception {
         __db.beginTransaction();
         try {
-          __insertionAdapterOfHandmadePart.insert(part);
+          __insertionAdapterOfPartResource.insert(resource);
           __db.setTransactionSuccessful();
           return Unit.INSTANCE;
         } finally {
@@ -412,6 +643,44 @@ public final class CosplayDao_Impl implements CosplayDao {
         __db.beginTransaction();
         try {
           __insertionAdapterOfPurchasedItem.insert(item);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object insertPhotoSession(final PhotoSession session,
+      final Continuation<? super Long> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
+      @Override
+      @NonNull
+      public Long call() throws Exception {
+        __db.beginTransaction();
+        try {
+          final Long _result = __insertionAdapterOfPhotoSession.insertAndReturnId(session);
+          __db.setTransactionSuccessful();
+          return _result;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object insertCosplayPhotoSessionCrossRef(final CosplayPhotoSessionCrossRef crossRef,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __insertionAdapterOfCosplayPhotoSessionCrossRef.insert(crossRef);
           __db.setTransactionSuccessful();
           return Unit.INSTANCE;
         } finally {
@@ -515,6 +784,44 @@ public final class CosplayDao_Impl implements CosplayDao {
   }
 
   @Override
+  public Object deleteWigMakeup(final WigMakeup item,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __deletionAdapterOfWigMakeup.handle(item);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object deletePartResource(final PartResource resource,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __deletionAdapterOfPartResource.handle(resource);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
   public Object deletePurchasedItem(final PurchasedItem item,
       final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
@@ -579,6 +886,44 @@ public final class CosplayDao_Impl implements CosplayDao {
         __db.beginTransaction();
         try {
           __updateAdapterOfHandmadePart.handle(part);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object updateWigMakeup(final WigMakeup item,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __updateAdapterOfWigMakeup.handle(item);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object updatePartResource(final PartResource resource,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __updateAdapterOfPartResource.handle(resource);
           __db.setTransactionSuccessful();
           return Unit.INSTANCE;
         } finally {
@@ -710,10 +1055,13 @@ public final class CosplayDao_Impl implements CosplayDao {
           final int _cursorIndexOfCosplanId = CursorUtil.getColumnIndexOrThrow(_cursor, "cosplanId");
           final int _cursorIndexOfCharacterName = CursorUtil.getColumnIndexOrThrow(_cursor, "characterName");
           final int _cursorIndexOfSeries = CursorUtil.getColumnIndexOrThrow(_cursor, "series");
+          final int _cursorIndexOfPreferredWeather = CursorUtil.getColumnIndexOrThrow(_cursor, "preferredWeather");
           final int _cursorIndexOfWigs = CursorUtil.getColumnIndexOrThrow(_cursor, "wigs");
           final int _cursorIndexOfMakeup = CursorUtil.getColumnIndexOrThrow(_cursor, "makeup");
           final int _cursorIndexOfAccessories = CursorUtil.getColumnIndexOrThrow(_cursor, "accessories");
           final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
+          final int _cursorIndexOfRecognition = CursorUtil.getColumnIndexOrThrow(_cursor, "recognition");
+          final int _cursorIndexOfIsCompleted = CursorUtil.getColumnIndexOrThrow(_cursor, "isCompleted");
           final int _cursorIndexOfIsFavorite = CursorUtil.getColumnIndexOrThrow(_cursor, "isFavorite");
           final int _cursorIndexOfMainImageUri = CursorUtil.getColumnIndexOrThrow(_cursor, "mainImageUri");
           final List<Cosplay> _result = new ArrayList<Cosplay>(_cursor.getCount());
@@ -721,12 +1069,18 @@ public final class CosplayDao_Impl implements CosplayDao {
             final Cosplay _item;
             final long _tmpId;
             _tmpId = _cursor.getLong(_cursorIndexOfId);
-            final long _tmpCosplanId;
-            _tmpCosplanId = _cursor.getLong(_cursorIndexOfCosplanId);
+            final Long _tmpCosplanId;
+            if (_cursor.isNull(_cursorIndexOfCosplanId)) {
+              _tmpCosplanId = null;
+            } else {
+              _tmpCosplanId = _cursor.getLong(_cursorIndexOfCosplanId);
+            }
             final String _tmpCharacterName;
             _tmpCharacterName = _cursor.getString(_cursorIndexOfCharacterName);
             final String _tmpSeries;
             _tmpSeries = _cursor.getString(_cursorIndexOfSeries);
+            final String _tmpPreferredWeather;
+            _tmpPreferredWeather = _cursor.getString(_cursorIndexOfPreferredWeather);
             final String _tmpWigs;
             _tmpWigs = _cursor.getString(_cursorIndexOfWigs);
             final String _tmpMakeup;
@@ -735,17 +1089,23 @@ public final class CosplayDao_Impl implements CosplayDao {
             _tmpAccessories = _cursor.getString(_cursorIndexOfAccessories);
             final String _tmpNotes;
             _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
-            final boolean _tmpIsFavorite;
+            final String _tmpRecognition;
+            _tmpRecognition = _cursor.getString(_cursorIndexOfRecognition);
+            final boolean _tmpIsCompleted;
             final int _tmp;
-            _tmp = _cursor.getInt(_cursorIndexOfIsFavorite);
-            _tmpIsFavorite = _tmp != 0;
+            _tmp = _cursor.getInt(_cursorIndexOfIsCompleted);
+            _tmpIsCompleted = _tmp != 0;
+            final boolean _tmpIsFavorite;
+            final int _tmp_1;
+            _tmp_1 = _cursor.getInt(_cursorIndexOfIsFavorite);
+            _tmpIsFavorite = _tmp_1 != 0;
             final String _tmpMainImageUri;
             if (_cursor.isNull(_cursorIndexOfMainImageUri)) {
               _tmpMainImageUri = null;
             } else {
               _tmpMainImageUri = _cursor.getString(_cursorIndexOfMainImageUri);
             }
-            _item = new Cosplay(_tmpId,_tmpCosplanId,_tmpCharacterName,_tmpSeries,_tmpWigs,_tmpMakeup,_tmpAccessories,_tmpNotes,_tmpIsFavorite,_tmpMainImageUri);
+            _item = new Cosplay(_tmpId,_tmpCosplanId,_tmpCharacterName,_tmpSeries,_tmpPreferredWeather,_tmpWigs,_tmpMakeup,_tmpAccessories,_tmpNotes,_tmpRecognition,_tmpIsCompleted,_tmpIsFavorite,_tmpMainImageUri);
             _result.add(_item);
           }
           return _result;
@@ -777,10 +1137,13 @@ public final class CosplayDao_Impl implements CosplayDao {
           final int _cursorIndexOfCosplanId = CursorUtil.getColumnIndexOrThrow(_cursor, "cosplanId");
           final int _cursorIndexOfCharacterName = CursorUtil.getColumnIndexOrThrow(_cursor, "characterName");
           final int _cursorIndexOfSeries = CursorUtil.getColumnIndexOrThrow(_cursor, "series");
+          final int _cursorIndexOfPreferredWeather = CursorUtil.getColumnIndexOrThrow(_cursor, "preferredWeather");
           final int _cursorIndexOfWigs = CursorUtil.getColumnIndexOrThrow(_cursor, "wigs");
           final int _cursorIndexOfMakeup = CursorUtil.getColumnIndexOrThrow(_cursor, "makeup");
           final int _cursorIndexOfAccessories = CursorUtil.getColumnIndexOrThrow(_cursor, "accessories");
           final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
+          final int _cursorIndexOfRecognition = CursorUtil.getColumnIndexOrThrow(_cursor, "recognition");
+          final int _cursorIndexOfIsCompleted = CursorUtil.getColumnIndexOrThrow(_cursor, "isCompleted");
           final int _cursorIndexOfIsFavorite = CursorUtil.getColumnIndexOrThrow(_cursor, "isFavorite");
           final int _cursorIndexOfMainImageUri = CursorUtil.getColumnIndexOrThrow(_cursor, "mainImageUri");
           final List<Cosplay> _result = new ArrayList<Cosplay>(_cursor.getCount());
@@ -788,12 +1151,18 @@ public final class CosplayDao_Impl implements CosplayDao {
             final Cosplay _item;
             final long _tmpId;
             _tmpId = _cursor.getLong(_cursorIndexOfId);
-            final long _tmpCosplanId;
-            _tmpCosplanId = _cursor.getLong(_cursorIndexOfCosplanId);
+            final Long _tmpCosplanId;
+            if (_cursor.isNull(_cursorIndexOfCosplanId)) {
+              _tmpCosplanId = null;
+            } else {
+              _tmpCosplanId = _cursor.getLong(_cursorIndexOfCosplanId);
+            }
             final String _tmpCharacterName;
             _tmpCharacterName = _cursor.getString(_cursorIndexOfCharacterName);
             final String _tmpSeries;
             _tmpSeries = _cursor.getString(_cursorIndexOfSeries);
+            final String _tmpPreferredWeather;
+            _tmpPreferredWeather = _cursor.getString(_cursorIndexOfPreferredWeather);
             final String _tmpWigs;
             _tmpWigs = _cursor.getString(_cursorIndexOfWigs);
             final String _tmpMakeup;
@@ -802,17 +1171,23 @@ public final class CosplayDao_Impl implements CosplayDao {
             _tmpAccessories = _cursor.getString(_cursorIndexOfAccessories);
             final String _tmpNotes;
             _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
-            final boolean _tmpIsFavorite;
+            final String _tmpRecognition;
+            _tmpRecognition = _cursor.getString(_cursorIndexOfRecognition);
+            final boolean _tmpIsCompleted;
             final int _tmp;
-            _tmp = _cursor.getInt(_cursorIndexOfIsFavorite);
-            _tmpIsFavorite = _tmp != 0;
+            _tmp = _cursor.getInt(_cursorIndexOfIsCompleted);
+            _tmpIsCompleted = _tmp != 0;
+            final boolean _tmpIsFavorite;
+            final int _tmp_1;
+            _tmp_1 = _cursor.getInt(_cursorIndexOfIsFavorite);
+            _tmpIsFavorite = _tmp_1 != 0;
             final String _tmpMainImageUri;
             if (_cursor.isNull(_cursorIndexOfMainImageUri)) {
               _tmpMainImageUri = null;
             } else {
               _tmpMainImageUri = _cursor.getString(_cursorIndexOfMainImageUri);
             }
-            _item = new Cosplay(_tmpId,_tmpCosplanId,_tmpCharacterName,_tmpSeries,_tmpWigs,_tmpMakeup,_tmpAccessories,_tmpNotes,_tmpIsFavorite,_tmpMainImageUri);
+            _item = new Cosplay(_tmpId,_tmpCosplanId,_tmpCharacterName,_tmpSeries,_tmpPreferredWeather,_tmpWigs,_tmpMakeup,_tmpAccessories,_tmpNotes,_tmpRecognition,_tmpIsCompleted,_tmpIsFavorite,_tmpMainImageUri);
             _result.add(_item);
           }
           return _result;
@@ -845,22 +1220,31 @@ public final class CosplayDao_Impl implements CosplayDao {
           final int _cursorIndexOfCosplanId = CursorUtil.getColumnIndexOrThrow(_cursor, "cosplanId");
           final int _cursorIndexOfCharacterName = CursorUtil.getColumnIndexOrThrow(_cursor, "characterName");
           final int _cursorIndexOfSeries = CursorUtil.getColumnIndexOrThrow(_cursor, "series");
+          final int _cursorIndexOfPreferredWeather = CursorUtil.getColumnIndexOrThrow(_cursor, "preferredWeather");
           final int _cursorIndexOfWigs = CursorUtil.getColumnIndexOrThrow(_cursor, "wigs");
           final int _cursorIndexOfMakeup = CursorUtil.getColumnIndexOrThrow(_cursor, "makeup");
           final int _cursorIndexOfAccessories = CursorUtil.getColumnIndexOrThrow(_cursor, "accessories");
           final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
+          final int _cursorIndexOfRecognition = CursorUtil.getColumnIndexOrThrow(_cursor, "recognition");
+          final int _cursorIndexOfIsCompleted = CursorUtil.getColumnIndexOrThrow(_cursor, "isCompleted");
           final int _cursorIndexOfIsFavorite = CursorUtil.getColumnIndexOrThrow(_cursor, "isFavorite");
           final int _cursorIndexOfMainImageUri = CursorUtil.getColumnIndexOrThrow(_cursor, "mainImageUri");
           final Cosplay _result;
           if (_cursor.moveToFirst()) {
             final long _tmpId;
             _tmpId = _cursor.getLong(_cursorIndexOfId);
-            final long _tmpCosplanId;
-            _tmpCosplanId = _cursor.getLong(_cursorIndexOfCosplanId);
+            final Long _tmpCosplanId;
+            if (_cursor.isNull(_cursorIndexOfCosplanId)) {
+              _tmpCosplanId = null;
+            } else {
+              _tmpCosplanId = _cursor.getLong(_cursorIndexOfCosplanId);
+            }
             final String _tmpCharacterName;
             _tmpCharacterName = _cursor.getString(_cursorIndexOfCharacterName);
             final String _tmpSeries;
             _tmpSeries = _cursor.getString(_cursorIndexOfSeries);
+            final String _tmpPreferredWeather;
+            _tmpPreferredWeather = _cursor.getString(_cursorIndexOfPreferredWeather);
             final String _tmpWigs;
             _tmpWigs = _cursor.getString(_cursorIndexOfWigs);
             final String _tmpMakeup;
@@ -869,17 +1253,23 @@ public final class CosplayDao_Impl implements CosplayDao {
             _tmpAccessories = _cursor.getString(_cursorIndexOfAccessories);
             final String _tmpNotes;
             _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
-            final boolean _tmpIsFavorite;
+            final String _tmpRecognition;
+            _tmpRecognition = _cursor.getString(_cursorIndexOfRecognition);
+            final boolean _tmpIsCompleted;
             final int _tmp;
-            _tmp = _cursor.getInt(_cursorIndexOfIsFavorite);
-            _tmpIsFavorite = _tmp != 0;
+            _tmp = _cursor.getInt(_cursorIndexOfIsCompleted);
+            _tmpIsCompleted = _tmp != 0;
+            final boolean _tmpIsFavorite;
+            final int _tmp_1;
+            _tmp_1 = _cursor.getInt(_cursorIndexOfIsFavorite);
+            _tmpIsFavorite = _tmp_1 != 0;
             final String _tmpMainImageUri;
             if (_cursor.isNull(_cursorIndexOfMainImageUri)) {
               _tmpMainImageUri = null;
             } else {
               _tmpMainImageUri = _cursor.getString(_cursorIndexOfMainImageUri);
             }
-            _result = new Cosplay(_tmpId,_tmpCosplanId,_tmpCharacterName,_tmpSeries,_tmpWigs,_tmpMakeup,_tmpAccessories,_tmpNotes,_tmpIsFavorite,_tmpMainImageUri);
+            _result = new Cosplay(_tmpId,_tmpCosplanId,_tmpCharacterName,_tmpSeries,_tmpPreferredWeather,_tmpWigs,_tmpMakeup,_tmpAccessories,_tmpNotes,_tmpRecognition,_tmpIsCompleted,_tmpIsFavorite,_tmpMainImageUri);
           } else {
             _result = null;
           }
@@ -906,10 +1296,13 @@ public final class CosplayDao_Impl implements CosplayDao {
           final int _cursorIndexOfCosplanId = CursorUtil.getColumnIndexOrThrow(_cursor, "cosplanId");
           final int _cursorIndexOfCharacterName = CursorUtil.getColumnIndexOrThrow(_cursor, "characterName");
           final int _cursorIndexOfSeries = CursorUtil.getColumnIndexOrThrow(_cursor, "series");
+          final int _cursorIndexOfPreferredWeather = CursorUtil.getColumnIndexOrThrow(_cursor, "preferredWeather");
           final int _cursorIndexOfWigs = CursorUtil.getColumnIndexOrThrow(_cursor, "wigs");
           final int _cursorIndexOfMakeup = CursorUtil.getColumnIndexOrThrow(_cursor, "makeup");
           final int _cursorIndexOfAccessories = CursorUtil.getColumnIndexOrThrow(_cursor, "accessories");
           final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
+          final int _cursorIndexOfRecognition = CursorUtil.getColumnIndexOrThrow(_cursor, "recognition");
+          final int _cursorIndexOfIsCompleted = CursorUtil.getColumnIndexOrThrow(_cursor, "isCompleted");
           final int _cursorIndexOfIsFavorite = CursorUtil.getColumnIndexOrThrow(_cursor, "isFavorite");
           final int _cursorIndexOfMainImageUri = CursorUtil.getColumnIndexOrThrow(_cursor, "mainImageUri");
           final List<Cosplay> _result = new ArrayList<Cosplay>(_cursor.getCount());
@@ -917,12 +1310,18 @@ public final class CosplayDao_Impl implements CosplayDao {
             final Cosplay _item;
             final long _tmpId;
             _tmpId = _cursor.getLong(_cursorIndexOfId);
-            final long _tmpCosplanId;
-            _tmpCosplanId = _cursor.getLong(_cursorIndexOfCosplanId);
+            final Long _tmpCosplanId;
+            if (_cursor.isNull(_cursorIndexOfCosplanId)) {
+              _tmpCosplanId = null;
+            } else {
+              _tmpCosplanId = _cursor.getLong(_cursorIndexOfCosplanId);
+            }
             final String _tmpCharacterName;
             _tmpCharacterName = _cursor.getString(_cursorIndexOfCharacterName);
             final String _tmpSeries;
             _tmpSeries = _cursor.getString(_cursorIndexOfSeries);
+            final String _tmpPreferredWeather;
+            _tmpPreferredWeather = _cursor.getString(_cursorIndexOfPreferredWeather);
             final String _tmpWigs;
             _tmpWigs = _cursor.getString(_cursorIndexOfWigs);
             final String _tmpMakeup;
@@ -931,17 +1330,23 @@ public final class CosplayDao_Impl implements CosplayDao {
             _tmpAccessories = _cursor.getString(_cursorIndexOfAccessories);
             final String _tmpNotes;
             _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
-            final boolean _tmpIsFavorite;
+            final String _tmpRecognition;
+            _tmpRecognition = _cursor.getString(_cursorIndexOfRecognition);
+            final boolean _tmpIsCompleted;
             final int _tmp;
-            _tmp = _cursor.getInt(_cursorIndexOfIsFavorite);
-            _tmpIsFavorite = _tmp != 0;
+            _tmp = _cursor.getInt(_cursorIndexOfIsCompleted);
+            _tmpIsCompleted = _tmp != 0;
+            final boolean _tmpIsFavorite;
+            final int _tmp_1;
+            _tmp_1 = _cursor.getInt(_cursorIndexOfIsFavorite);
+            _tmpIsFavorite = _tmp_1 != 0;
             final String _tmpMainImageUri;
             if (_cursor.isNull(_cursorIndexOfMainImageUri)) {
               _tmpMainImageUri = null;
             } else {
               _tmpMainImageUri = _cursor.getString(_cursorIndexOfMainImageUri);
             }
-            _item = new Cosplay(_tmpId,_tmpCosplanId,_tmpCharacterName,_tmpSeries,_tmpWigs,_tmpMakeup,_tmpAccessories,_tmpNotes,_tmpIsFavorite,_tmpMainImageUri);
+            _item = new Cosplay(_tmpId,_tmpCosplanId,_tmpCharacterName,_tmpSeries,_tmpPreferredWeather,_tmpWigs,_tmpMakeup,_tmpAccessories,_tmpNotes,_tmpRecognition,_tmpIsCompleted,_tmpIsFavorite,_tmpMainImageUri);
             _result.add(_item);
           }
           return _result;
@@ -972,9 +1377,12 @@ public final class CosplayDao_Impl implements CosplayDao {
           final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
           final int _cursorIndexOfCosplayId = CursorUtil.getColumnIndexOrThrow(_cursor, "cosplayId");
           final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
-          final int _cursorIndexOfProcessSteps = CursorUtil.getColumnIndexOrThrow(_cursor, "processSteps");
+          final int _cursorIndexOfImageUris = CursorUtil.getColumnIndexOrThrow(_cursor, "imageUris");
+          final int _cursorIndexOfPrice = CursorUtil.getColumnIndexOrThrow(_cursor, "price");
+          final int _cursorIndexOfTimeSpent = CursorUtil.getColumnIndexOrThrow(_cursor, "timeSpent");
+          final int _cursorIndexOfProcessDescription = CursorUtil.getColumnIndexOrThrow(_cursor, "processDescription");
+          final int _cursorIndexOfProjectPercentage = CursorUtil.getColumnIndexOrThrow(_cursor, "projectPercentage");
           final int _cursorIndexOfMaterials = CursorUtil.getColumnIndexOrThrow(_cursor, "materials");
-          final int _cursorIndexOfEstimatedCost = CursorUtil.getColumnIndexOrThrow(_cursor, "estimatedCost");
           final int _cursorIndexOfIsFinished = CursorUtil.getColumnIndexOrThrow(_cursor, "isFinished");
           final List<HandmadePart> _result = new ArrayList<HandmadePart>(_cursor.getCount());
           while (_cursor.moveToNext()) {
@@ -985,17 +1393,253 @@ public final class CosplayDao_Impl implements CosplayDao {
             _tmpCosplayId = _cursor.getLong(_cursorIndexOfCosplayId);
             final String _tmpName;
             _tmpName = _cursor.getString(_cursorIndexOfName);
-            final String _tmpProcessSteps;
-            _tmpProcessSteps = _cursor.getString(_cursorIndexOfProcessSteps);
+            final String _tmpImageUris;
+            _tmpImageUris = _cursor.getString(_cursorIndexOfImageUris);
+            final double _tmpPrice;
+            _tmpPrice = _cursor.getDouble(_cursorIndexOfPrice);
+            final String _tmpTimeSpent;
+            _tmpTimeSpent = _cursor.getString(_cursorIndexOfTimeSpent);
+            final String _tmpProcessDescription;
+            _tmpProcessDescription = _cursor.getString(_cursorIndexOfProcessDescription);
+            final int _tmpProjectPercentage;
+            _tmpProjectPercentage = _cursor.getInt(_cursorIndexOfProjectPercentage);
             final String _tmpMaterials;
             _tmpMaterials = _cursor.getString(_cursorIndexOfMaterials);
-            final double _tmpEstimatedCost;
-            _tmpEstimatedCost = _cursor.getDouble(_cursorIndexOfEstimatedCost);
             final boolean _tmpIsFinished;
             final int _tmp;
             _tmp = _cursor.getInt(_cursorIndexOfIsFinished);
             _tmpIsFinished = _tmp != 0;
-            _item = new HandmadePart(_tmpId,_tmpCosplayId,_tmpName,_tmpProcessSteps,_tmpMaterials,_tmpEstimatedCost,_tmpIsFinished);
+            _item = new HandmadePart(_tmpId,_tmpCosplayId,_tmpName,_tmpImageUris,_tmpPrice,_tmpTimeSpent,_tmpProcessDescription,_tmpProjectPercentage,_tmpMaterials,_tmpIsFinished);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Object getHandmadePartById(final long id,
+      final Continuation<? super HandmadePart> $completion) {
+    final String _sql = "SELECT * FROM handmade_parts WHERE id = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, id);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<HandmadePart>() {
+      @Override
+      @Nullable
+      public HandmadePart call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfCosplayId = CursorUtil.getColumnIndexOrThrow(_cursor, "cosplayId");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfImageUris = CursorUtil.getColumnIndexOrThrow(_cursor, "imageUris");
+          final int _cursorIndexOfPrice = CursorUtil.getColumnIndexOrThrow(_cursor, "price");
+          final int _cursorIndexOfTimeSpent = CursorUtil.getColumnIndexOrThrow(_cursor, "timeSpent");
+          final int _cursorIndexOfProcessDescription = CursorUtil.getColumnIndexOrThrow(_cursor, "processDescription");
+          final int _cursorIndexOfProjectPercentage = CursorUtil.getColumnIndexOrThrow(_cursor, "projectPercentage");
+          final int _cursorIndexOfMaterials = CursorUtil.getColumnIndexOrThrow(_cursor, "materials");
+          final int _cursorIndexOfIsFinished = CursorUtil.getColumnIndexOrThrow(_cursor, "isFinished");
+          final HandmadePart _result;
+          if (_cursor.moveToFirst()) {
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpCosplayId;
+            _tmpCosplayId = _cursor.getLong(_cursorIndexOfCosplayId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpImageUris;
+            _tmpImageUris = _cursor.getString(_cursorIndexOfImageUris);
+            final double _tmpPrice;
+            _tmpPrice = _cursor.getDouble(_cursorIndexOfPrice);
+            final String _tmpTimeSpent;
+            _tmpTimeSpent = _cursor.getString(_cursorIndexOfTimeSpent);
+            final String _tmpProcessDescription;
+            _tmpProcessDescription = _cursor.getString(_cursorIndexOfProcessDescription);
+            final int _tmpProjectPercentage;
+            _tmpProjectPercentage = _cursor.getInt(_cursorIndexOfProjectPercentage);
+            final String _tmpMaterials;
+            _tmpMaterials = _cursor.getString(_cursorIndexOfMaterials);
+            final boolean _tmpIsFinished;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsFinished);
+            _tmpIsFinished = _tmp != 0;
+            _result = new HandmadePart(_tmpId,_tmpCosplayId,_tmpName,_tmpImageUris,_tmpPrice,_tmpTimeSpent,_tmpProcessDescription,_tmpProjectPercentage,_tmpMaterials,_tmpIsFinished);
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Flow<List<WigMakeup>> getWigMakeupItems(final long cosplayId) {
+    final String _sql = "SELECT * FROM wig_makeup_items WHERE cosplayId = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, cosplayId);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"wig_makeup_items"}, new Callable<List<WigMakeup>>() {
+      @Override
+      @NonNull
+      public List<WigMakeup> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfCosplayId = CursorUtil.getColumnIndexOrThrow(_cursor, "cosplayId");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfImageUris = CursorUtil.getColumnIndexOrThrow(_cursor, "imageUris");
+          final int _cursorIndexOfPrice = CursorUtil.getColumnIndexOrThrow(_cursor, "price");
+          final int _cursorIndexOfTimeSpent = CursorUtil.getColumnIndexOrThrow(_cursor, "timeSpent");
+          final int _cursorIndexOfDescription = CursorUtil.getColumnIndexOrThrow(_cursor, "description");
+          final int _cursorIndexOfProductsUsed = CursorUtil.getColumnIndexOrThrow(_cursor, "productsUsed");
+          final int _cursorIndexOfIsFinished = CursorUtil.getColumnIndexOrThrow(_cursor, "isFinished");
+          final List<WigMakeup> _result = new ArrayList<WigMakeup>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final WigMakeup _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpCosplayId;
+            _tmpCosplayId = _cursor.getLong(_cursorIndexOfCosplayId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpImageUris;
+            _tmpImageUris = _cursor.getString(_cursorIndexOfImageUris);
+            final double _tmpPrice;
+            _tmpPrice = _cursor.getDouble(_cursorIndexOfPrice);
+            final String _tmpTimeSpent;
+            _tmpTimeSpent = _cursor.getString(_cursorIndexOfTimeSpent);
+            final String _tmpDescription;
+            _tmpDescription = _cursor.getString(_cursorIndexOfDescription);
+            final String _tmpProductsUsed;
+            _tmpProductsUsed = _cursor.getString(_cursorIndexOfProductsUsed);
+            final boolean _tmpIsFinished;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsFinished);
+            _tmpIsFinished = _tmp != 0;
+            _item = new WigMakeup(_tmpId,_tmpCosplayId,_tmpName,_tmpImageUris,_tmpPrice,_tmpTimeSpent,_tmpDescription,_tmpProductsUsed,_tmpIsFinished);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Object getWigMakeupById(final long id, final Continuation<? super WigMakeup> $completion) {
+    final String _sql = "SELECT * FROM wig_makeup_items WHERE id = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, id);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<WigMakeup>() {
+      @Override
+      @Nullable
+      public WigMakeup call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfCosplayId = CursorUtil.getColumnIndexOrThrow(_cursor, "cosplayId");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfImageUris = CursorUtil.getColumnIndexOrThrow(_cursor, "imageUris");
+          final int _cursorIndexOfPrice = CursorUtil.getColumnIndexOrThrow(_cursor, "price");
+          final int _cursorIndexOfTimeSpent = CursorUtil.getColumnIndexOrThrow(_cursor, "timeSpent");
+          final int _cursorIndexOfDescription = CursorUtil.getColumnIndexOrThrow(_cursor, "description");
+          final int _cursorIndexOfProductsUsed = CursorUtil.getColumnIndexOrThrow(_cursor, "productsUsed");
+          final int _cursorIndexOfIsFinished = CursorUtil.getColumnIndexOrThrow(_cursor, "isFinished");
+          final WigMakeup _result;
+          if (_cursor.moveToFirst()) {
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpCosplayId;
+            _tmpCosplayId = _cursor.getLong(_cursorIndexOfCosplayId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpImageUris;
+            _tmpImageUris = _cursor.getString(_cursorIndexOfImageUris);
+            final double _tmpPrice;
+            _tmpPrice = _cursor.getDouble(_cursorIndexOfPrice);
+            final String _tmpTimeSpent;
+            _tmpTimeSpent = _cursor.getString(_cursorIndexOfTimeSpent);
+            final String _tmpDescription;
+            _tmpDescription = _cursor.getString(_cursorIndexOfDescription);
+            final String _tmpProductsUsed;
+            _tmpProductsUsed = _cursor.getString(_cursorIndexOfProductsUsed);
+            final boolean _tmpIsFinished;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsFinished);
+            _tmpIsFinished = _tmp != 0;
+            _result = new WigMakeup(_tmpId,_tmpCosplayId,_tmpName,_tmpImageUris,_tmpPrice,_tmpTimeSpent,_tmpDescription,_tmpProductsUsed,_tmpIsFinished);
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Flow<List<PartResource>> getResourcesForPart(final long partId) {
+    final String _sql = "SELECT * FROM part_resources WHERE partId = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, partId);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"part_resources"}, new Callable<List<PartResource>>() {
+      @Override
+      @NonNull
+      public List<PartResource> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfPartId = CursorUtil.getColumnIndexOrThrow(_cursor, "partId");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfWebLink = CursorUtil.getColumnIndexOrThrow(_cursor, "webLink");
+          final int _cursorIndexOfPrice = CursorUtil.getColumnIndexOrThrow(_cursor, "price");
+          final int _cursorIndexOfImageUris = CursorUtil.getColumnIndexOrThrow(_cursor, "imageUris");
+          final int _cursorIndexOfUsageDescription = CursorUtil.getColumnIndexOrThrow(_cursor, "usageDescription");
+          final List<PartResource> _result = new ArrayList<PartResource>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final PartResource _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpPartId;
+            _tmpPartId = _cursor.getLong(_cursorIndexOfPartId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpWebLink;
+            _tmpWebLink = _cursor.getString(_cursorIndexOfWebLink);
+            final double _tmpPrice;
+            _tmpPrice = _cursor.getDouble(_cursorIndexOfPrice);
+            final String _tmpImageUris;
+            _tmpImageUris = _cursor.getString(_cursorIndexOfImageUris);
+            final String _tmpUsageDescription;
+            _tmpUsageDescription = _cursor.getString(_cursorIndexOfUsageDescription);
+            _item = new PartResource(_tmpId,_tmpPartId,_tmpName,_tmpWebLink,_tmpPrice,_tmpImageUris,_tmpUsageDescription);
             _result.add(_item);
           }
           return _result;
@@ -1026,8 +1670,11 @@ public final class CosplayDao_Impl implements CosplayDao {
           final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
           final int _cursorIndexOfCosplayId = CursorUtil.getColumnIndexOrThrow(_cursor, "cosplayId");
           final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
-          final int _cursorIndexOfStoreName = CursorUtil.getColumnIndexOrThrow(_cursor, "storeName");
           final int _cursorIndexOfPurchaseLink = CursorUtil.getColumnIndexOrThrow(_cursor, "purchaseLink");
+          final int _cursorIndexOfImageUris = CursorUtil.getColumnIndexOrThrow(_cursor, "imageUris");
+          final int _cursorIndexOfAdjustmentDescription = CursorUtil.getColumnIndexOrThrow(_cursor, "adjustmentDescription");
+          final int _cursorIndexOfProjectPercentage = CursorUtil.getColumnIndexOrThrow(_cursor, "projectPercentage");
+          final int _cursorIndexOfStoreName = CursorUtil.getColumnIndexOrThrow(_cursor, "storeName");
           final int _cursorIndexOfPrice = CursorUtil.getColumnIndexOrThrow(_cursor, "price");
           final int _cursorIndexOfIsReceived = CursorUtil.getColumnIndexOrThrow(_cursor, "isReceived");
           final List<PurchasedItem> _result = new ArrayList<PurchasedItem>(_cursor.getCount());
@@ -1039,17 +1686,135 @@ public final class CosplayDao_Impl implements CosplayDao {
             _tmpCosplayId = _cursor.getLong(_cursorIndexOfCosplayId);
             final String _tmpName;
             _tmpName = _cursor.getString(_cursorIndexOfName);
-            final String _tmpStoreName;
-            _tmpStoreName = _cursor.getString(_cursorIndexOfStoreName);
             final String _tmpPurchaseLink;
             _tmpPurchaseLink = _cursor.getString(_cursorIndexOfPurchaseLink);
+            final String _tmpImageUris;
+            _tmpImageUris = _cursor.getString(_cursorIndexOfImageUris);
+            final String _tmpAdjustmentDescription;
+            _tmpAdjustmentDescription = _cursor.getString(_cursorIndexOfAdjustmentDescription);
+            final int _tmpProjectPercentage;
+            _tmpProjectPercentage = _cursor.getInt(_cursorIndexOfProjectPercentage);
+            final String _tmpStoreName;
+            _tmpStoreName = _cursor.getString(_cursorIndexOfStoreName);
             final double _tmpPrice;
             _tmpPrice = _cursor.getDouble(_cursorIndexOfPrice);
             final boolean _tmpIsReceived;
             final int _tmp;
             _tmp = _cursor.getInt(_cursorIndexOfIsReceived);
             _tmpIsReceived = _tmp != 0;
-            _item = new PurchasedItem(_tmpId,_tmpCosplayId,_tmpName,_tmpStoreName,_tmpPurchaseLink,_tmpPrice,_tmpIsReceived);
+            _item = new PurchasedItem(_tmpId,_tmpCosplayId,_tmpName,_tmpPurchaseLink,_tmpImageUris,_tmpAdjustmentDescription,_tmpProjectPercentage,_tmpStoreName,_tmpPrice,_tmpIsReceived);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Object getPurchasedItemById(final long id,
+      final Continuation<? super PurchasedItem> $completion) {
+    final String _sql = "SELECT * FROM purchased_items WHERE id = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, id);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<PurchasedItem>() {
+      @Override
+      @Nullable
+      public PurchasedItem call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfCosplayId = CursorUtil.getColumnIndexOrThrow(_cursor, "cosplayId");
+          final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+          final int _cursorIndexOfPurchaseLink = CursorUtil.getColumnIndexOrThrow(_cursor, "purchaseLink");
+          final int _cursorIndexOfImageUris = CursorUtil.getColumnIndexOrThrow(_cursor, "imageUris");
+          final int _cursorIndexOfAdjustmentDescription = CursorUtil.getColumnIndexOrThrow(_cursor, "adjustmentDescription");
+          final int _cursorIndexOfProjectPercentage = CursorUtil.getColumnIndexOrThrow(_cursor, "projectPercentage");
+          final int _cursorIndexOfStoreName = CursorUtil.getColumnIndexOrThrow(_cursor, "storeName");
+          final int _cursorIndexOfPrice = CursorUtil.getColumnIndexOrThrow(_cursor, "price");
+          final int _cursorIndexOfIsReceived = CursorUtil.getColumnIndexOrThrow(_cursor, "isReceived");
+          final PurchasedItem _result;
+          if (_cursor.moveToFirst()) {
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpCosplayId;
+            _tmpCosplayId = _cursor.getLong(_cursorIndexOfCosplayId);
+            final String _tmpName;
+            _tmpName = _cursor.getString(_cursorIndexOfName);
+            final String _tmpPurchaseLink;
+            _tmpPurchaseLink = _cursor.getString(_cursorIndexOfPurchaseLink);
+            final String _tmpImageUris;
+            _tmpImageUris = _cursor.getString(_cursorIndexOfImageUris);
+            final String _tmpAdjustmentDescription;
+            _tmpAdjustmentDescription = _cursor.getString(_cursorIndexOfAdjustmentDescription);
+            final int _tmpProjectPercentage;
+            _tmpProjectPercentage = _cursor.getInt(_cursorIndexOfProjectPercentage);
+            final String _tmpStoreName;
+            _tmpStoreName = _cursor.getString(_cursorIndexOfStoreName);
+            final double _tmpPrice;
+            _tmpPrice = _cursor.getDouble(_cursorIndexOfPrice);
+            final boolean _tmpIsReceived;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsReceived);
+            _tmpIsReceived = _tmp != 0;
+            _result = new PurchasedItem(_tmpId,_tmpCosplayId,_tmpName,_tmpPurchaseLink,_tmpImageUris,_tmpAdjustmentDescription,_tmpProjectPercentage,_tmpStoreName,_tmpPrice,_tmpIsReceived);
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Flow<List<PhotoSession>> getPhotoSessionsForCosplay(final long cosplayId) {
+    final String _sql = "SELECT * FROM photo_sessions ps INNER JOIN cosplay_photosession_cross_ref ref ON ps.id = ref.photoSessionId WHERE ref.cosplayId = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, cosplayId);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"photo_sessions",
+        "cosplay_photosession_cross_ref"}, new Callable<List<PhotoSession>>() {
+      @Override
+      @NonNull
+      public List<PhotoSession> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfDate = CursorUtil.getColumnIndexOrThrow(_cursor, "date");
+          final int _cursorIndexOfPhotographer = CursorUtil.getColumnIndexOrThrow(_cursor, "photographer");
+          final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
+          final int _cursorIndexOfLocationId = CursorUtil.getColumnIndexOrThrow(_cursor, "locationId");
+          final List<PhotoSession> _result = new ArrayList<PhotoSession>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final PhotoSession _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final long _tmpDate;
+            _tmpDate = _cursor.getLong(_cursorIndexOfDate);
+            final String _tmpPhotographer;
+            _tmpPhotographer = _cursor.getString(_cursorIndexOfPhotographer);
+            final String _tmpNotes;
+            _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
+            final Long _tmpLocationId;
+            if (_cursor.isNull(_cursorIndexOfLocationId)) {
+              _tmpLocationId = null;
+            } else {
+              _tmpLocationId = _cursor.getLong(_cursorIndexOfLocationId);
+            }
+            _item = new PhotoSession(_tmpId,_tmpDate,_tmpPhotographer,_tmpNotes,_tmpLocationId);
             _result.add(_item);
           }
           return _result;
