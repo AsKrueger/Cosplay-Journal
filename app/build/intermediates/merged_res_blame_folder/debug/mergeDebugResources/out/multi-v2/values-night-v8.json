@@ -4,7 +4,7 @@
             "outputFile": "com.cosplayjournal.app-mergeDebugResources-72:/values-night-v8/values-night-v8.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\33af2973e2f00d8b8ef1e8b990d4fecd\\transformed\\appcompat-1.7.0\\res\\values-night-v8\\values-night-v8.xml",
+                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\8c06cdd57ae9d941a2d2a4433ade9e68\\transformed\\appcompat-1.7.0\\res\\values-night-v8\\values-night-v8.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\ed6ba681e449dc1be54058eb24c2ccf9\\transformed\\material-1.12.0\\res\\values-night-v8\\values-night-v8.xml",
+                    "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\53eb4705d4f83563ef9c76c355c288aa\\transformed\\material-1.12.0\\res\\values-night-v8\\values-night-v8.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
