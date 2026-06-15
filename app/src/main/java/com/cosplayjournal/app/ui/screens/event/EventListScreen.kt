@@ -33,6 +33,9 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
     val events by viewModel.events.collectAsState()
     val userEventData by viewModel.userEventData.collectAsState()
     
+    // Locale para español
+    val spanishLocale = remember { Locale("es", "ES") }
+    
     // Elevamos el estado del mes para que la lista pueda reaccionar a él
     var currentViewMonth by remember { mutableStateOf(YearMonth.now()) }
 
@@ -56,17 +59,17 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Journal", fontWeight = FontWeight.Bold) },
+                title = { Text("Agenda", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 16.dp)) {
                         Box(modifier = Modifier.size(12.dp).background(Color(0xFF4DB6AC), CircleShape))
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("ONLINE", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text("EN LÍNEA", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 },
                 actions = {
                     IconButton(onClick = { /* TODO */ }) {
-                        Icon(Icons.Default.Search, contentDescription = "Search")
+                        Icon(Icons.Default.Search, contentDescription = "Buscar")
                     }
                 }
             )
@@ -76,13 +79,17 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
             CalendarSection(
                 events = events, 
                 currentMonth = currentViewMonth,
-                onMonthChange = { currentViewMonth = it }
+                onMonthChange = { currentViewMonth = it },
+                locale = spanishLocale
             )
             
             Spacer(modifier = Modifier.height(16.dp))
             
+            val monthName = currentViewMonth.month.getDisplayName(TextStyle.FULL, spanishLocale)
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(spanishLocale) else it.toString() }
+
             Text(
-                text = "Events in ${currentViewMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${currentViewMonth.year}",
+                text = "Eventos en $monthName ${currentViewMonth.year}",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -92,7 +99,7 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
             if (filteredEvents.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.Center) {
                     Text(
-                        "No events scheduled for this month",
+                        "No hay eventos programados para este mes",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -108,7 +115,7 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
                         val data = userEventData.find { it.eventId == event.id }
                         EventCard(
                             event = event, 
-                            status = data?.status ?: "PLANNING",
+                            status = data?.status ?: "PLANIFICANDO",
                             isFavorite = data?.isFavorite ?: false,
                             onClick = { onEventClick(event.id) },
                             onFavoriteClick = { viewModel.toggleFavorite(event.id) }
@@ -124,10 +131,11 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
 fun CalendarSection(
     events: List<Event>, 
     currentMonth: YearMonth,
-    onMonthChange: (YearMonth) -> Unit
+    onMonthChange: (YearMonth) -> Unit,
+    locale: Locale
 ) {
     val today = remember { LocalDate.now() }
-    val maxMonth = remember { YearMonth.now().plusMonths(36) } // Extendemos el rango para pruebas
+    val maxMonth = remember { YearMonth.now().plusMonths(36) } 
     val minMonth = remember { YearMonth.now().minusMonths(12) }
 
     Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
@@ -140,11 +148,14 @@ fun CalendarSection(
                 onClick = { if (currentMonth > minMonth) onMonthChange(currentMonth.minusMonths(1)) },
                 enabled = currentMonth > minMonth
             ) { 
-                Icon(Icons.Default.ChevronLeft, contentDescription = "Previous") 
+                Icon(Icons.Default.ChevronLeft, contentDescription = "Anterior") 
             }
             
+            val monthName = currentMonth.month.getDisplayName(TextStyle.FULL, locale)
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(locale) else it.toString() }
+
             Text(
-                text = "${currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${currentMonth.year}",
+                text = "$monthName ${currentMonth.year}",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
@@ -154,12 +165,13 @@ fun CalendarSection(
                 onClick = { if (currentMonth < maxMonth) onMonthChange(currentMonth.plusMonths(1)) },
                 enabled = currentMonth < maxMonth
             ) { 
-                Icon(Icons.Default.ChevronRight, contentDescription = "Next") 
+                Icon(Icons.Default.ChevronRight, contentDescription = "Siguiente") 
             }
         }
         
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            listOf("S", "M", "T", "W", "T", "F", "S").forEach { day ->
+            // Iniciales de los días en español empezando por Domingo: D, L, M, X, J, V, S
+            listOf("D", "L", "M", "X", "J", "V", "S").forEach { day ->
                 Text(day, modifier = Modifier.weight(1f), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center)
             }
         }
@@ -243,6 +255,12 @@ fun EventCard(
     onClick: () -> Unit,
     onFavoriteClick: () -> Unit
 ) {
+    val statusText = when(status) {
+        "ATTENDING" -> "ASISTIRÉ"
+        "INTERESTED" -> "INTERESADO"
+        "PLANNING" -> "PLANIFICANDO"
+        else -> status
+    }
     val statusColor = when(status) {
         "ATTENDING" -> MaterialTheme.colorScheme.primaryContainer
         "INTERESTED" -> MaterialTheme.colorScheme.secondaryContainer
@@ -276,7 +294,7 @@ fun EventCard(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = status,
+                        text = statusText,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         style = MaterialTheme.typography.labelSmall,
                         color = statusTextColor,
@@ -297,12 +315,12 @@ fun EventCard(
                 IconButton(onClick = onFavoriteClick) {
                     Icon(
                         if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder, 
-                        contentDescription = "Favorite", 
+                        contentDescription = "Favorito", 
                         tint = if (isFavorite) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 IconButton(onClick = { /* Share */ }) {
-                    Icon(Icons.Default.Share, contentDescription = "Share", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Icon(Icons.Default.Share, contentDescription = "Compartir", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }
