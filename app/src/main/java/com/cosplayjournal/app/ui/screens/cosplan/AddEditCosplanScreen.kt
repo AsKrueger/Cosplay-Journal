@@ -1,13 +1,16 @@
 package com.cosplayjournal.app.ui.screens.cosplan
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.cosplayjournal.app.data.entity.Cosplan
 import com.cosplayjournal.app.ui.viewmodel.CosplanViewModel
@@ -51,7 +54,12 @@ fun AddEditCosplanScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                )
             )
         }
     ) { padding ->
@@ -59,53 +67,73 @@ fun AddEditCosplanScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            val textFieldColors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                cursorColor = MaterialTheme.colorScheme.primary
+            )
+
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
                 label = { Text("Name") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
             OutlinedTextField(
                 value = description,
                 onValueChange = { description = it },
                 label = { Text("Description") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
+            
             OutlinedTextField(
                 value = status,
                 onValueChange = { status = it },
                 label = { Text("Status") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
             OutlinedTextField(
                 value = difficulty,
                 onValueChange = { difficulty = it },
                 label = { Text("Difficulty") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
+            
             OutlinedTextField(
                 value = season,
                 onValueChange = { season = it },
                 label = { Text("Season") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
             OutlinedTextField(
                 value = estimatedBudget,
                 onValueChange = { estimatedBudget = it },
                 label = { Text("Estimated Budget") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
             OutlinedTextField(
                 value = notes,
                 onValueChange = { notes = it },
                 label = { Text("Notes") },
                 modifier = Modifier.fillMaxWidth(),
-                minLines = 3
+                minLines = 3,
+                colors = textFieldColors
             )
+
+            Spacer(modifier = Modifier.weight(1f))
 
             Button(
                 onClick = {
@@ -128,10 +156,17 @@ fun AddEditCosplanScreen(
                     }
                     onNavigateBack()
                 },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = name.isNotBlank()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                enabled = name.isNotBlank(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                shape = RoundedCornerShape(12.dp)
             ) {
-                Text("Save Cosplan")
+                Text("Save Cosplan", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             }
         }
     }

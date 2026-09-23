@@ -19,6 +19,13 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object Favorites : Screen("favorites", "Favoritos")
     object Settings : Screen("settings", "Ajustes")
     
+    // Selection screen
+    object CosplaySelection : Screen("cosplay_selection", "Selección")
+    
+    // List screens
+    object CosplanList : Screen("cosplan_list", "Mis Cosplans")
+    object CosplayList : Screen("cosplay_list_full", "Mis Cosplays")
+
     // Detail screens
     object CosplanDetail : Screen("cosplan_detail/{cosplanId}", "Detalle Cosplan")
     object CosplayDetail : Screen("cosplay_detail/{cosplayId}", "Detalle Cosplay")

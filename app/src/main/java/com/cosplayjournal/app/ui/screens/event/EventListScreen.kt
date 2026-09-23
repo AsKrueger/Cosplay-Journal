@@ -23,6 +23,7 @@ import com.cosplayjournal.app.data.model.Event
 import com.cosplayjournal.app.ui.viewmodel.EventViewModel
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeParseException
 import java.time.format.TextStyle
 import java.util.*
 
@@ -31,52 +32,95 @@ import java.util.*
 fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
     val events by viewModel.events.collectAsState()
     val userEventData by viewModel.userEventData.collectAsState()
+    
+    // Locale para español
+    val spanishLocale = remember { Locale("es", "ES") }
+    
+    // Elevamos el estado del mes para que la lista pueda reaccionar a él
+    var currentViewMonth by remember { mutableStateOf(YearMonth.now()) }
+
+    // Filtramos los eventos basándonos en el mes que se está visualizando en el calendario
+    val filteredEvents = remember(events, currentViewMonth) {
+        events.filter { event ->
+            try {
+                val start = LocalDate.parse(event.startDate)
+                val end = LocalDate.parse(event.endDate)
+                val eventStartMonth = YearMonth.from(start)
+                val eventEndMonth = YearMonth.from(end)
+                
+                // El evento es relevante si su rango de fechas toca el mes seleccionado
+                !(currentViewMonth.isBefore(eventStartMonth) || currentViewMonth.isAfter(eventEndMonth))
+            } catch (e: Exception) {
+                false
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Journal", fontWeight = FontWeight.Bold) },
+                title = { Text("Agenda", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 16.dp)) {
                         Box(modifier = Modifier.size(12.dp).background(Color(0xFF4DB6AC), CircleShape))
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("OFFLINE", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                        Text("EN LÍNEA", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 },
                 actions = {
                     IconButton(onClick = { /* TODO */ }) {
-                        Icon(Icons.Default.Search, contentDescription = "Search")
+                        Icon(Icons.Default.Search, contentDescription = "Buscar")
                     }
                 }
             )
         }
     ) { padding ->
-        Column(modifier = Modifier.padding(padding).fillMaxSize()) {
-            CalendarSection()
+        Column(modifier = Modifier.padding(padding).fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+            CalendarSection(
+                events = events, 
+                currentMonth = currentViewMonth,
+                onMonthChange = { currentViewMonth = it },
+                locale = spanishLocale
+            )
             
             Spacer(modifier = Modifier.height(16.dp))
             
+            val monthName = currentViewMonth.month.getDisplayName(TextStyle.FULL, spanishLocale)
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(spanishLocale) else it.toString() }
+
             Text(
-                text = "Upcoming Conventions",
+                text = "Eventos en $monthName ${currentViewMonth.year}",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp),
+                color = MaterialTheme.colorScheme.onBackground
             )
 
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(events) { event ->
-                    val data = userEventData.find { it.eventId == event.id }
-                    EventCard(
-                        event = event, 
-                        status = data?.status ?: "PLANNING",
-                        isFavorite = data?.isFavorite ?: false,
-                        onClick = { onEventClick(event.id) },
-                        onFavoriteClick = { viewModel.toggleFavorite(event.id) }
+            if (filteredEvents.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.Center) {
+                    Text(
+                        "No hay eventos programados para este mes",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
                     )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(filteredEvents) { event ->
+                        val data = userEventData.find { it.eventId == event.id }
+                        EventCard(
+                            event = event, 
+                            status = data?.status ?: "PLANIFICANDO",
+                            isFavorite = data?.isFavorite ?: false,
+                            onClick = { onEventClick(event.id) },
+                            onFavoriteClick = { viewModel.toggleFavorite(event.id) }
+                        )
+                    }
                 }
             }
         }
@@ -84,11 +128,15 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
 }
 
 @Composable
-fun CalendarSection() {
+fun CalendarSection(
+    events: List<Event>, 
+    currentMonth: YearMonth,
+    onMonthChange: (YearMonth) -> Unit,
+    locale: Locale
+) {
     val today = remember { LocalDate.now() }
-    var currentMonth by remember { mutableStateOf(YearMonth.now()) }
-    val maxMonth = remember { YearMonth.now().plusMonths(20) }
-    val minMonth = remember { YearMonth.now() }
+    val maxMonth = remember { YearMonth.now().plusMonths(36) } 
+    val minMonth = remember { YearMonth.now().minusMonths(12) }
 
     Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
         Row(
@@ -97,34 +145,39 @@ fun CalendarSection() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
-                onClick = { if (currentMonth > minMonth) currentMonth = currentMonth.minusMonths(1) },
+                onClick = { if (currentMonth > minMonth) onMonthChange(currentMonth.minusMonths(1)) },
                 enabled = currentMonth > minMonth
             ) { 
-                Icon(Icons.Default.ChevronLeft, contentDescription = "Previous") 
+                Icon(Icons.Default.ChevronLeft, contentDescription = "Anterior") 
             }
             
+            val monthName = currentMonth.month.getDisplayName(TextStyle.FULL, locale)
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(locale) else it.toString() }
+
             Text(
-                text = "${currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${currentMonth.year}",
+                text = "$monthName ${currentMonth.year}",
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface
             )
             
             IconButton(
-                onClick = { if (currentMonth < maxMonth) currentMonth = currentMonth.plusMonths(1) },
+                onClick = { if (currentMonth < maxMonth) onMonthChange(currentMonth.plusMonths(1)) },
                 enabled = currentMonth < maxMonth
             ) { 
-                Icon(Icons.Default.ChevronRight, contentDescription = "Next") 
+                Icon(Icons.Default.ChevronRight, contentDescription = "Siguiente") 
             }
         }
         
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            listOf("S", "M", "T", "W", "T", "F", "S").forEach { day ->
-                Text(day, modifier = Modifier.weight(1f), style = MaterialTheme.typography.labelSmall, color = Color.Gray, textAlign = TextAlign.Center)
+            // Iniciales de los días en español empezando por Domingo: D, L, M, X, J, V, S
+            listOf("D", "L", "M", "X", "J", "V", "S").forEach { day ->
+                Text(day, modifier = Modifier.weight(1f), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center)
             }
         }
         
         val daysInMonth = currentMonth.lengthOfMonth()
-        val firstDayOfMonth = currentMonth.atDay(1).dayOfWeek.value % 7 // Adjusted for Sunday start
+        val firstDayOfMonth = currentMonth.atDay(1).dayOfWeek.value % 7 
         
         val days = mutableListOf<String>()
         repeat(firstDayOfMonth) { days.add("") }
@@ -142,19 +195,43 @@ fun CalendarSection() {
                         contentAlignment = Alignment.Center
                     ) {
                         if (day.isNotEmpty()) {
-                            val isToday = currentMonth.year == today.year && 
-                                          currentMonth.month == today.month && 
-                                          day.toInt() == today.dayOfMonth
+                            val date = currentMonth.atDay(day.toInt())
+                            val isToday = date == today
                             
-                            if (isToday) {
+                            val hasEvent = events.any { event ->
+                                try {
+                                    val start = LocalDate.parse(event.startDate)
+                                    val end = LocalDate.parse(event.endDate)
+                                    !date.isBefore(start) && !date.isAfter(end)
+                                } catch (e: Exception) {
+                                    false
+                                }
+                            }
+
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Box(
-                                    modifier = Modifier.size(32.dp).background(Color(0xFF00ACC1), CircleShape),
+                                    modifier = Modifier
+                                        .size(32.dp)
+                                        .background(
+                                            if (isToday) MaterialTheme.colorScheme.primary else Color.Transparent, 
+                                            CircleShape
+                                        ),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Text(day, color = Color.White, fontWeight = FontWeight.Bold)
+                                    Text(
+                                        day, 
+                                        color = if (isToday) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                                        fontWeight = if (isToday) FontWeight.Bold else FontWeight.Normal
+                                    )
                                 }
-                            } else {
-                                Text(day)
+                                if (hasEvent && !isToday) {
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(top = 2.dp)
+                                            .size(4.dp)
+                                            .background(MaterialTheme.colorScheme.secondary, CircleShape)
+                                    )
+                                }
                             }
                         }
                     }
@@ -166,7 +243,7 @@ fun CalendarSection() {
         }
         
         Spacer(modifier = Modifier.height(8.dp))
-        Box(modifier = Modifier.width(40.dp).height(4.dp).background(Color.LightGray, RoundedCornerShape(2.dp)).align(Alignment.CenterHorizontally))
+        Box(modifier = Modifier.width(40.dp).height(4.dp).background(MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(2.dp)).align(Alignment.CenterHorizontally))
     }
 }
 
@@ -178,21 +255,27 @@ fun EventCard(
     onClick: () -> Unit,
     onFavoriteClick: () -> Unit
 ) {
+    val statusText = when(status) {
+        "ATTENDING" -> "ASISTIRÉ"
+        "INTERESTED" -> "INTERESADO"
+        "PLANNING" -> "PLANIFICANDO"
+        else -> status
+    }
     val statusColor = when(status) {
-        "ATTENDING" -> Color(0xFFE0F2F1)
-        "INTERESTED" -> Color(0xFFF5F5F5)
-        else -> Color(0xFFFFF3E0)
+        "ATTENDING" -> MaterialTheme.colorScheme.primaryContainer
+        "INTERESTED" -> MaterialTheme.colorScheme.secondaryContainer
+        else -> MaterialTheme.colorScheme.tertiaryContainer
     }
     val statusTextColor = when(status) {
-        "ATTENDING" -> Color(0xFF00897B)
-        "INTERESTED" -> Color(0xFF757575)
-        else -> Color(0xFFFB8C00)
+        "ATTENDING" -> MaterialTheme.colorScheme.onPrimaryContainer
+        "INTERESTED" -> MaterialTheme.colorScheme.onSecondaryContainer
+        else -> MaterialTheme.colorScheme.onTertiaryContainer
     }
 
     Card(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -200,7 +283,7 @@ fun EventCard(
                 modifier = Modifier
                     .size(80.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Color.LightGray)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             )
             
             Spacer(modifier = Modifier.width(16.dp))
@@ -211,19 +294,19 @@ fun EventCard(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = status,
+                        text = statusText,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         style = MaterialTheme.typography.labelSmall,
                         color = statusTextColor,
                         fontWeight = FontWeight.Bold
                     )
                 }
-                Text(text = event.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                Text(text = event.city, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                Text(text = event.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = event.city, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text(
                     text = "${event.startDate} - ${event.endDate}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF00ACC1),
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -232,12 +315,12 @@ fun EventCard(
                 IconButton(onClick = onFavoriteClick) {
                     Icon(
                         if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder, 
-                        contentDescription = "Favorite", 
-                        tint = if (isFavorite) Color.Red else Color.LightGray
+                        contentDescription = "Favorito", 
+                        tint = if (isFavorite) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 IconButton(onClick = { /* Share */ }) {
-                    Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.LightGray)
+                    Icon(Icons.Default.Share, contentDescription = "Compartir", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }

@@ -8,19 +8,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFF00ACC1),
-    secondary = Color(0xFF4DB6AC),
-    tertiary = Color(0xFFFB8C00),
+    primary = PrimaryOrange,
+    secondary = SecondaryBlue,
+    tertiary = TertiaryRed,
     background = Color(0xFF121212),
-    surface = Color(0xFF1E1E1E)
+    surface = Color(0xFF1E1E1E),
+    onPrimary = Color.Black, // Para que resalte sobre el naranja
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color(0xFFE6E1E5),
+    onSurface = Color(0xFFE6E1E5),
+    outline = Color(0xFFE6E1E5) // Usaremos esto para los bordes brutalistas en modo oscuro
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF00ACC1),
-    secondary = Color(0xFF4DB6AC),
-    tertiary = Color(0xFF7D5260),
-    background = Color(0xFFF8F9FA),
-    surface = Color(0xFFFFFFFF)
+    primary = PrimaryOrange,
+    secondary = SecondaryBlue,
+    tertiary = TertiaryRed,
+    background = BackgroundBeige,
+    surface = SurfaceCream,
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color.Black,
+    onSurface = Color.Black,
+    outline = Color.Black // Bordes negros en modo claro
 )
 
 @Composable
@@ -32,6 +44,7 @@ fun CosplayJournalTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
+        typography = Typography,
         content = content
     )
 }

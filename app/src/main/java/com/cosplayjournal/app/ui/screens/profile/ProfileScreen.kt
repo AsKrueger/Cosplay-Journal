@@ -45,16 +45,20 @@ fun ProfileScreen(
                 title = { Text("Journal", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 16.dp)) {
-                        Box(modifier = Modifier.size(12.dp).background(Color(0xFF4DB6AC), CircleShape))
+                        Box(modifier = Modifier.size(12.dp).background(MaterialTheme.colorScheme.primary, CircleShape))
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("LOCALVAULT", style = MaterialTheme.typography.labelSmall, color = Color(0xFF4DB6AC), fontWeight = FontWeight.Bold)
+                        Text("LOCALVAULT", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                     }
                 },
                 actions = {
                     IconButton(onClick = { /* Share profile */ }) {
-                        Icon(Icons.Default.Share, contentDescription = "Share")
+                        Icon(Icons.Default.Share, contentDescription = "Share", tint = MaterialTheme.colorScheme.onSurface)
                     }
-                }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
+                )
             )
         }
     ) { padding ->
@@ -62,14 +66,17 @@ fun ProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(horizontal = 16.dp)
-                .background(Color(0xFFF8F9FA))
         ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            
             // Profile Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
                 Column(
                     modifier = Modifier.padding(24.dp),
@@ -79,32 +86,37 @@ fun ProfileScreen(
                         Box(
                             modifier = Modifier
                                 .size(100.dp)
-                                .border(3.dp, Color(0xFF00ACC1), CircleShape)
+                                .border(3.dp, MaterialTheme.colorScheme.primary, CircleShape)
                                 .padding(4.dp)
                                 .clip(CircleShape)
-                                .background(Color.LightGray)
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
                         )
                         Box(
                             modifier = Modifier
                                 .size(24.dp)
-                                .background(Color(0xFFFB8C00), CircleShape)
-                                .border(2.dp, Color.White, CircleShape),
+                                .background(MaterialTheme.colorScheme.tertiary, CircleShape)
+                                .border(2.dp, MaterialTheme.colorScheme.surface, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("✔", color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                            Text("✔", color = MaterialTheme.colorScheme.onTertiary, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                         }
                     }
 
                     Spacer(modifier = Modifier.height(12.dp))
-                    Text("My Cosplay Journey", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                    Text("Offline Explorer", color = Color(0xFF00ACC1), style = MaterialTheme.typography.bodySmall)
+                    Text(
+                        "My Cosplay Journey", 
+                        style = MaterialTheme.typography.headlineSmall, 
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text("Offline Explorer", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
                     
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
                         "Plan, track, and document your cosplay projects locally. Your personal creative sanctuary.",
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -124,7 +136,10 @@ fun ProfileScreen(
                     onClick = onFavoritesClick,
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surface, 
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    ),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
                 ) {
                     Icon(Icons.Default.Favorite, contentDescription = null, tint = Color.Red)
@@ -135,10 +150,13 @@ fun ProfileScreen(
                     onClick = onSettingsClick,
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surface, 
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    ),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
                 ) {
-                    Icon(Icons.Default.Settings, contentDescription = null, tint = Color.Gray)
+                    Icon(Icons.Default.Settings, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Settings")
                 }
@@ -151,9 +169,14 @@ fun ProfileScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Portfolio Preview", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(
+                    "Portfolio Preview", 
+                    style = MaterialTheme.typography.titleMedium, 
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
                 TextButton(onClick = onSeeAllPortfolioClick) {
-                    Text("SEE ALL", color = Color(0xFF00ACC1), style = MaterialTheme.typography.labelLarge)
+                    Text("SEE ALL", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge)
                 }
             }
 
@@ -169,7 +192,7 @@ fun ProfileScreen(
                         modifier = Modifier
                             .aspectRatio(1f)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(Color.LightGray)
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
                             .clickable { onCosplayClick(cosplay.id) }
                     ) {
                         if (cosplay.mainImageUri != null) {
@@ -189,7 +212,7 @@ fun ProfileScreen(
                         modifier = Modifier
                             .aspectRatio(1f)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(Color(0xFFE0F2F1))
+                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                     )
                 }
             }
@@ -201,7 +224,10 @@ fun ProfileScreen(
                     .padding(vertical = 16.dp)
                     .height(56.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00ACC1))
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
             ) {
                 Icon(Icons.Default.PictureAsPdf, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
@@ -214,7 +240,16 @@ fun ProfileScreen(
 @Composable
 fun StatItem(count: String, label: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = count, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-        Text(text = label, style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+        Text(
+            text = count, 
+            style = MaterialTheme.typography.titleLarge, 
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Text(
+            text = label, 
+            style = MaterialTheme.typography.labelSmall, 
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
