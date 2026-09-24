@@ -76,25 +76,6 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\lovei\\OneDrive\\Escritorio\\Cosplay-Journal\\app\\src\\main\\res\\values\\themes.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "57",
-                        "endLines": "6",
-                        "endColumns": "12",
-                        "endOffsets": "337"
-                    },
-                    "to": {
-                        "startLines": "6447",
-                        "startColumns": "4",
-                        "startOffsets": "452406",
-                        "endLines": "6451",
-                        "endColumns": "12",
-                        "endOffsets": "452682"
-                    }
-                },
-                {
                     "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\4eaa328bf217b5807d23674e019d779f\\transformed\\jetified-lifecycle-viewmodel-release\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2",
@@ -296,6 +277,40 @@
                     }
                 },
                 {
+                    "source": "C:\\Users\\lovei\\Documents\\XD\\Cosplay-Journal\\app\\src\\main\\res\\values\\strings.xml",
+                    "from": {
+                        "startLines": "1,4,3,2,5",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "17,165,116,71,218",
+                        "endColumns": "52,51,47,43,49",
+                        "endOffsets": "65,212,159,110,263"
+                    },
+                    "to": {
+                        "startLines": "1915,1950,1959,1978,2165",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "128287,131563,132112,133537,155138",
+                        "endColumns": "52,51,47,43,49",
+                        "endOffsets": "128335,131610,132155,133576,155183"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\lovei\\Documents\\XD\\Cosplay-Journal\\app\\src\\main\\res\\values\\colors.xml",
+                    "from": {
+                        "startLines": "7,2,3,4,5,6,8",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "293,57,105,153,201,247,336",
+                        "endColumns": "41,46,46,46,44,44,41",
+                        "endOffsets": "330,99,147,195,241,287,373"
+                    },
+                    "to": {
+                        "startLines": "561,868,869,870,881,882,885",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "29207,52065,52112,52159,52903,52948,53114",
+                        "endColumns": "41,46,46,46,44,44,41",
+                        "endOffsets": "29244,52107,52154,52201,52943,52988,53151"
+                    }
+                },
+                {
                     "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\7bc979c1504e49dbcc486dbff816ef72\\transformed\\fragment-1.5.4\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2,3,4,5,10",
@@ -312,23 +327,6 @@
                         "endLines": "1734,1772,1811,10955,10959",
                         "endColumns": "56,64,63,24,24",
                         "endOffsets": "117307,119282,121304,718627,718776"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\lovei\\OneDrive\\Escritorio\\Cosplay-Journal\\app\\src\\main\\res\\values\\strings.xml",
-                    "from": {
-                        "startLines": "1,4,3,2,5",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "17,165,116,71,218",
-                        "endColumns": "52,51,47,43,49",
-                        "endOffsets": "65,212,159,110,263"
-                    },
-                    "to": {
-                        "startLines": "1915,1950,1959,1978,2165",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "128287,131563,132112,133537,155138",
-                        "endColumns": "52,51,47,43,49",
-                        "endOffsets": "128335,131610,132155,133576,155183"
                     }
                 },
                 {
@@ -406,6 +404,25 @@
                     }
                 },
                 {
+                    "source": "C:\\Users\\lovei\\Documents\\XD\\Cosplay-Journal\\app\\src\\main\\res\\values\\themes.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "57",
+                        "endLines": "6",
+                        "endColumns": "12",
+                        "endOffsets": "337"
+                    },
+                    "to": {
+                        "startLines": "6447",
+                        "startColumns": "4",
+                        "startOffsets": "452406",
+                        "endLines": "6451",
+                        "endColumns": "12",
+                        "endOffsets": "452682"
+                    }
+                },
+                {
                     "source": "C:\\Users\\lovei\\.gradle\\caches\\transforms-4\\5f2f57c3af1dae360ef02fa989344105\\transformed\\jetified-osmdroid-android-6.1.18\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50",
@@ -437,23 +454,6 @@
                         "startOffsets": "128204",
                         "endColumns": "82",
                         "endOffsets": "128282"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\lovei\\OneDrive\\Escritorio\\Cosplay-Journal\\app\\src\\main\\res\\values\\colors.xml",
-                    "from": {
-                        "startLines": "7,2,3,4,5,6,8",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "293,57,105,153,201,247,336",
-                        "endColumns": "41,46,46,46,44,44,41",
-                        "endOffsets": "330,99,147,195,241,287,373"
-                    },
-                    "to": {
-                        "startLines": "561,868,869,870,881,882,885",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "29207,52065,52112,52159,52903,52948,53114",
-                        "endColumns": "41,46,46,46,44,44,41",
-                        "endOffsets": "29244,52107,52154,52201,52943,52988,53151"
                     }
                 },
                 {

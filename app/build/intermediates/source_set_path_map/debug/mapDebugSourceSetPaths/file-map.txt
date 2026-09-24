@@ -68,9 +68,9 @@ com.cosplayjournal.app-jetified-startup-runtime-1.1.1-66 C:\Users\lovei\.gradle\
 com.cosplayjournal.app-jetified-activity-1.9.1-67 C:\Users\lovei\.gradle\caches\transforms-4\fdf4490fc54128ac8de28fb2deb91833\transformed\jetified-activity-1.9.1\res
 com.cosplayjournal.app-drawerlayout-1.1.1-68 C:\Users\lovei\.gradle\caches\transforms-4\fe7d6e0cd106184188ed04faa4f8db7c\transformed\drawerlayout-1.1.1\res
 com.cosplayjournal.app-jetified-activity-compose-1.9.1-69 C:\Users\lovei\.gradle\caches\transforms-4\ff300ed0f59e5bf27babb8b54870213e\transformed\jetified-activity-compose-1.9.1\res
-com.cosplayjournal.app-resValues-70 C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\build\generated\res\resValues\debug
-com.cosplayjournal.app-packageDebugResources-71 C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
-com.cosplayjournal.app-packageDebugResources-72 C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
-com.cosplayjournal.app-debug-73 C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\build\intermediates\merged_res\debug\mergeDebugResources
-com.cosplayjournal.app-debug-74 C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\debug\res
-com.cosplayjournal.app-main-75 C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\res
+com.cosplayjournal.app-resValues-70 C:\Users\lovei\Documents\XD\Cosplay-Journal\app\build\generated\res\resValues\debug
+com.cosplayjournal.app-packageDebugResources-71 C:\Users\lovei\Documents\XD\Cosplay-Journal\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.cosplayjournal.app-packageDebugResources-72 C:\Users\lovei\Documents\XD\Cosplay-Journal\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.cosplayjournal.app-debug-73 C:\Users\lovei\Documents\XD\Cosplay-Journal\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.cosplayjournal.app-debug-74 C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\debug\res
+com.cosplayjournal.app-main-75 C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\res

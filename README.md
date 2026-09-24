@@ -1,39 +1,58 @@
 # Cosplay Journal
 
-Una aplicación Android diseñada para cosplayers que permite organizar sus proyectos, eventos y recuerdos en un solo lugar.
+Plataforma integral para cosplayers orientada a la planificación de proyectos, descubrimiento de eventos y coordinación de participaciones individuales, en dúo y grupales.
 
-## 🚀 Características
+---
 
-- **Gestión de Cosplays:** Organiza tus cosplays terminados y tus futuros planes (cosplans).
-- **Calendario de Eventos:** Mantente al tanto de las próximas convenciones y eventos de cosplay.
-- **Galería de Fotos:** Guarda y visualiza tus mejores momentos en cada evento.
-- **Exportación a PDF:** Genera reportes detallados de tus proyectos de cosplay.
-- **Mapas Integrados:** Localiza fácilmente los lugares de los eventos.
-- **Perfil Personalizado:** Gestiona tu información de cosplayer y tus favoritos.
+## 🚀 Visión del Producto
 
-## 🛠️ Tech Stack
+**Cosplay Journal** centraliza el ciclo de vida completo de un cosplayer:
 
-- **Lenguaje:** [Kotlin](https://kotlinlang.org/)
-- **UI:** [Jetpack Compose](https://developer.android.com/jetpack/compose) con Material 3
-- **Base de Datos:** [Room Persistence Library](https://developer.android.com/training/data-storage/room)
-- **Navegación:** [Navigation Compose](https://developer.android.com/jetpack/compose/navigation)
-- **Carga de Imágenes:** [Coil](https://coil-kt.github.io/coil/)
-- **Mapas:** [osmdroid](https://github.com/osmdroid/osmdroid)
-- **Generación de PDF:** [iText7](https://itextpdf.com/products/itext-7)
+1. **Descubrimiento de Eventos:** Consulta y filtrado de eventos de cosplay en España por fecha y ubicación.
+2. **Gestión de Proyectos (Cosplans):** Control de ideas, materiales, presupuestos, estados y notas.
+3. **Coordinación de Participaciones:** Organización de participaciones **Individuales**, **Dúos** y **Grupales** vinculadas a convenciones.
+4. **Gestión de Grupos y Personajes:** Asignación de personajes y roles entre los miembros de un cosgroup.
+5. **Galería de Fotos Compartida:** Galería restringida para compartir las fotografías de la participación entre los integrantes del grupo.
 
-## 📦 Instalación
+---
 
-1. Clona este repositorio:
-   ```bash
-   git clone https://github.com/tu-usuario/Cosplay-Journal.git
-   ```
-2. Abre el proyecto en **Android Studio**.
-3. Sincroniza el proyecto con los archivos de Gradle.
-4. Ejecuta la aplicación en un emulador o dispositivo físico.
+## 🛠️ Arquitectura y Dirección Técnica
 
-## 📸 Capturas de Pantalla
+El proyecto evoluciona hacia una arquitectura cliente-servidor basada en **Arquitectura Hexagonal (Ports & Adapters)**:
 
-*(Próximamente)*
+- **Backend:** Java 21 / Spring Boot 3 ([backend/](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend))
+- **Arquitectura:** Hexagonal (Dominio desacoplado de infraestructura)
+- **Base de Datos:** PostgreSQL 16 + Flyway (Migraciones SQL)
+- **API REST:** Especificación OpenAPI 3.0 / `/api/v1/`
+- **Mensajería Asíncrona:** Apache Kafka
+- **Seguridad:** Spring Security + JWT
+- **Cliente Móvil:** Android (Jetpack Compose, Material 3, Coroutines)
+- **DevOps & Infraestructura:** Docker, Docker Compose, Kubernetes, GitHub Actions
+- **Testing:** JUnit 5, Mockito, Testcontainers
+
+---
+
+## 📚 Documentación Técnica y Decisiones
+
+La documentación detallada del proyecto se encuentra en el directorio [`docs/`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs):
+
+- 📄 [**HOJA DE RUTA (ROADMAP)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/ROADMAP.md) — Planificación por fases del desarrollo.
+- 🎯 [**Visión del Producto**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/PRODUCT_VISION.md) — Objetivos, propuesta de valor y usuarios objetivo.
+- 📌 [**Alcance del MVP**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/MVP_SCOPE.md) — Flujo completo del MVP y criterios de aceptación.
+- 🏛️ [**Dirección Técnica y Arquitectura**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/ARCHITECTURE.md) — Reglas de dependencia, Hexagonal, Kafka, K8s, testing y persistencia.
+- 🧩 [**Modelo de Dominio**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/DOMAIN_MODEL.md) — Bounded Contexts, Entidades, Value Objects e invariantes de negocio.
+- 📊 [**Auditoría y Decisiones (ADR)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/AUDIT_AND_DECISIONS.md) — Auditoría del estado actual y decisiones técnicas ([ADR 0001](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0001-architecture-and-product-redefinition.md) / [ADR 0002](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0002-aggregate-boundaries.md)).
+- 📋 [**Próximas Issues**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/NEXT_ISSUES.md) — Backlog detallado de tareas de implementación.
+
+---
+
+## 📋 Estado Actual
+
+- ✅ **Issue #0 (Redefinición del producto, auditoría y dirección técnica):** Completada.
+- ✅ **Issue #1 (Creación del backend Java 21 con Arquitectura Hexagonal):** Completada.
+- ✅ **Issue #2 (Modelado e Implementación del Dominio Inicial):** Completada.
+- ✅ **Issue #3 (Definición de agregados y límites de consistencia del dominio):** Completada.
+- 🚀 **Próxima:** **Issue #4 (Persistencia de Eventos, Importador Scraper y API REST de Eventos con PostgreSQL + Flyway)**.
 
 ---
 Desarrollado con ❤️ para la comunidad de cosplay.

@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:2:1-27:12
-INJECTED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:2:1-27:12
-INJECTED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:2:1-27:12
-INJECTED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:2:1-27:12
+ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:2:1-27:12
+INJECTED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:2:1-27:12
+INJECTED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:2:1-27:12
+INJECTED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:2:1-27:12
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\lovei\.gradle\caches\transforms-4\53eb4705d4f83563ef9c76c355c288aa\transformed\material-1.12.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\lovei\.gradle\caches\transforms-4\497aa5a1a20ee59f9e9b03cfaf182f8c\transformed\constraintlayout-2.0.1\AndroidManifest.xml:2:1-11:12
 MERGED from [io.coil-kt:coil-compose:2.6.0] C:\Users\lovei\.gradle\caches\transforms-4\6e3717d4738d75f7da0b3d1919bc3eef\transformed\jetified-coil-compose-2.6.0\AndroidManifest.xml:2:1-7:12
@@ -96,28 +96,28 @@ MERGED from [androidx.print:print:1.0.0] C:\Users\lovei\.gradle\caches\transform
 MERGED from [androidx.exifinterface:exifinterface:1.3.7] C:\Users\lovei\.gradle\caches\transforms-4\cb3f42558e26b94aa847523dcab90adb\transformed\exifinterface-1.3.7\AndroidManifest.xml:17:1-24:12
 MERGED from [org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\5f2f57c3af1dae360ef02fa989344105\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:2:1-27:12
 	package
-		INJECTED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml
 	android:versionName
-		INJECTED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml
 	android:versionCode
-		INJECTED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:2:11-69
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:2:11-69
 uses-permission#android.permission.INTERNET
-ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:4:5-67
+ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:4:5-67
 	android:name
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:4:22-64
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:4:22-64
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:5:5-81
+ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:5:5-81
 	android:name
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:5:22-78
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:5:22-78
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
-ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:6:5-80
+ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:6:5-80
 	android:name
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:6:22-77
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:6:22-77
 application
-ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:8:5-25:19
-INJECTED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:8:5-25:19
+ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:8:5-25:19
+INJECTED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:8:5-25:19
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\lovei\.gradle\caches\transforms-4\53eb4705d4f83563ef9c76c355c288aa\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\lovei\.gradle\caches\transforms-4\53eb4705d4f83563ef9c76c355c288aa\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\lovei\.gradle\caches\transforms-4\497aa5a1a20ee59f9e9b03cfaf182f8c\transformed\constraintlayout-2.0.1\AndroidManifest.xml:9:5-20
@@ -141,45 +141,45 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\lo
 MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\lovei\.gradle\caches\transforms-4\fa853a93f58f3d8bfa904e4f09d8c804\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:25:5-31:19
 MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\lovei\.gradle\caches\transforms-4\fa853a93f58f3d8bfa904e4f09d8c804\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:25:5-31:19
 	android:extractNativeLibs
-		INJECTED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.13.1] C:\Users\lovei\.gradle\caches\transforms-4\5121d921e6e49a20e653734cbcafdb50\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:14:9-35
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:14:9-35
 	android:label
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:12:9-41
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:12:9-41
 	android:roundIcon
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:13:9-54
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:13:9-54
 	android:icon
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:11:9-43
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:11:9-43
 	android:allowBackup
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:10:9-35
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:10:9-35
 	android:theme
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:15:9-52
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:15:9-52
 	android:name
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:9:9-50
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:9:9-50
 activity#com.cosplayjournal.app.ui.MainActivity
-ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:16:9-24:20
+ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:16:9-24:20
 	android:exported
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:18:13-36
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:18:13-36
 	android:theme
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:19:13-56
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:19:13-56
 	android:name
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:17:13-44
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:17:13-44
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:20:13-23:29
+ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:20:13-23:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:21:17-69
+ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:21:17-69
 	android:name
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:21:25-66
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:21:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:22:17-77
+ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:22:17-77
 	android:name
-		ADDED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml:22:27-74
+		ADDED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml:22:27-74
 uses-sdk
-INJECTED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml
-INJECTED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\lovei\.gradle\caches\transforms-4\53eb4705d4f83563ef9c76c355c288aa\transformed\material-1.12.0\AndroidManifest.xml:20:5-44
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\lovei\.gradle\caches\transforms-4\53eb4705d4f83563ef9c76c355c288aa\transformed\material-1.12.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\lovei\.gradle\caches\transforms-4\497aa5a1a20ee59f9e9b03cfaf182f8c\transformed\constraintlayout-2.0.1\AndroidManifest.xml:5:5-7:41
@@ -363,9 +363,9 @@ MERGED from [androidx.exifinterface:exifinterface:1.3.7] C:\Users\lovei\.gradle\
 MERGED from [org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\5f2f57c3af1dae360ef02fa989344105\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:5:5-7:41
 MERGED from [org.osmdroid:osmdroid-android:6.1.18] C:\Users\lovei\.gradle\caches\transforms-4\5f2f57c3af1dae360ef02fa989344105\transformed\jetified-osmdroid-android-6.1.18\AndroidManifest.xml:5:5-7:41
 	android:targetSdkVersion
-		INJECTED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from C:\Users\lovei\OneDrive\Escritorio\Cosplay-Journal\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\lovei\Documents\XD\Cosplay-Journal\app\src\main\AndroidManifest.xml
 activity#androidx.compose.ui.tooling.PreviewActivity
 ADDED from [androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\lovei\.gradle\caches\transforms-4\1617e12dcb0447ec6751b05037041424\transformed\jetified-ui-tooling-release\AndroidManifest.xml:23:9-25:39
 	android:exported

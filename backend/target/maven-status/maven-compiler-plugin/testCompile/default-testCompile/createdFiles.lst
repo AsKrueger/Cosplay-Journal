@@ -1,0 +1,10 @@
+com\cosplayjournal\domain\PhotoTest.class
+com\cosplayjournal\infrastructure\adapter\in\rest\CosplayControllerIntegrationTest.class
+com\cosplayjournal\domain\EventLocationTest.class
+com\cosplayjournal\domain\ParticipantTest.class
+com\cosplayjournal\domain\ParticipationTest.class
+com\cosplayjournal\application\CosplayApplicationServiceTest.class
+com\cosplayjournal\domain\EventTest.class
+com\cosplayjournal\domain\AggregateBoundaryTest.class
+com\cosplayjournal\domain\CosplayTest.class
+com\cosplayjournal\domain\EventDateRangeTest.class
