@@ -70,6 +70,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- H2 Database for lightweight test fallback -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Testcontainers PostgreSQL -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
