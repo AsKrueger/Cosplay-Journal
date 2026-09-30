@@ -15,6 +15,20 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public ProcessParticipantJoinedService processParticipantJoinedService() {
+        return new ProcessParticipantJoinedService();
+    }
+
+    @Bean
+    public UserApplicationService userApplicationService(
+            UserRepositoryPort userRepositoryPort,
+            PasswordHasherPort passwordHasherPort,
+            TokenProviderPort tokenProviderPort
+    ) {
+        return new UserApplicationService(userRepositoryPort, passwordHasherPort, tokenProviderPort);
+    }
+
+    @Bean
     public CosplayApplicationService cosplayApplicationService(
             CosplayRepositoryPort cosplayRepositoryPort,
             DomainEventPublisherPort domainEventPublisherPort

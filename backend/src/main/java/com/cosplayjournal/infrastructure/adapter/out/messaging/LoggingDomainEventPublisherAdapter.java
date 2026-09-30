@@ -4,9 +4,11 @@ import com.cosplayjournal.application.port.out.DomainEventPublisherPort;
 import com.cosplayjournal.domain.event.DomainEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("test")
 public class LoggingDomainEventPublisherAdapter implements DomainEventPublisherPort {
 
     private static final Logger log = LoggerFactory.getLogger(LoggingDomainEventPublisherAdapter.class);

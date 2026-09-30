@@ -2,6 +2,7 @@ C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjou
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\application\EventApplicationServiceTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\application\ParticipationApplicationServiceTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\application\PhotoApplicationServiceTest.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\application\UserApplicationServiceTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\domain\AggregateBoundaryTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\domain\ArchitectureIsolationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\domain\CosplayTest.java
@@ -11,11 +12,18 @@ C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjou
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\domain\ParticipantTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\domain\ParticipationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\domain\PhotoTest.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\domain\UserTest.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\kafka\ParticipantJoinedKafkaConsumerAdapterTest.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\rest\auth\AuthControllerIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\rest\CosplayControllerIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\rest\EventControllerIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\rest\ParticipationControllerIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\rest\PhotoControllerIntegrationTest.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\out\messaging\kafka\KafkaDomainEventPublisherAdapterTest.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\out\messaging\kafka\KafkaEventMapperTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\out\persistence\CosplayJpaAdapterIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\out\persistence\EventJpaAdapterIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\out\persistence\ParticipationJpaAdapterIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\out\persistence\PhotoJpaAdapterIntegrationTest.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\out\persistence\UserJpaAdapterIntegrationTest.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\out\security\JwtTokenProviderAdapterTest.java

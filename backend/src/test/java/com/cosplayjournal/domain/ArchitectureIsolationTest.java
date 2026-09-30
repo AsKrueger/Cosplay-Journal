@@ -3,7 +3,6 @@ package com.cosplayjournal.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,13 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ArchitectureIsolationTest {
 
     @Test
-    @DisplayName("El paquete com.cosplayjournal.domain no debe importar Spring, JPA, Hibernate ni PostgreSQL")
+    @DisplayName("El paquete com.cosplayjournal.domain no debe importar Spring, JPA, Hibernate, Kafka ni PostgreSQL")
     void domainPackageMustNotImportFrameworks() throws IOException {
-        Path domainDir = Paths.get("src/main/java/com/cosplayjournal/domain");
-        if (!Files.exists(domainDir)) {
-            domainDir = Paths.get("backend/src/main/java/com/cosplayjournal/domain");
-        }
-
+        Path domainDir = resolveDir("domain");
         assertTrue(Files.exists(domainDir), "El directorio del dominio debe existir");
 
         List<String> forbiddenImports = List.of(
@@ -34,7 +29,36 @@ class ArchitectureIsolationTest {
                 "com.fasterxml.jackson"
         );
 
-        try (Stream<Path> paths = Files.walk(domainDir)) {
+        assertNoForbiddenImports(domainDir, forbiddenImports, "dominio");
+    }
+
+    @Test
+    @DisplayName("El paquete com.cosplayjournal.application no debe importar Kafka ni JPA ni frameworks de infraestructura")
+    void applicationPackageMustNotImportKafka() throws IOException {
+        Path applicationDir = resolveDir("application");
+        assertTrue(Files.exists(applicationDir), "El directorio de aplicación debe existir");
+
+        List<String> forbiddenImports = List.of(
+                "org.springframework.kafka",
+                "org.apache.kafka",
+                "jakarta.persistence",
+                "javax.persistence",
+                "org.hibernate"
+        );
+
+        assertNoForbiddenImports(applicationDir, forbiddenImports, "aplicación");
+    }
+
+    private Path resolveDir(String subPackage) {
+        Path path = Paths.get("src/main/java/com/cosplayjournal/" + subPackage);
+        if (!Files.exists(path)) {
+            path = Paths.get("backend/src/main/java/com/cosplayjournal/" + subPackage);
+        }
+        return path;
+    }
+
+    private void assertNoForbiddenImports(Path dir, List<String> forbiddenImports, String layerName) throws IOException {
+        try (Stream<Path> paths = Files.walk(dir)) {
             paths.filter(Files::isRegularFile)
                     .filter(path -> path.toString().endsWith(".java"))
                     .forEach(path -> {
@@ -46,8 +70,8 @@ class ArchitectureIsolationTest {
                                     for (String forbidden : forbiddenImports) {
                                         if (trimmed.contains(forbidden)) {
                                             throw new AssertionError(
-                                                    "Violación de Arquitectura Hexagonal en " + path.getFileName() +
-                                                            ": El dominio importa " + forbidden + " en la línea: " + line
+                                                    "Violación de Arquitectura Hexagonal en la capa de " + layerName + " (" + path.getFileName() +
+                                                            "): Importa " + forbidden + " en la línea: " + line
                                             );
                                         }
                                     }
