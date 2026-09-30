@@ -41,6 +41,7 @@ La documentación detallada del proyecto se encuentra en el directorio [`docs/`]
 - 📌 [**Alcance del MVP**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/MVP_SCOPE.md) — Flujo completo del MVP y criterios de aceptación.
 - 🏛️ [**Dirección Técnica y Arquitectura**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/ARCHITECTURE.md) — Reglas de dependencia, Hexagonal, Kafka, K8s, testing y persistencia.
 - 🧩 [**Modelo de Dominio**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/DOMAIN_MODEL.md) — Bounded Contexts, Entidades, Value Objects e invariantes de negocio.
+- ⚙️ [**Casos de Uso e Integración API**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/use-cases/USE_CASES.md) — Servicios de aplicación, puertos de entrada/salida y endpoints REST.
 - 🗄️ [**Esquema de Base de Datos**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/database/DATABASE.md) — Tablas, índices, claves y Docker Compose local.
 - 📊 [**Auditoría y Decisiones (ADR)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/AUDIT_AND_DECISIONS.md) — Auditoría del estado actual y decisiones técnicas ([ADR 0001](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0001-architecture-and-product-redefinition.md) / [ADR 0002](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0002-aggregate-boundaries.md) / [ADR 0003](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0003-separation-domain-and-persistence-model.md)).
 - 📋 [**Próximas Issues**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/NEXT_ISSUES.md) — Backlog detallado de tareas de implementación.
@@ -54,7 +55,8 @@ La documentación detallada del proyecto se encuentra en el directorio [`docs/`]
 - ✅ **Issue #2 (Modelado e Implementación del Dominio Inicial):** Completada.
 - ✅ **Issue #3 (Definición de agregados y límites de consistencia del dominio):** Completada.
 - ✅ **Issue #4 (Persistencia PostgreSQL mediante JPA/Hibernate y Flyway):** Completada.
-- 🚀 **Próxima:** **Issue #5 (Importador Scraper de Eventos y API REST de Eventos)**.
+- ✅ **Issue #5 (Implementación de casos de uso y consolidación de la capa de aplicación):** Completada.
+- 🚀 **Próxima:** **Issue #6 (Eventos Asíncronos e Integración con Apache Kafka)**.
 
 ---
 Desarrollado con ❤️ para la comunidad de cosplay.

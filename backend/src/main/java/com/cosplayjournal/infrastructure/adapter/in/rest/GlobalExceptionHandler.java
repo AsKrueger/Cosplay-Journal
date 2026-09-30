@@ -1,7 +1,6 @@
 package com.cosplayjournal.infrastructure.adapter.in.rest;
 
-import com.cosplayjournal.domain.exception.CosplayNotFoundException;
-import com.cosplayjournal.domain.exception.InvalidCosplayDataException;
+import com.cosplayjournal.domain.exception.*;
 import com.cosplayjournal.infrastructure.adapter.in.rest.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -15,8 +14,13 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(CosplayNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleCosplayNotFound(CosplayNotFoundException ex, HttpServletRequest request) {
+    @ExceptionHandler({
+            CosplayNotFoundException.class,
+            EventNotFoundException.class,
+            ParticipationNotFoundException.class,
+            PhotoNotFoundException.class
+    })
+    public ResponseEntity<ErrorResponse> handleNotFoundExceptions(RuntimeException ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 "Not Found",
@@ -26,8 +30,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    @ExceptionHandler(InvalidCosplayDataException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidCosplayData(InvalidCosplayDataException ex, HttpServletRequest request) {
+    @ExceptionHandler({
+            InvalidCosplayDataException.class,
+            InvalidEventDataException.class,
+            InvalidParticipationDataException.class,
+            InvalidStateTransitionException.class,
+            IllegalArgumentException.class
+    })
+    public ResponseEntity<ErrorResponse> handleBadRequestExceptions(RuntimeException ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Bad Request",
@@ -49,17 +59,6 @@ public class GlobalExceptionHandler {
                 "Error de validación en la petición",
                 request.getRequestURI(),
                 details
-        );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex, HttpServletRequest request) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Bad Request",
-                ex.getMessage(),
-                request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }

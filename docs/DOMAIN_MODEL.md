@@ -2,6 +2,8 @@
 
 El módulo de dominio de **Cosplay Journal** está implementado en Java 21 puro dentro del paquete `com.cosplayjournal.domain` de la aplicación backend, totalmente aislado de frameworks como Spring, JPA, Hibernate o motores de bases de datos.
 
+La orquestación de este dominio hacia la API REST y la infraestructura se realiza mediante la [**Capa de Aplicación**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/use-cases/USE_CASES.md).
+
 ---
 
 ## 1. Contextos Delimitados (Bounded Contexts) y Entidades
@@ -33,7 +35,7 @@ El módulo de dominio de **Cosplay Journal** está implementado en Java 21 puro 
 │                        PHOTO CONTEXT                      │
 │  [Photo] ─── (PhotoId, ParticipationId, storageReference, │
 │               caption, uploadedByUserId, uploadedAt)      │
-└───────────────────────────────────────────────────────────┘
+└─────────────────────────────┬─────────────────────────────┘
 ```
 
 ---
@@ -127,6 +129,9 @@ El módulo de dominio de **Cosplay Journal** está implementado en Java 21 puro 
 ## 3. Excepciones de Dominio
 
 - `CosplayNotFoundException`: Lanzada cuando no se localiza un proyecto de cosplay por ID.
+- `EventNotFoundException`: Lanzada cuando no se localiza un evento por ID.
+- `ParticipationNotFoundException`: Lanzada cuando no se localiza una participación por ID.
+- `PhotoNotFoundException`: Lanzada cuando no se localiza una foto por ID.
 - `InvalidCosplayDataException`: Lanzada ante violaciones de validación de datos en el contexto de Cosplay.
 - `InvalidStateTransitionException`: Lanzada al intentar una transición no permitida de `CosplayStatus`.
 - `InvalidEventDataException`: Lanzada ante fechas o ubicaciones inconsistentes en `Event`.

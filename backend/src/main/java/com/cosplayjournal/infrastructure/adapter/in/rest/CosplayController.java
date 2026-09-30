@@ -1,8 +1,11 @@
 package com.cosplayjournal.infrastructure.adapter.in.rest;
 
+import com.cosplayjournal.application.port.in.ChangeCosplayStatusCommand;
+import com.cosplayjournal.application.port.in.ChangeCosplayStatusUseCase;
 import com.cosplayjournal.application.port.in.CreateCosplayUseCase;
 import com.cosplayjournal.application.port.in.GetCosplayUseCase;
 import com.cosplayjournal.domain.model.Cosplay;
+import com.cosplayjournal.infrastructure.adapter.in.rest.dto.ChangeCosplayStatusRequest;
 import com.cosplayjournal.infrastructure.adapter.in.rest.dto.CosplayResponse;
 import com.cosplayjournal.infrastructure.adapter.in.rest.dto.CreateCosplayRequest;
 import com.cosplayjournal.infrastructure.adapter.in.rest.mapper.CosplayRestMapper;
@@ -19,10 +22,16 @@ public class CosplayController {
 
     private final CreateCosplayUseCase createCosplayUseCase;
     private final GetCosplayUseCase getCosplayUseCase;
+    private final ChangeCosplayStatusUseCase changeCosplayStatusUseCase;
 
-    public CosplayController(CreateCosplayUseCase createCosplayUseCase, GetCosplayUseCase getCosplayUseCase) {
+    public CosplayController(
+            CreateCosplayUseCase createCosplayUseCase,
+            GetCosplayUseCase getCosplayUseCase,
+            ChangeCosplayStatusUseCase changeCosplayStatusUseCase
+    ) {
         this.createCosplayUseCase = createCosplayUseCase;
         this.getCosplayUseCase = getCosplayUseCase;
+        this.changeCosplayStatusUseCase = changeCosplayStatusUseCase;
     }
 
     @PostMapping
@@ -43,5 +52,16 @@ public class CosplayController {
                 .map(CosplayRestMapper::toResponse)
                 .toList();
         return ResponseEntity.ok(cosplays);
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<CosplayResponse> changeCosplayStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody ChangeCosplayStatusRequest request
+    ) {
+        Cosplay updated = changeCosplayStatusUseCase.changeCosplayStatus(
+                new ChangeCosplayStatusCommand(id, request.status())
+        );
+        return ResponseEntity.ok(CosplayRestMapper.toResponse(updated));
     }
 }
