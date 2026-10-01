@@ -63,6 +63,40 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @DisplayName("GET /api/v1/events debe retornar el catálogo filtrado y paginado correctamente")
+    void shouldSearchEventsWithFiltersAndPagination() throws Exception {
+        // Crear evento 1 en Madrid
+        CreateEventRequest req1 = new CreateEventRequest(
+                "Salón Manga Madrid", "Desc", LocalDate.now().plusDays(5), LocalDate.now().plusDays(7),
+                "Madrid", "IFEMA", "Madrid", "España", "", null, null, "", EventSource.MANUAL_ADMIN
+        );
+        mockMvc.perform(post("/api/v1/events")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req1))).andExpect(status().isCreated());
+
+        // Buscar con filtro city=Madrid & page=0 & size=10
+        mockMvc.perform(get("/api/v1/events")
+                        .param("city", "Madrid")
+                        .param("page", "0")
+                        .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", not(empty())))
+                .andExpect(jsonPath("$.page", is(0)))
+                .andExpect(jsonPath("$.size", is(10)))
+                .andExpect(jsonPath("$.totalElements", greaterThanOrEqualTo(1)));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/events debe retornar 400 Bad Request si la fecha 'from' es posterior a 'to'")
+    void shouldReturn400WhenFromIsAfterTo() throws Exception {
+        mockMvc.perform(get("/api/v1/events")
+                        .param("from", "2026-12-31")
+                        .param("to", "2026-01-01"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(400)));
+    }
+
+    @Test
     @DisplayName("GET /api/v1/events/{id} debe retornar 404 Not Found si no existe")
     void shouldReturnNotFoundWhenEventDoesNotExist() throws Exception {
         mockMvc.perform(get("/api/v1/events/non-existing-evt-id"))

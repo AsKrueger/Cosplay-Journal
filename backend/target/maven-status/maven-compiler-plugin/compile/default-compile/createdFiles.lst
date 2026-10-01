@@ -13,6 +13,7 @@ com\cosplayjournal\domain\event\CosplayStatusChangedEvent.class
 com\cosplayjournal\domain\exception\PhotoNotFoundException.class
 com\cosplayjournal\application\port\in\CreateCosplayCommand.class
 com\cosplayjournal\infrastructure\adapter\in\rest\dto\RegisterUserRequest.class
+com\cosplayjournal\application\dto\PageResult.class
 com\cosplayjournal\domain\event\PhotoUploadedEvent.class
 com\cosplayjournal\infrastructure\adapter\out\persistence\repository\SpringDataPhotoRepository.class
 com\cosplayjournal\application\dto\ImportEventsResult.class
@@ -37,6 +38,7 @@ com\cosplayjournal\application\port\in\ProcessParticipantJoinedUseCase.class
 com\cosplayjournal\infrastructure\adapter\out\persistence\adapter\JpaUserRepositoryAdapter.class
 com\cosplayjournal\domain\exception\EventNotFoundException.class
 com\cosplayjournal\infrastructure\adapter\out\security\SpringSecurityCurrentUserAdapter.class
+com\cosplayjournal\application\dto\EventSearchCriteria.class
 com\cosplayjournal\infrastructure\adapter\out\persistence\entity\ParticipantJpaEntityId.class
 com\cosplayjournal\application\port\in\GetParticipationPhotosUseCase.class
 com\cosplayjournal\application\port\in\LeaveParticipationCommand.class

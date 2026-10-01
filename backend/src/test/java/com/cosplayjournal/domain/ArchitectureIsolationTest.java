@@ -35,7 +35,7 @@ class ArchitectureIsolationTest {
     }
 
     @Test
-    @DisplayName("El paquete com.cosplayjournal.application no debe importar Kafka, JPA, SecurityContextHolder, JJWT ni Jsoup")
+    @DisplayName("El paquete com.cosplayjournal.application no debe importar Kafka, JPA, Spring Data, SecurityContextHolder, JJWT ni Jsoup")
     void applicationPackageMustNotImportKafka() throws IOException {
         Path applicationDir = resolveDir("application");
         assertTrue(Files.exists(applicationDir), "El directorio de aplicación debe existir");
@@ -48,6 +48,7 @@ class ArchitectureIsolationTest {
                 "org.hibernate",
                 "org.jsoup",
                 "io.jsonwebtoken",
+                "org.springframework.data",
                 "org.springframework.security.core.context.SecurityContextHolder"
         );
 
