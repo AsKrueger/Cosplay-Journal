@@ -2,6 +2,7 @@ package com.cosplayjournal.infrastructure.adapter.out.persistence.mapper;
 
 import com.cosplayjournal.domain.model.event.EventId;
 import com.cosplayjournal.domain.model.participation.*;
+import com.cosplayjournal.domain.model.user.UserId;
 import com.cosplayjournal.infrastructure.adapter.out.persistence.entity.ParticipantJpaEntity;
 import com.cosplayjournal.infrastructure.adapter.out.persistence.entity.ParticipantJpaEntityId;
 import com.cosplayjournal.infrastructure.adapter.out.persistence.entity.ParticipationJpaEntity;
@@ -16,6 +17,7 @@ public class ParticipationPersistenceMapper {
 
         ParticipationJpaEntity entity = new ParticipationJpaEntity(
                 participation.getId().value(),
+                participation.getCreatorId().value(),
                 participation.getEventId().value(),
                 participation.getCosplayId(),
                 participation.getType().name(),
@@ -62,6 +64,7 @@ public class ParticipationPersistenceMapper {
 
         return new Participation(
                 ParticipationId.of(entity.getId()),
+                UserId.of(entity.getCreatorId() != null ? entity.getCreatorId() : "system-default"),
                 EventId.of(entity.getEventId()),
                 entity.getCosplayId(),
                 ParticipationType.valueOf(entity.getType()),

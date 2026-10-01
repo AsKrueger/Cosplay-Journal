@@ -11,6 +11,9 @@ public class CosplayJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "owner_id", nullable = false, length = 100)
+    private String ownerId;
+
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
@@ -35,8 +38,9 @@ public class CosplayJpaEntity {
     public CosplayJpaEntity() {
     }
 
-    public CosplayJpaEntity(Long id, String name, String description, String characterName, String originSeries, String status, Instant createdAt, Instant updatedAt) {
+    public CosplayJpaEntity(Long id, String ownerId, String name, String description, String characterName, String originSeries, String status, Instant createdAt, Instant updatedAt) {
         this.id = id;
+        this.ownerId = ownerId;
         this.name = name;
         this.description = description;
         this.characterName = characterName;
@@ -52,6 +56,14 @@ public class CosplayJpaEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
     }
 
     public String getName() {

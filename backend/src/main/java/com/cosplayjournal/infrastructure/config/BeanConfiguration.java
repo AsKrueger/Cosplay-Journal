@@ -31,9 +31,10 @@ public class BeanConfiguration {
     @Bean
     public CosplayApplicationService cosplayApplicationService(
             CosplayRepositoryPort cosplayRepositoryPort,
-            DomainEventPublisherPort domainEventPublisherPort
+            DomainEventPublisherPort domainEventPublisherPort,
+            CurrentUserPort currentUserPort
     ) {
-        return new CosplayApplicationService(cosplayRepositoryPort, domainEventPublisherPort);
+        return new CosplayApplicationService(cosplayRepositoryPort, domainEventPublisherPort, currentUserPort);
     }
 
     @Bean
@@ -50,6 +51,7 @@ public class BeanConfiguration {
             EventRepositoryPort eventRepositoryPort,
             CosplayRepositoryPort cosplayRepositoryPort,
             DomainEventPublisherPort domainEventPublisherPort,
+            CurrentUserPort currentUserPort,
             ParticipationValidationDomainService validationDomainService
     ) {
         return new ParticipationApplicationService(
@@ -57,6 +59,7 @@ public class BeanConfiguration {
                 eventRepositoryPort,
                 cosplayRepositoryPort,
                 domainEventPublisherPort,
+                currentUserPort,
                 validationDomainService
         );
     }
@@ -65,8 +68,9 @@ public class BeanConfiguration {
     public PhotoApplicationService photoApplicationService(
             PhotoRepositoryPort photoRepositoryPort,
             ParticipationRepositoryPort participationRepositoryPort,
-            DomainEventPublisherPort domainEventPublisherPort
+            DomainEventPublisherPort domainEventPublisherPort,
+            CurrentUserPort currentUserPort
     ) {
-        return new PhotoApplicationService(photoRepositoryPort, participationRepositoryPort, domainEventPublisherPort);
+        return new PhotoApplicationService(photoRepositoryPort, participationRepositoryPort, domainEventPublisherPort, currentUserPort);
     }
 }

@@ -2,6 +2,7 @@ package com.cosplayjournal.domain.model.participation;
 
 import com.cosplayjournal.domain.exception.InvalidParticipationDataException;
 import com.cosplayjournal.domain.model.event.EventId;
+import com.cosplayjournal.domain.model.user.UserId;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Objects;
 public class Participation {
 
     private final ParticipationId id;
+    private final UserId creatorId;
     private final EventId eventId;
     private final Long cosplayId;
     private final ParticipationType type;
@@ -23,6 +25,7 @@ public class Participation {
 
     public Participation(
             ParticipationId id,
+            UserId creatorId,
             EventId eventId,
             Long cosplayId,
             ParticipationType type,
@@ -35,6 +38,9 @@ public class Participation {
         if (id == null) {
             throw new InvalidParticipationDataException("El ID de la participación no puede ser nulo");
         }
+        if (creatorId == null) {
+            throw new InvalidParticipationDataException("El creador (creatorId) de la participación es obligatorio");
+        }
         if (eventId == null) {
             throw new InvalidParticipationDataException("El evento asociado a la participación no puede ser nulo");
         }
@@ -46,6 +52,7 @@ public class Participation {
         }
 
         this.id = id;
+        this.creatorId = creatorId;
         this.eventId = eventId;
         this.cosplayId = cosplayId;
         this.type = type;
@@ -61,6 +68,37 @@ public class Participation {
         }
     }
 
+    public Participation(
+            ParticipationId id,
+            EventId eventId,
+            Long cosplayId,
+            ParticipationType type,
+            ParticipationStatus status,
+            String groupName,
+            List<Participant> initialParticipants,
+            Instant createdAt,
+            Instant updatedAt
+    ) {
+        this(id, UserId.of("system-default"), eventId, cosplayId, type, status, groupName, initialParticipants, createdAt, updatedAt);
+    }
+
+    public static Participation create(
+            ParticipationId id,
+            UserId creatorId,
+            EventId eventId,
+            Long cosplayId,
+            ParticipationType type,
+            Participant leader
+    ) {
+        Participation participation = new Participation(
+                id, creatorId, eventId, cosplayId, type, ParticipationStatus.PLANNED, "", null, Instant.now(), Instant.now()
+        );
+        if (leader != null) {
+            participation.addParticipant(leader);
+        }
+        return participation;
+    }
+
     public static Participation create(
             ParticipationId id,
             EventId eventId,
@@ -68,13 +106,16 @@ public class Participation {
             ParticipationType type,
             Participant leader
     ) {
-        Participation participation = new Participation(
-                id, eventId, cosplayId, type, ParticipationStatus.PLANNED, "", null, Instant.now(), Instant.now()
-        );
-        if (leader != null) {
-            participation.addParticipant(leader);
-        }
-        return participation;
+        return create(id, UserId.of("system-default"), eventId, cosplayId, type, leader);
+    }
+
+    public boolean isCreatedBy(UserId userId) {
+        return userId != null && this.creatorId.equals(userId);
+    }
+
+    public boolean isParticipant(String userId) {
+        if (userId == null) return false;
+        return participants.stream().anyMatch(p -> p.getUserId().equalsIgnoreCase(userId.trim()));
     }
 
     public void addParticipant(Participant participant) {
@@ -149,6 +190,10 @@ public class Participation {
         return id;
     }
 
+    public UserId getCreatorId() {
+        return creatorId;
+    }
+
     public EventId getEventId() {
         return eventId;
     }
@@ -203,6 +248,7 @@ public class Participation {
     public String toString() {
         return "Participation{" +
                 "id=" + id +
+                ", creatorId=" + creatorId +
                 ", eventId=" + eventId +
                 ", type=" + type +
                 ", participants=" + participants.size() +

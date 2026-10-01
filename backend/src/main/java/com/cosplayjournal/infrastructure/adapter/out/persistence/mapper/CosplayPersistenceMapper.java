@@ -2,6 +2,7 @@ package com.cosplayjournal.infrastructure.adapter.out.persistence.mapper;
 
 import com.cosplayjournal.domain.model.Cosplay;
 import com.cosplayjournal.domain.model.CosplayStatus;
+import com.cosplayjournal.domain.model.user.UserId;
 import com.cosplayjournal.infrastructure.adapter.out.persistence.entity.CosplayJpaEntity;
 
 public class CosplayPersistenceMapper {
@@ -10,6 +11,7 @@ public class CosplayPersistenceMapper {
         if (cosplay == null) return null;
         return new CosplayJpaEntity(
                 cosplay.getId(),
+                cosplay.getOwnerId().value(),
                 cosplay.getName(),
                 cosplay.getDescription(),
                 cosplay.getCharacterName(),
@@ -24,6 +26,7 @@ public class CosplayPersistenceMapper {
         if (entity == null) return null;
         return new Cosplay(
                 entity.getId(),
+                UserId.of(entity.getOwnerId() != null ? entity.getOwnerId() : "system-default"),
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCharacterName(),

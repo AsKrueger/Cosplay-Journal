@@ -1,7 +1,11 @@
 package com.cosplayjournal.infrastructure.adapter.in.rest;
 
+import com.cosplayjournal.domain.model.user.User;
+import com.cosplayjournal.domain.model.user.UserId;
 import com.cosplayjournal.infrastructure.adapter.in.rest.dto.CreateCosplayRequest;
+import com.cosplayjournal.infrastructure.adapter.out.persistence.adapter.JpaUserRepositoryAdapter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +32,18 @@ class CosplayControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private JpaUserRepositoryAdapter userRepositoryAdapter;
+
+    @BeforeEach
+    void setUp() {
+        if (userRepositoryAdapter.findById(UserId.of("testuser")).isEmpty()) {
+            userRepositoryAdapter.save(User.create(UserId.of("testuser"), "testuser", "testuser@example.com", "$2a$10$hash"));
+        }
+    }
+
     @Test
-    @DisplayName("POST /api/v1/cosplays debe crear un cosplay correctamente")
+    @DisplayName("POST /api/v1/cosplays debe crear un cosplay correctamente asociando el ownerId del usuario autenticado")
     void shouldCreateCosplayViaRest() throws Exception {
         CreateCosplayRequest request = new CreateCosplayRequest(
                 "Link BotW",

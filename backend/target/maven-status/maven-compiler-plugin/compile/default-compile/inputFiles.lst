@@ -27,6 +27,7 @@ C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjou
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\in\RegisterUserCommand.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\in\RegisterUserUseCase.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\out\CosplayRepositoryPort.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\out\CurrentUserPort.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\out\DomainEventPublisherPort.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\out\EventRepositoryPort.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\out\ParticipationRepositoryPort.java
@@ -50,6 +51,7 @@ C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjou
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\domain\event\PhotoUploadedEvent.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\domain\exception\CosplayNotFoundException.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\domain\exception\EventNotFoundException.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\domain\exception\ForbiddenAccessException.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\domain\exception\InvalidCosplayDataException.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\domain\exception\InvalidEventDataException.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\domain\exception\InvalidParticipationDataException.java
@@ -141,4 +143,5 @@ C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjou
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\out\persistence\repository\SpringDataUserRepository.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\out\security\BCryptPasswordHasherAdapter.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\out\security\JwtTokenProviderAdapter.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\out\security\SpringSecurityCurrentUserAdapter.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\config\BeanConfiguration.java

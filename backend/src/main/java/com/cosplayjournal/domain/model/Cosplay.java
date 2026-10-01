@@ -2,6 +2,7 @@ package com.cosplayjournal.domain.model;
 
 import com.cosplayjournal.domain.exception.InvalidCosplayDataException;
 import com.cosplayjournal.domain.exception.InvalidStateTransitionException;
+import com.cosplayjournal.domain.model.user.UserId;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -10,6 +11,7 @@ import java.util.Set;
 public class Cosplay {
 
     private final Long id;
+    private final UserId ownerId;
     private final String name;
     private final String description;
     private final String characterName;
@@ -18,9 +20,14 @@ public class Cosplay {
     private final Instant createdAt;
     private Instant updatedAt;
 
-    public Cosplay(Long id, String name, String description, String characterName, String originSeries, CosplayStatus status, Instant createdAt, Instant updatedAt) {
+    public Cosplay(Long id, UserId ownerId, String name, String description, String characterName, String originSeries, CosplayStatus status, Instant createdAt, Instant updatedAt) {
         validateName(name);
+        if (ownerId == null) {
+            throw new InvalidCosplayDataException("El propietario (ownerId) del cosplay es obligatorio");
+        }
+
         this.id = id;
+        this.ownerId = ownerId;
         this.name = name.trim();
         this.description = description != null ? description.trim() : "";
         this.characterName = characterName != null ? characterName.trim() : "";
@@ -30,12 +37,24 @@ public class Cosplay {
         this.updatedAt = updatedAt != null ? updatedAt : this.createdAt;
     }
 
+    public Cosplay(Long id, String name, String description, String characterName, String originSeries, CosplayStatus status, Instant createdAt, Instant updatedAt) {
+        this(id, UserId.of("system-default"), name, description, characterName, originSeries, status, createdAt, updatedAt);
+    }
+
+    public static Cosplay createNew(String name, String description, String characterName, String originSeries, UserId ownerId) {
+        return new Cosplay(null, ownerId, name, description, characterName, originSeries, CosplayStatus.IDEA, Instant.now(), Instant.now());
+    }
+
     public static Cosplay createNew(String name, String description, String characterName, String originSeries) {
-        return new Cosplay(null, name, description, characterName, originSeries, CosplayStatus.IDEA, Instant.now(), Instant.now());
+        return createNew(name, description, characterName, originSeries, UserId.of("system-default"));
     }
 
     public Cosplay withId(Long newId) {
-        return new Cosplay(newId, this.name, this.description, this.characterName, this.originSeries, this.status, this.createdAt, Instant.now());
+        return new Cosplay(newId, this.ownerId, this.name, this.description, this.characterName, this.originSeries, this.status, this.createdAt, Instant.now());
+    }
+
+    public boolean isOwnedBy(UserId userId) {
+        return userId != null && this.ownerId.equals(userId);
     }
 
     public void changeStatus(CosplayStatus newStatus) {
@@ -83,6 +102,10 @@ public class Cosplay {
         return id;
     }
 
+    public UserId getOwnerId() {
+        return ownerId;
+    }
+
     public String getName() {
         return name;
     }
@@ -128,6 +151,7 @@ public class Cosplay {
     public String toString() {
         return "Cosplay{" +
                 "id=" + id +
+                ", ownerId=" + ownerId +
                 ", name='" + name + '\'' +
                 ", status=" + status +
                 '}';

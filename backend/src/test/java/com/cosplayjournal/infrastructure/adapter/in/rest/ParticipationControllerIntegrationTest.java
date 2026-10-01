@@ -7,11 +7,14 @@ import com.cosplayjournal.domain.model.event.EventLocation;
 import com.cosplayjournal.domain.model.event.EventSource;
 import com.cosplayjournal.domain.model.participation.ParticipantRole;
 import com.cosplayjournal.domain.model.participation.ParticipationType;
+import com.cosplayjournal.domain.model.user.User;
+import com.cosplayjournal.domain.model.user.UserId;
 import com.cosplayjournal.infrastructure.adapter.in.rest.dto.AssignCharacterRequest;
 import com.cosplayjournal.infrastructure.adapter.in.rest.dto.CreateParticipationRequest;
 import com.cosplayjournal.infrastructure.adapter.in.rest.dto.JoinParticipationRequest;
 import com.cosplayjournal.infrastructure.adapter.out.persistence.adapter.JpaCosplayRepositoryAdapter;
 import com.cosplayjournal.infrastructure.adapter.out.persistence.adapter.JpaEventRepositoryAdapter;
+import com.cosplayjournal.infrastructure.adapter.out.persistence.adapter.JpaUserRepositoryAdapter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,11 +51,24 @@ class ParticipationControllerIntegrationTest {
     @Autowired
     private JpaCosplayRepositoryAdapter cosplayRepositoryAdapter;
 
+    @Autowired
+    private JpaUserRepositoryAdapter userRepositoryAdapter;
+
     private Event event;
     private Cosplay cosplay;
 
     @BeforeEach
     void setUp() {
+        if (userRepositoryAdapter.findById(UserId.of("testuser")).isEmpty()) {
+            userRepositoryAdapter.save(User.create(UserId.of("testuser"), "testuser", "testuser@example.com", "$2a$10$hash"));
+        }
+        if (userRepositoryAdapter.findById(UserId.of("user-leader-rest")).isEmpty()) {
+            userRepositoryAdapter.save(User.create(UserId.of("user-leader-rest"), "leader_rest", "leader@example.com", "$2a$10$hash"));
+        }
+        if (userRepositoryAdapter.findById(UserId.of("user-member-2")).isEmpty()) {
+            userRepositoryAdapter.save(User.create(UserId.of("user-member-2"), "member_two", "member2@example.com", "$2a$10$hash"));
+        }
+
         event = eventRepositoryAdapter.save(Event.create(
                 EventId.of("evt-part-rest-1"), "Comic Con Sevilla", "Desc",
                 LocalDate.now().plusDays(1), LocalDate.now().plusDays(3),
@@ -60,7 +76,7 @@ class ParticipationControllerIntegrationTest {
         ));
 
         cosplay = cosplayRepositoryAdapter.save(
-                Cosplay.createNew("Zoro", "3 espadas", "Roronoa Zoro", "One Piece")
+                Cosplay.createNew("Zoro", "3 espadas", "Roronoa Zoro", "One Piece", UserId.of("testuser"))
         );
     }
 
@@ -72,7 +88,7 @@ class ParticipationControllerIntegrationTest {
                 event.getId().value(),
                 cosplay.getId(),
                 ParticipationType.GROUP,
-                "user-leader-rest",
+                "testuser",
                 "Alonso Leader",
                 "Grupo Mugiwara"
         );
@@ -89,7 +105,7 @@ class ParticipationControllerIntegrationTest {
 
         String participationId = objectMapper.readTree(responseContent).get("id").asText();
 
-        // 2. Unirse miembro
+        // 2. Unirse miembro (mismo usuario o creador)
         JoinParticipationRequest joinRequest = new JoinParticipationRequest(
                 "user-member-2",
                 "Beatriz",
@@ -104,7 +120,7 @@ class ParticipationControllerIntegrationTest {
 
         // 3. Asignar personaje
         AssignCharacterRequest assignRequest = new AssignCharacterRequest(
-                "user-leader-rest",
+                "testuser",
                 "Roronoa Zoro"
         );
 
