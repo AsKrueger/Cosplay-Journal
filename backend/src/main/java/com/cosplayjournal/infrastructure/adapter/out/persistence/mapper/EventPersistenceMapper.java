@@ -9,6 +9,7 @@ public class EventPersistenceMapper {
         if (event == null) return null;
         return new EventJpaEntity(
                 event.getId().value(),
+                event.getExternalId(),
                 event.getName(),
                 event.getDescription(),
                 event.getDateRange().startDate(),
@@ -28,20 +29,28 @@ public class EventPersistenceMapper {
 
     public static Event toDomain(EventJpaEntity entity) {
         if (entity == null) return null;
+        EventDateRange dateRange = EventDateRange.of(
+                entity.getStartDate(),
+                entity.getEndDate()
+        );
+
+        EventLocation location = new EventLocation(
+                entity.getCity(),
+                entity.getVenue(),
+                entity.getProvince(),
+                entity.getCountry(),
+                entity.getAddress(),
+                entity.getLatitude(),
+                entity.getLongitude()
+        );
+
         return new Event(
                 EventId.of(entity.getId()),
+                entity.getExternalId(),
                 entity.getName(),
                 entity.getDescription(),
-                EventDateRange.of(entity.getStartDate(), entity.getEndDate()),
-                new EventLocation(
-                        entity.getCity(),
-                        entity.getVenue(),
-                        entity.getProvince(),
-                        entity.getCountry(),
-                        entity.getAddress(),
-                        entity.getLatitude(),
-                        entity.getLongitude()
-                ),
+                dateRange,
+                location,
                 entity.getWebsite(),
                 EventSource.valueOf(entity.getSource()),
                 EventStatus.valueOf(entity.getStatus())

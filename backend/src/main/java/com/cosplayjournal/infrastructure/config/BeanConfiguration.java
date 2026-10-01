@@ -29,6 +29,15 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public ImportExternalEventsService importExternalEventsService(
+            ExternalEventSourcePort externalEventSourcePort,
+            EventRepositoryPort eventRepositoryPort,
+            DomainEventPublisherPort domainEventPublisherPort
+    ) {
+        return new ImportExternalEventsService(externalEventSourcePort, eventRepositoryPort, domainEventPublisherPort);
+    }
+
+    @Bean
     public CosplayApplicationService cosplayApplicationService(
             CosplayRepositoryPort cosplayRepositoryPort,
             DomainEventPublisherPort domainEventPublisherPort,

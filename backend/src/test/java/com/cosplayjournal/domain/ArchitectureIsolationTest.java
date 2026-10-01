@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ArchitectureIsolationTest {
 
     @Test
-    @DisplayName("El paquete com.cosplayjournal.domain no debe importar Spring, JPA, Hibernate, Kafka ni PostgreSQL")
+    @DisplayName("El paquete com.cosplayjournal.domain no debe importar Spring, JPA, Hibernate, Kafka, Security, JJWT ni Jsoup")
     void domainPackageMustNotImportFrameworks() throws IOException {
         Path domainDir = resolveDir("domain");
         assertTrue(Files.exists(domainDir), "El directorio del dominio debe existir");
@@ -26,14 +26,16 @@ class ArchitectureIsolationTest {
                 "javax.persistence",
                 "org.hibernate",
                 "org.postgresql",
-                "com.fasterxml.jackson"
+                "com.fasterxml.jackson",
+                "org.jsoup",
+                "io.jsonwebtoken"
         );
 
         assertNoForbiddenImports(domainDir, forbiddenImports, "dominio");
     }
 
     @Test
-    @DisplayName("El paquete com.cosplayjournal.application no debe importar Kafka ni JPA ni frameworks de infraestructura")
+    @DisplayName("El paquete com.cosplayjournal.application no debe importar Kafka, JPA, SecurityContextHolder, JJWT ni Jsoup")
     void applicationPackageMustNotImportKafka() throws IOException {
         Path applicationDir = resolveDir("application");
         assertTrue(Files.exists(applicationDir), "El directorio de aplicación debe existir");
@@ -43,7 +45,10 @@ class ArchitectureIsolationTest {
                 "org.apache.kafka",
                 "jakarta.persistence",
                 "javax.persistence",
-                "org.hibernate"
+                "org.hibernate",
+                "org.jsoup",
+                "io.jsonwebtoken",
+                "org.springframework.security.core.context.SecurityContextHolder"
         );
 
         assertNoForbiddenImports(applicationDir, forbiddenImports, "aplicación");

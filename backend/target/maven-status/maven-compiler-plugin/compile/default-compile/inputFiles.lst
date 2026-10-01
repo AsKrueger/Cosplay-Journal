@@ -1,3 +1,5 @@
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\dto\ExternalEventData.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\dto\ImportEventsResult.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\in\AddPhotoCommand.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\in\AddPhotoUseCase.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\in\AssignCharacterCommand.java
@@ -18,6 +20,7 @@ C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjou
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\in\GetParticipationPhotosUseCase.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\in\GetParticipationUseCase.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\in\GetPhotoUseCase.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\in\ImportExternalEventsUseCase.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\in\JoinParticipationCommand.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\in\JoinParticipationUseCase.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\in\LeaveParticipationCommand.java
@@ -30,6 +33,7 @@ C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjou
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\out\CurrentUserPort.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\out\DomainEventPublisherPort.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\out\EventRepositoryPort.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\out\ExternalEventSourcePort.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\out\ParticipationRepositoryPort.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\out\PasswordHasherPort.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\out\PhotoRepositoryPort.java
@@ -37,6 +41,7 @@ C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjou
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\port\out\UserRepositoryPort.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\service\CosplayApplicationService.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\service\EventApplicationService.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\service\ImportExternalEventsService.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\service\ParticipationApplicationService.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\service\PhotoApplicationService.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\application\service\ProcessParticipantJoinedService.java
@@ -82,6 +87,7 @@ C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjou
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\domain\model\user\UserStatus.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\domain\service\ParticipationValidationDomainService.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\in\kafka\ParticipantJoinedKafkaConsumerAdapter.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\in\rest\admin\AdminEventController.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\in\rest\auth\AuthController.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\in\rest\CosplayController.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\in\rest\dto\AddPhotoRequest.java
@@ -112,6 +118,7 @@ C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjou
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\in\rest\PhotoController.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\in\rest\security\JwtAuthenticationFilter.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\in\rest\security\SpringSecurityConfig.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\out\external\listadomanga\ListadoMangaEventSourceAdapter.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\out\messaging\kafka\adapter\KafkaDomainEventPublisherAdapter.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\out\messaging\kafka\dto\ParticipantJoinedMessage.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\out\messaging\kafka\dto\ParticipationCreatedMessage.java

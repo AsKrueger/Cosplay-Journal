@@ -5,6 +5,7 @@ import com.cosplayjournal.infrastructure.adapter.in.rest.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -30,12 +31,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    @ExceptionHandler(ForbiddenAccessException.class)
-    public ResponseEntity<ErrorResponse> handleForbiddenAccessException(ForbiddenAccessException ex, HttpServletRequest request) {
+    @ExceptionHandler({ForbiddenAccessException.class, AccessDeniedException.class})
+    public ResponseEntity<ErrorResponse> handleForbiddenAccessException(Exception ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.FORBIDDEN.value(),
                 "Forbidden",
-                ex.getMessage(),
+                "No dispone de permisos para realizar esta operación",
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
