@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.cosplayjournal.domain.CosplayTest" time="0.007" tests="5" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.cosplayjournal.infrastructure.adapter.in.rest.OpenApiIntegrationTest" time="0.483" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -10,6 +10,7 @@
     <property name="user.variant" value=""/>
     <property name="java.vendor.url" value="https://adoptium.net/"/>
     <property name="user.timezone" value="Europe/Madrid"/>
+    <property name="org.jboss.logging.provider" value="slf4j"/>
     <property name="os.name" value="Windows 11"/>
     <property name="java.vm.specification.version" value="21"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
@@ -30,6 +31,8 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="FILE_LOG_CHARSET" value="UTF-8"/>
+    <property name="java.awt.headless" value="true"/>
     <property name="surefire.real.class.path" value="C:\Users\lovei\AppData\Local\Temp\surefire11466487017440815316\surefirebooter-20261002140510629_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
@@ -45,11 +48,14 @@
     <property name="localRepository" value="C:\Users\lovei\.m2\repository"/>
     <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
     <property name="java.io.tmpdir" value="C:\Users\lovei\AppData\Local\Temp\"/>
+    <property name="com.zaxxer.hikari.pool_number" value="2"/>
     <property name="java.version" value="21.0.12.1"/>
     <property name="user.dir" value="C:\Users\lovei\Documents\XD\Cosplay-Journal\backend"/>
     <property name="os.arch" value="amd64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="PID" value="16064"/>
     <property name="sun.os.patch.level" value=""/>
+    <property name="CONSOLE_LOG_CHARSET" value="UTF-8"/>
     <property name="native.encoding" value="Cp1252"/>
     <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Users\lovei\Documents\XD\Maven\apache-maven-3.9.16\bin;C:\Users\lovei\AppData\Local\Programs\Python\Python312\Scripts\;C:\Users\lovei\AppData\Local\Programs\Python\Python312\;C:\Users\lovei\AppData\Local\Programs\Python\Launcher\;C:\Users\lovei\AppData\Local\Microsoft\WindowsApps;;C:\Users\lovei\AppData\Local\Programs\DockerDesktop\resources\bin;C:\Users\lovei\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\Android\Android Studio\plugins\android\resources\android-cli\bin;."/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
@@ -58,10 +64,12 @@
     <property name="java.vm.version" value="21.0.12.1+1-LTS"/>
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
+    <property name="LOGGED_APPLICATION_NAME" value="[cosplay-journal-backend] "/>
   </properties>
-  <testcase name="shouldThrowExceptionWhenNameIsInvalid" classname="com.cosplayjournal.domain.CosplayTest" time="0.002"/>
-  <testcase name="shouldAllowValidStatusTransitions" classname="com.cosplayjournal.domain.CosplayTest" time="0.001"/>
-  <testcase name="shouldThrowExceptionForInvalidTransitions" classname="com.cosplayjournal.domain.CosplayTest" time="0.001"/>
-  <testcase name="shouldCreateCosplayWithValidData" classname="com.cosplayjournal.domain.CosplayTest" time="0.001"/>
-  <testcase name="shouldThrowExceptionWhenUpdatingToNullStatus" classname="com.cosplayjournal.domain.CosplayTest" time="0.0"/>
+  <testcase name="shouldGenerateOpenApiDocumentation" classname="com.cosplayjournal.infrastructure.adapter.in.rest.OpenApiIntegrationTest" time="0.477">
+    <system-out><![CDATA[2026-10-02T14:05:20.747+02:00  INFO 16064 --- [cosplay-journal-backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.cosplayjournal.infrastructure.adapter.in.rest.OpenApiIntegrationTest]: OpenApiIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-02T14:05:20.750+02:00  INFO 16064 --- [cosplay-journal-backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.cosplayjournal.CosplayJournalApplication for test class com.cosplayjournal.infrastructure.adapter.in.rest.OpenApiIntegrationTest
+2026-10-02T14:05:21.204+02:00  INFO 16064 --- [cosplay-journal-backend] [           main] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 445 ms
+]]></system-out>
+  </testcase>
 </testsuite>

@@ -25,6 +25,7 @@ com\cosplayjournal\infrastructure\adapter\out\external\listadomanga\ListadoManga
 com\cosplayjournal\infrastructure\adapter\out\security\JwtTokenProviderAdapterTest.class
 com\cosplayjournal\domain\CosplayTest.class
 com\cosplayjournal\domain\EventDateRangeTest.class
+com\cosplayjournal\infrastructure\adapter\in\rest\OpenApiIntegrationTest.class
 com\cosplayjournal\infrastructure\adapter\out\persistence\EventJpaAdapterIntegrationTest.class
 com\cosplayjournal\domain\EventLocationTest.class
 com\cosplayjournal\domain\ParticipantTest.class

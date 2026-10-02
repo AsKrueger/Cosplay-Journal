@@ -125,6 +125,7 @@ com\cosplayjournal\application\port\in\JoinParticipationCommand.class
 com\cosplayjournal\application\port\in\GetCosplayUseCase.class
 com\cosplayjournal\infrastructure\adapter\in\rest\dto\AuthTokenResponse.class
 com\cosplayjournal\domain\model\CosplayStatus.class
+com\cosplayjournal\infrastructure\config\OpenApiConfig.class
 com\cosplayjournal\application\service\CosplayApplicationService.class
 com\cosplayjournal\domain\model\user\UserRole.class
 com\cosplayjournal\infrastructure\adapter\out\messaging\kafka\dto\PhotoUploadedMessage.class

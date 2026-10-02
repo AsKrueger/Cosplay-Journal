@@ -19,6 +19,7 @@ C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjou
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\rest\auth\AuthControllerIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\rest\CosplayControllerIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\rest\EventControllerIntegrationTest.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\rest\OpenApiIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\rest\ParticipationControllerIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\rest\PhotoControllerIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\scheduler\ScheduledEventSynchronizationAdapterTest.java

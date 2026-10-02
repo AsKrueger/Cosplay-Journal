@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ArchitectureIsolationTest {
 
     @Test
-    @DisplayName("El paquete com.cosplayjournal.domain no debe importar Spring, JPA, Hibernate, Kafka, Security, JJWT, Jsoup, Scheduling ni Micrometer")
+    @DisplayName("El paquete com.cosplayjournal.domain no debe importar Spring, JPA, Hibernate, Kafka, Security, JJWT, Jsoup, OpenAPI ni Swagger")
     void domainPackageMustNotImportFrameworks() throws IOException {
         Path domainDir = resolveDir("domain");
         assertTrue(Files.exists(domainDir), "El directorio del dominio debe existir");
@@ -29,14 +29,16 @@ class ArchitectureIsolationTest {
                 "com.fasterxml.jackson",
                 "org.jsoup",
                 "io.jsonwebtoken",
-                "io.micrometer"
+                "io.micrometer",
+                "io.swagger.v3",
+                "org.springdoc"
         );
 
         assertNoForbiddenImports(domainDir, forbiddenImports, "dominio");
     }
 
     @Test
-    @DisplayName("El paquete com.cosplayjournal.application no debe importar Kafka, JPA, Spring Data, SecurityContextHolder, JJWT, Jsoup, Scheduling ni Micrometer")
+    @DisplayName("El paquete com.cosplayjournal.application no debe importar Kafka, JPA, Spring Data, SecurityContextHolder, JJWT, Jsoup, OpenAPI ni Swagger")
     void applicationPackageMustNotImportKafka() throws IOException {
         Path applicationDir = resolveDir("application");
         assertTrue(Files.exists(applicationDir), "El directorio de aplicación debe existir");
@@ -52,7 +54,9 @@ class ArchitectureIsolationTest {
                 "org.springframework.data",
                 "org.springframework.security.core.context.SecurityContextHolder",
                 "org.springframework.scheduling",
-                "io.micrometer"
+                "io.micrometer",
+                "io.swagger.v3",
+                "org.springdoc"
         );
 
         assertNoForbiddenImports(applicationDir, forbiddenImports, "aplicación");

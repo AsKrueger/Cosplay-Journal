@@ -26,7 +26,8 @@ El proyecto evoluciona hacia una arquitectura cliente-servidor basada en **Arqui
 - **Mensajería Asíncrona:** Apache Kafka ([docs/messaging/KAFKA.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/messaging/KAFKA.md))
 - **Seguridad y Autorización:** Spring Security + JWT + Resource Ownership ([docs/security/SECURITY.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/security/SECURITY.md) / [docs/security/AUTHORIZATION.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/security/AUTHORIZATION.md))
 - **Integraciones Externas:** Scraper ListadoManga + Jsoup + Sincronización Idempotente ([docs/integrations/LISTADOMANGA.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/integrations/LISTADOMANGA.md))
-- **API REST:** Especificación OpenAPI 3.0 / `/api/v1/`
+- **Resiliencia & Operaciones:** Timeouts, Reintentos con Backoff Exponencial y Scheduler ([docs/operations/RESILIENCE.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/operations/RESILIENCE.md) / [docs/operations/OBSERVABILITY.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/operations/OBSERVABILITY.md))
+- **API REST & Contrato OpenAPI:** Especificación OpenAPI 3.0 / Swagger UI / `/api/v1/` ([docs/api/API.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/api/API.md))
 - **Cliente Móvil:** Android (Jetpack Compose, Material 3, Coroutines)
 - **DevOps & Infraestructura:** Docker, Docker Compose, Kubernetes, GitHub Actions
 - **Testing:** JUnit 5, Mockito, Testcontainers
@@ -44,11 +45,14 @@ La documentación detallada del proyecto se encuentra en el directorio [`docs/`]
 - 🧩 [**Modelo de Dominio**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/DOMAIN_MODEL.md) — Bounded Contexts, Entidades, Value Objects e invariantes de negocio.
 - ⚡ [**Mensajería y Eventos Kafka**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/messaging/KAFKA.md) — Topics, DTOs de mensajería, claves y consumidores asíncronos.
 - ⚙️ [**Casos de Uso e Integración API**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/use-cases/USE_CASES.md) — Servicios de aplicación, puertos de entrada/salida y endpoints REST.
+- 📖 [**Especificación de API REST (OpenAPI 3)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/api/API.md) — Swagger UI, contratos, DTOs, esquemas JWT y códigos HTTP.
 - 🔒 [**Seguridad y Autenticación**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/security/SECURITY.md) — Modelo de tokens JWT, BCrypt, roles y filtros.
 - 🛡️ [**Propiedad de Recursos (Ownership)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/security/AUTHORIZATION.md) — Abstracción `CurrentUserPort`, matriz de permisos y respuestas 403 Forbidden.
 - 🌐 [**Integración Externa ListadoManga**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/integrations/LISTADOMANGA.md) — Scraper Jsoup, clave externa, sincronización e idempotencia.
+- 🏥 [**Resiliencia y Timeouts**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/operations/RESILIENCE.md) — Reintentos exponenciales, timeouts HTTP y excepciones técnicas.
+- 📊 [**Observabilidad y Métricas**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/operations/OBSERVABILITY.md) — Métricas Micrometer, Spring Boot Actuator y salud del sistema.
 - 🗄️ [**Esquema de Base de Datos**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/database/DATABASE.md) — Tablas, índices, claves y Docker Compose local.
-- 📊 [**Auditoría y Decisiones (ADR)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/AUDIT_AND_DECISIONS.md) — Auditoría del estado actual y decisiones técnicas ([ADR 0001](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0001-architecture-and-product-redefinition.md) / [ADR 0002](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0002-aggregate-boundaries.md) / [ADR 0003](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0003-separation-domain-and-persistence-model.md) / [ADR 0004](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0004-authentication-and-authorization.md) / [ADR 0005](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0005-resource-ownership-and-authorization.md) / [ADR 0006](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0006-external-event-source.md) / [ADR 0007](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0007-event-search-and-pagination.md) / [ADR 0008](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0008-external-event-synchronization.md)).
+- 📋 [**Auditoría y Decisiones (ADR)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/AUDIT_AND_DECISIONS.md) — Decisiones técnicas ([ADR 0001](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0001-architecture-and-product-redefinition.md) - [ADR 0011](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0011-openapi-api-contract-and-swagger.md)).
 - 📋 [**Próximas Issues**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/NEXT_ISSUES.md) — Backlog detallado de tareas de implementación.
 
 ---
@@ -67,7 +71,10 @@ La documentación detallada del proyecto se encuentra en el directorio [`docs/`]
 - ✅ **Issue #9 (Importación Real de Eventos desde ListadoManga y Scraper Service):** Completada.
 - ✅ **Issue #10 (Consulta, filtrado y paginación del catálogo de eventos):** Completada.
 - ✅ **Issue #11 (Sincronización y actualización de eventos externos):** Completada.
-- 🚀 **Próxima:** **Issue #12 (Integración del Cliente Móvil Android con la API REST)**.
+- ✅ **Issue #12 (Automatización de la sincronización y configuración operativa):** Completada.
+- ✅ **Issue #13 (Resiliencia, timeouts y control de fallos de la fuente externa):** Completada.
+- ✅ **Issue #14 (Contrato de API REST y documentación OpenAPI):** Completada.
+- 🚀 **Próxima:** **Issue #15 (Integración del Cliente Móvil Android con la API REST)**.
 
 ---
 Desarrollado con ❤️ para la comunidad de cosplay.
