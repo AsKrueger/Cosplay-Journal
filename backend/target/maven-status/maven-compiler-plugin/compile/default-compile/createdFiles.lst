@@ -27,6 +27,7 @@ com\cosplayjournal\infrastructure\adapter\out\persistence\adapter\JpaEventReposi
 com\cosplayjournal\application\port\in\CreateCosplayUseCase.class
 com\cosplayjournal\infrastructure\adapter\out\persistence\InMemoryCosplayRepositoryAdapter.class
 com\cosplayjournal\application\port\in\CreateEventUseCase.class
+com\cosplayjournal\infrastructure\adapter\out\messaging\kafka\dto\EventUpdatedMessage.class
 com\cosplayjournal\domain\event\ParticipantJoinedEvent.class
 com\cosplayjournal\infrastructure\adapter\in\rest\admin\AdminEventController.class
 com\cosplayjournal\infrastructure\adapter\in\rest\dto\CreateParticipationRequest.class
@@ -76,6 +77,7 @@ com\cosplayjournal\infrastructure\adapter\in\rest\dto\JoinParticipationRequest.c
 com\cosplayjournal\infrastructure\adapter\in\rest\auth\AuthController.class
 com\cosplayjournal\infrastructure\adapter\out\persistence\entity\ParticipationJpaEntity.class
 com\cosplayjournal\infrastructure\adapter\out\persistence\repository\SpringDataParticipationRepository.class
+com\cosplayjournal\domain\event\EventUpdatedEvent.class
 com\cosplayjournal\infrastructure\adapter\in\rest\dto\ParticipantResponse.class
 com\cosplayjournal\application\service\PhotoApplicationService.class
 com\cosplayjournal\application\dto\ExternalEventData.class

@@ -110,6 +110,49 @@ public class Event {
         );
     }
 
+    public boolean updateExternalDetails(
+            String newName,
+            String newDescription,
+            LocalDate newStartDate,
+            LocalDate newEndDate,
+            EventLocation newLocation,
+            String newWebsite
+    ) {
+        validateName(newName);
+        EventDateRange newDateRange = EventDateRange.of(newStartDate, newEndDate);
+
+        boolean changed = false;
+
+        if (!this.name.equals(newName.trim())) {
+            this.name = newName.trim();
+            changed = true;
+        }
+
+        String trimmedDesc = newDescription != null ? newDescription.trim() : "";
+        if (!this.description.equals(trimmedDesc)) {
+            this.description = trimmedDesc;
+            changed = true;
+        }
+
+        if (!this.dateRange.equals(newDateRange)) {
+            this.dateRange = newDateRange;
+            changed = true;
+        }
+
+        if (newLocation != null && !this.location.equals(newLocation)) {
+            this.location = newLocation;
+            changed = true;
+        }
+
+        String trimmedWeb = newWebsite != null ? newWebsite.trim() : "";
+        if (!this.website.equals(trimmedWeb)) {
+            this.website = trimmedWeb;
+            changed = true;
+        }
+
+        return changed;
+    }
+
     public void cancel() {
         if (this.status == EventStatus.CANCELLED) {
             return;

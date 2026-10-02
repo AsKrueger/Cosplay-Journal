@@ -1,8 +1,10 @@
 package com.cosplayjournal.infrastructure.adapter.out.messaging.kafka.mapper;
 
+import com.cosplayjournal.domain.event.EventUpdatedEvent;
 import com.cosplayjournal.domain.event.ParticipantJoinedEvent;
 import com.cosplayjournal.domain.event.ParticipationCreatedEvent;
 import com.cosplayjournal.domain.event.PhotoUploadedEvent;
+import com.cosplayjournal.infrastructure.adapter.out.messaging.kafka.dto.EventUpdatedMessage;
 import com.cosplayjournal.infrastructure.adapter.out.messaging.kafka.dto.ParticipantJoinedMessage;
 import com.cosplayjournal.infrastructure.adapter.out.messaging.kafka.dto.ParticipationCreatedMessage;
 import com.cosplayjournal.infrastructure.adapter.out.messaging.kafka.dto.PhotoUploadedMessage;
@@ -41,6 +43,15 @@ public class KafkaEventMapper {
                 event.participationId(),
                 event.uploadedByUserId(),
                 event.storageReference()
+        );
+    }
+
+    public static EventUpdatedMessage toMessage(EventUpdatedEvent event) {
+        return new EventUpdatedMessage(
+                event.eventId(),
+                event.name(),
+                event.source().name(),
+                event.occurredOn()
         );
     }
 }

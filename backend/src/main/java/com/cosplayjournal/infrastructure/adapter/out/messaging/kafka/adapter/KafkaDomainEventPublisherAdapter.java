@@ -1,10 +1,7 @@
 package com.cosplayjournal.infrastructure.adapter.out.messaging.kafka.adapter;
 
 import com.cosplayjournal.application.port.out.DomainEventPublisherPort;
-import com.cosplayjournal.domain.event.DomainEvent;
-import com.cosplayjournal.domain.event.ParticipantJoinedEvent;
-import com.cosplayjournal.domain.event.ParticipationCreatedEvent;
-import com.cosplayjournal.domain.event.PhotoUploadedEvent;
+import com.cosplayjournal.domain.event.*;
 import com.cosplayjournal.infrastructure.adapter.out.messaging.kafka.mapper.KafkaEventMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +19,7 @@ public class KafkaDomainEventPublisherAdapter implements DomainEventPublisherPor
 
     public static final String PARTICIPATION_TOPIC = "cosplay-journal.participation";
     public static final String PHOTO_TOPIC = "cosplay-journal.photo";
+    public static final String EVENT_TOPIC = "cosplay-journal.event";
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
@@ -46,6 +44,10 @@ public class KafkaDomainEventPublisherAdapter implements DomainEventPublisherPor
                 var message = KafkaEventMapper.toMessage(photoUploaded);
                 kafkaTemplate.send(PHOTO_TOPIC, photoUploaded.participationId(), message);
                 log.info("Enviado mensaje Kafka PhotoUploaded a topic '{}' con key '{}'", PHOTO_TOPIC, photoUploaded.participationId());
+            } else if (event instanceof EventUpdatedEvent eventUpdated) {
+                var message = KafkaEventMapper.toMessage(eventUpdated);
+                kafkaTemplate.send(EVENT_TOPIC, eventUpdated.eventId(), message);
+                log.info("Enviado mensaje Kafka EventUpdated a topic '{}' con key '{}'", EVENT_TOPIC, eventUpdated.eventId());
             } else {
                 log.info("Evento de dominio publicado de forma síncrona -> EventId: {}, Type: {}", event.eventId(), event.getClass().getSimpleName());
             }

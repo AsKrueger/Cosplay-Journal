@@ -7,6 +7,7 @@ import com.cosplayjournal.application.port.out.DomainEventPublisherPort;
 import com.cosplayjournal.application.port.out.EventRepositoryPort;
 import com.cosplayjournal.application.port.out.ExternalEventSourcePort;
 import com.cosplayjournal.domain.event.EventCreatedEvent;
+import com.cosplayjournal.domain.event.EventUpdatedEvent;
 import com.cosplayjournal.domain.model.event.Event;
 import com.cosplayjournal.domain.model.event.EventId;
 import com.cosplayjournal.domain.model.event.EventLocation;
@@ -37,7 +38,7 @@ public class ImportExternalEventsService implements ImportExternalEventsUseCase 
 
     @Override
     public ImportEventsResult importEvents() {
-        log.info("Iniciando importación de eventos desde fuente externa ListadoManga...");
+        log.info("Iniciando importación y sincronización de eventos desde fuente externa ListadoManga...");
         List<ExternalEventData> externalEvents;
         try {
             externalEvents = externalEventSourcePort.fetchEvents();
@@ -54,15 +55,6 @@ public class ImportExternalEventsService implements ImportExternalEventsUseCase 
 
         for (ExternalEventData data : externalEvents) {
             try {
-                Optional<Event> existingOpt = eventRepositoryPort.findBySourceAndExternalId(
-                        EventSource.LISTADOMANGA, data.externalId()
-                );
-
-                if (existingOpt.isPresent()) {
-                    skipped++;
-                    continue;
-                }
-
                 EventLocation location = new EventLocation(
                         data.city() != null ? data.city() : "España",
                         data.venue() != null ? data.venue() : "",
@@ -73,28 +65,54 @@ public class ImportExternalEventsService implements ImportExternalEventsUseCase 
                         null
                 );
 
-                Event event = Event.createWithExternalId(
-                        EventId.generate(),
-                        data.externalId(),
-                        data.name(),
-                        data.description(),
-                        data.startDate(),
-                        data.endDate(),
-                        location,
-                        data.website(),
-                        EventSource.LISTADOMANGA
+                Optional<Event> existingOpt = eventRepositoryPort.findBySourceAndExternalId(
+                        EventSource.LISTADOMANGA, data.externalId()
                 );
 
-                Event saved = eventRepositoryPort.save(event);
-                eventPublisherPort.publish(new EventCreatedEvent(saved.getId().value(), saved.getName()));
-                created++;
+                if (existingOpt.isPresent()) {
+                    Event existing = existingOpt.get();
+                    boolean changed = existing.updateExternalDetails(
+                            data.name(),
+                            data.description(),
+                            data.startDate(),
+                            data.endDate(),
+                            location,
+                            data.website()
+                    );
+
+                    if (changed) {
+                        Event saved = eventRepositoryPort.save(existing);
+                        eventPublisherPort.publish(new EventUpdatedEvent(saved.getId().value(), saved.getName(), saved.getSource()));
+                        updated++;
+                    } else {
+                        skipped++;
+                    }
+                } else {
+                    Event newEvent = Event.createWithExternalId(
+                            EventId.generate(),
+                            data.externalId(),
+                            data.name(),
+                            data.description(),
+                            data.startDate(),
+                            data.endDate(),
+                            location,
+                            data.website(),
+                            EventSource.LISTADOMANGA
+                    );
+
+                    Event saved = eventRepositoryPort.save(newEvent);
+                    eventPublisherPort.publish(new EventCreatedEvent(saved.getId().value(), saved.getName()));
+                    created++;
+                }
             } catch (Exception ex) {
-                log.warn("Falló el procesamiento del evento externo ID '{}': {}", data.externalId(), ex.getMessage());
+                log.warn("Falló la sincronización del evento externo ID '{}': {}", data.externalId(), ex.getMessage());
                 failed++;
             }
         }
 
-        log.info("Importación completada. Total: {}, Creados: {}, Omitidos: {}, Fallidos: {}", totalFound, created, skipped, failed);
+        log.info("Sincronización completada. Total: {}, Creados: {}, Actualizados: {}, Omitidos: {}, Fallidos: {}",
+                totalFound, created, updated, skipped, failed);
+
         return new ImportEventsResult(totalFound, created, updated, skipped, failed);
     }
 }

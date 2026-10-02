@@ -1,10 +1,10 @@
-# Integración de Eventos Externos: ListadoManga — Cosplay Journal
+# Integración de Eventos Externos y Sincronización: ListadoManga — Cosplay Journal
 
 ## 1. Visión General
 
 **ListadoManga** (`https://www.listadomanga.es/salones.php`) proporciona el listado de referencia de convenciones, salones de manga y eventos de cosplay en España.
 
-Esta integración permite importar automáticamente o mediante ejecución administrativa eventos reales hacia la base de datos de **Cosplay Journal** sin acoplar el dominio ni los casos de uso a la estructura HTML del sitio web.
+Esta integración permite importar y sincronizar automáticamente eventos reales hacia la base de datos de **Cosplay Journal** sin acoplar el dominio ni los casos de uso a la estructura HTML del sitio web.
 
 ---
 
@@ -29,25 +29,31 @@ Esta integración permite importar automáticamente o mediante ejecución admini
                          │
                          ▼
               ImportExternalEventsService
-           (Verifica idempotencia por ID)
+                   (Sincronización)
                          │
-                         ▼
-                 Event Aggregate
-                         │
-                         ▼
-             PostgreSQL + Kafka Event
+          ┌──────────────┼──────────────┐
+          ▼              ▼              ▼
+       CREATE         UPDATE          SKIP
+          │              │              │
+          ▼              ▼              ▼
+     EventCreated   EventUpdated     No-op
+          │              │
+          └──────┬───────┘
+                 ▼
+      PostgreSQL + Kafka Topic
 ```
 
 ---
 
-## 3. Clave Externa e Idempotencia
+## 3. Clave Externa, Idempotencia y Estrategia de Sincronización
 
 Cada evento importado se almacena con el valor `source = 'LISTADOMANGA'` y un identificador externo estable `external_id`:
-- Si el hipervínculo del evento en ListadoManga contiene `salones.php?id=101`, el `external_id` asignado es `lm-101`.
-- Si no dispone de parámetro de query, se genera un slug determinista basado en el nombre normalizado.
-- **Invariante de Persistencia:** Restricción de unicidad relacional `UNIQUE (source, external_id)` en la tabla `event` (Migración Flyway `V4__add_external_event_identity.sql`).
-
-Reejecutar la importación no genera duplicados: los eventos previamente registrados se omiten (`skipped`).
+- Restricción de unicidad relacional `UNIQUE (source, external_id)` en la tabla `event`.
+- **Reglas de Sincronización (CREATE / UPDATE / SKIP / FAIL):**
+  - **`CREATE`:** Si no existe un evento con la combinación `(LISTADOMANGA, externalId)`, se crea y se emite `EventCreatedEvent`.
+  - **`UPDATE`:** Si el evento ya existe, se invoca `event.updateExternalDetails(...)`. Si algún atributo sincronizable (`name`, `description`, `startDate`, `endDate`, `location`, `website`) difiere de la fuente externa, se actualiza en base de datos y se emite `EventUpdatedEvent`.
+  - **`SKIP`:** Si el evento ya existe y todos los datos sincronizables son idénticos, no se realizan escrituras SQL ni se emiten mensajes Kafka.
+  - **`FAIL`:** Si una fila HTML externa presenta errores irrecuperables, se contabiliza como fallida sin cancelar el resto de la importación.
 
 ---
 
@@ -58,11 +64,11 @@ Reejecutar la importación no genera duplicados: los eventos previamente registr
 - **Respuesta:**
 ```json
 {
-  "totalFound": 12,
-  "created": 10,
-  "updated": 0,
-  "skipped": 2,
-  "failed": 0
+  "totalFound": 30,
+  "created": 5,
+  "updated": 8,
+  "skipped": 16,
+  "failed": 1
 }
 ```
 
