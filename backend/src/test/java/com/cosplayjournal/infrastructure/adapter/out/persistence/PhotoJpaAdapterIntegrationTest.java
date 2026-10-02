@@ -11,10 +11,13 @@ import com.cosplayjournal.domain.model.participation.ParticipationId;
 import com.cosplayjournal.domain.model.participation.ParticipationType;
 import com.cosplayjournal.domain.model.photo.Photo;
 import com.cosplayjournal.domain.model.photo.PhotoId;
+import com.cosplayjournal.domain.model.user.User;
+import com.cosplayjournal.domain.model.user.UserId;
 import com.cosplayjournal.infrastructure.adapter.out.persistence.adapter.JpaCosplayRepositoryAdapter;
 import com.cosplayjournal.infrastructure.adapter.out.persistence.adapter.JpaEventRepositoryAdapter;
 import com.cosplayjournal.infrastructure.adapter.out.persistence.adapter.JpaParticipationRepositoryAdapter;
 import com.cosplayjournal.infrastructure.adapter.out.persistence.adapter.JpaPhotoRepositoryAdapter;
+import com.cosplayjournal.infrastructure.adapter.out.persistence.adapter.JpaUserRepositoryAdapter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,19 +46,26 @@ class PhotoJpaAdapterIntegrationTest {
     @Autowired
     private JpaCosplayRepositoryAdapter cosplayRepositoryAdapter;
 
+    @Autowired
+    private JpaUserRepositoryAdapter userRepositoryAdapter;
+
     @Test
     @DisplayName("Debe guardar, buscar por ParticipationId y eliminar Photo en la base de datos relacional")
     void shouldSaveAndFindPhotoInDatabase() {
+        if (userRepositoryAdapter.findById(UserId.of("u1")).isEmpty()) {
+            userRepositoryAdapter.save(User.create(UserId.of("u1"), "carlos_u1", "u1@example.com", "$2a$10$hash"));
+        }
+
         // Claves foráneas
         Event event = eventRepositoryAdapter.save(Event.create(
                 EventId.of("evt-photo-1"), "Photo Fest", "Desc",
                 LocalDate.now(), LocalDate.now(), EventLocation.of("Sevilla", "Fibes"), "", EventSource.MANUAL_ADMIN
         ));
-        Cosplay cosplay = cosplayRepositoryAdapter.save(Cosplay.createNew("Naruto", "Desc", "Naruto", "Anime"));
+        Cosplay cosplay = cosplayRepositoryAdapter.save(Cosplay.createNew("Naruto", "Desc", "Naruto", "Anime", UserId.of("u1")));
 
         ParticipationId participationId = ParticipationId.of("part-photo-1");
         participationRepositoryAdapter.save(Participation.create(
-                participationId, event.getId(), cosplay.getId(), ParticipationType.INDIVIDUAL, Participant.createLeader("u1", "Carlos")
+                participationId, UserId.of("u1"), event.getId(), cosplay.getId(), ParticipationType.INDIVIDUAL, Participant.createLeader("u1", "Carlos")
         ));
 
         PhotoId photoId = PhotoId.of("photo-100");

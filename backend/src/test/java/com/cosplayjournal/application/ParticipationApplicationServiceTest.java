@@ -1,19 +1,16 @@
 package com.cosplayjournal.application;
 
 import com.cosplayjournal.application.port.in.*;
-import com.cosplayjournal.application.port.out.CosplayRepositoryPort;
-import com.cosplayjournal.application.port.out.DomainEventPublisherPort;
-import com.cosplayjournal.application.port.out.EventRepositoryPort;
-import com.cosplayjournal.application.port.out.ParticipationRepositoryPort;
+import com.cosplayjournal.application.port.out.*;
 import com.cosplayjournal.application.service.ParticipationApplicationService;
 import com.cosplayjournal.domain.event.ParticipantJoinedEvent;
 import com.cosplayjournal.domain.event.ParticipationCreatedEvent;
-import com.cosplayjournal.domain.exception.CosplayNotFoundException;
 import com.cosplayjournal.domain.exception.EventNotFoundException;
-import com.cosplayjournal.domain.exception.ParticipationNotFoundException;
+import com.cosplayjournal.domain.exception.ForbiddenAccessException;
 import com.cosplayjournal.domain.model.Cosplay;
 import com.cosplayjournal.domain.model.event.*;
 import com.cosplayjournal.domain.model.participation.*;
+import com.cosplayjournal.domain.model.user.UserId;
 import com.cosplayjournal.domain.service.ParticipationValidationDomainService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,21 +41,27 @@ class ParticipationApplicationServiceTest {
     @Mock
     private DomainEventPublisherPort eventPublisherPort;
 
+    @Mock
+    private CurrentUserPort currentUserPort;
+
     private ParticipationApplicationService participationApplicationService;
 
     @BeforeEach
     void setUp() {
         participationApplicationService = new ParticipationApplicationService(
                 participationRepositoryPort, eventRepositoryPort, cosplayRepositoryPort,
-                eventPublisherPort, new ParticipationValidationDomainService()
+                eventPublisherPort, currentUserPort, new ParticipationValidationDomainService()
         );
     }
 
     @Test
-    @DisplayName("Debe crear una participación si el Evento y Cosplay existen")
+    @DisplayName("Debe crear una participación asignando creatorId del usuario autenticado")
     void shouldCreateParticipationSuccessfully() {
         EventId eventId = EventId.of("evt-1");
         Long cosplayId = 10L;
+        UserId userId = UserId.of("user-leader");
+
+        when(currentUserPort.getRequiredCurrentUserId()).thenReturn(userId);
 
         Event event = Event.create(eventId, "Salon Manga", "Desc", LocalDate.now(), LocalDate.now(), EventLocation.of("Sevilla", "Fibes"), "", EventSource.MANUAL_ADMIN);
         Cosplay cosplay = Cosplay.createNew("Luffy", "Gear 5", "Luffy", "One Piece").withId(cosplayId);
@@ -76,6 +79,7 @@ class ParticipationApplicationServiceTest {
         assertNotNull(result);
         assertEquals(eventId, result.getEventId());
         assertEquals(cosplayId, result.getCosplayId());
+        assertEquals(userId, result.getCreatorId());
         assertEquals(1, result.getParticipants().size());
 
         verify(eventPublisherPort, times(1)).publish(any(ParticipationCreatedEvent.class));
@@ -86,6 +90,7 @@ class ParticipationApplicationServiceTest {
     @DisplayName("Debe lanzar EventNotFoundException si el evento no existe al crear participación")
     void shouldThrowExceptionWhenEventDoesNotExist() {
         EventId eventId = EventId.of("evt-999");
+        when(currentUserPort.getRequiredCurrentUserId()).thenReturn(UserId.of("u1"));
         when(eventRepositoryPort.findById(eventId)).thenReturn(Optional.empty());
 
         CreateParticipationCommand command = new CreateParticipationCommand(
@@ -96,21 +101,19 @@ class ParticipationApplicationServiceTest {
     }
 
     @Test
-    @DisplayName("Debe permitir unirse a una participación grupal existente")
-    void shouldJoinParticipation() {
+    @DisplayName("Debe lanzar ForbiddenAccessException si un usuario intenta unir a otro usuario sin ser creador ni admin")
+    void shouldThrowExceptionWhenUnauthorizedUserTriesToJoinAnother() {
         ParticipationId participationId = ParticipationId.of("part-100");
         Participation participation = Participation.create(
-                participationId, EventId.of("evt-1"), 10L, ParticipationType.GROUP, Participant.createLeader("u1", "Alonso")
+                participationId, UserId.of("creator-user"), EventId.of("evt-1"), 10L, ParticipationType.GROUP, Participant.createLeader("creator-user", "Alonso")
         );
 
         when(participationRepositoryPort.findById(participationId)).thenReturn(Optional.of(participation));
-        when(participationRepositoryPort.save(any(Participation.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(currentUserPort.getRequiredCurrentUserId()).thenReturn(UserId.of("stranger-user"));
+        when(currentUserPort.isAdmin()).thenReturn(false);
 
-        JoinParticipationCommand command = new JoinParticipationCommand(participationId, "u2", "Beatriz", ParticipantRole.MEMBER);
+        JoinParticipationCommand command = new JoinParticipationCommand(participationId, "other-user", "Beatriz", ParticipantRole.MEMBER);
 
-        Participation updated = participationApplicationService.joinParticipation(command);
-
-        assertEquals(2, updated.getParticipants().size());
-        verify(eventPublisherPort, times(1)).publish(any(ParticipantJoinedEvent.class));
+        assertThrows(ForbiddenAccessException.class, () -> participationApplicationService.joinParticipation(command));
     }
 }

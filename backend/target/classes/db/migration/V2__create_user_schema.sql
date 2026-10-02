@@ -13,3 +13,7 @@ CREATE TABLE user_account (
 
 CREATE INDEX idx_user_username ON user_account(username);
 CREATE INDEX idx_user_email ON user_account(email);
+
+-- Default system user for initial seeds / fallback
+INSERT INTO user_account (id, username, email, password_hash, role, status, created_at, updated_at)
+VALUES ('system-default', 'system_default', 'system@cosplayjournal.com', '$2a$10$systemDefaultHashPlaceholder', 'USER', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

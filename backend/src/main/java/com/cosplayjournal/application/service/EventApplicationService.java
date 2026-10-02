@@ -1,5 +1,7 @@
 package com.cosplayjournal.application.service;
 
+import com.cosplayjournal.application.dto.EventSearchCriteria;
+import com.cosplayjournal.application.dto.PageResult;
 import com.cosplayjournal.application.port.in.CreateEventCommand;
 import com.cosplayjournal.application.port.in.CreateEventUseCase;
 import com.cosplayjournal.application.port.in.GetEventUseCase;
@@ -54,5 +56,13 @@ public class EventApplicationService implements CreateEventUseCase, GetEventUseC
     @Override
     public List<Event> getAllEvents() {
         return eventRepositoryPort.findAll();
+    }
+
+    @Override
+    public PageResult<Event> searchEvents(EventSearchCriteria criteria) {
+        if (criteria == null) {
+            criteria = EventSearchCriteria.defaultCriteria();
+        }
+        return eventRepositoryPort.search(criteria);
     }
 }

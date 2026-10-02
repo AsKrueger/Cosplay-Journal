@@ -4,6 +4,7 @@ com\cosplayjournal\infrastructure\adapter\out\persistence\PhotoJpaAdapterIntegra
 com\cosplayjournal\domain\ArchitectureIsolationTest.class
 com\cosplayjournal\domain\UserTest.class
 com\cosplayjournal\infrastructure\adapter\in\rest\ParticipationControllerIntegrationTest.class
+com\cosplayjournal\infrastructure\adapter\in\rest\admin\AdminEventControllerIntegrationTest.class
 com\cosplayjournal\infrastructure\adapter\in\rest\EventControllerIntegrationTest.class
 com\cosplayjournal\application\ParticipationApplicationServiceTest.class
 com\cosplayjournal\infrastructure\adapter\out\messaging\kafka\KafkaDomainEventPublisherAdapterTest.class
@@ -13,6 +14,7 @@ com\cosplayjournal\infrastructure\adapter\out\persistence\UserJpaAdapterIntegrat
 com\cosplayjournal\infrastructure\adapter\out\messaging\kafka\KafkaEventMapperTest.class
 com\cosplayjournal\application\UserApplicationServiceTest.class
 com\cosplayjournal\domain\EventTest.class
+com\cosplayjournal\infrastructure\adapter\out\external\listadomanga\ListadoMangaEventSourceAdapterTest.class
 com\cosplayjournal\domain\AggregateBoundaryTest.class
 com\cosplayjournal\domain\PhotoTest.class
 com\cosplayjournal\infrastructure\adapter\in\rest\PhotoControllerIntegrationTest.class
@@ -26,4 +28,6 @@ com\cosplayjournal\infrastructure\adapter\out\persistence\EventJpaAdapterIntegra
 com\cosplayjournal\domain\EventLocationTest.class
 com\cosplayjournal\domain\ParticipantTest.class
 com\cosplayjournal\domain\ParticipationTest.class
+com\cosplayjournal\application\ImportExternalEventsServiceTest.class
 com\cosplayjournal\application\PhotoApplicationServiceTest.class
+com\cosplayjournal\infrastructure\adapter\in\scheduler\ScheduledEventSynchronizationAdapterTest.class

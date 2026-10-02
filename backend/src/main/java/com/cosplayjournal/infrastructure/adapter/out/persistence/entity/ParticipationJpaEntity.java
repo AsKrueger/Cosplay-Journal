@@ -13,6 +13,9 @@ public class ParticipationJpaEntity {
     @Column(name = "id", nullable = false, length = 100)
     private String id;
 
+    @Column(name = "creator_id", nullable = false, length = 100)
+    private String creatorId;
+
     @Column(name = "event_id", nullable = false, length = 100)
     private String eventId;
 
@@ -40,8 +43,9 @@ public class ParticipationJpaEntity {
     public ParticipationJpaEntity() {
     }
 
-    public ParticipationJpaEntity(String id, String eventId, Long cosplayId, String type, String status, String groupName, Instant createdAt, Instant updatedAt) {
+    public ParticipationJpaEntity(String id, String creatorId, String eventId, Long cosplayId, String type, String status, String groupName, Instant createdAt, Instant updatedAt) {
         this.id = id;
+        this.creatorId = creatorId;
         this.eventId = eventId;
         this.cosplayId = cosplayId;
         this.type = type;
@@ -62,6 +66,14 @@ public class ParticipationJpaEntity {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
     }
 
     public String getEventId() {

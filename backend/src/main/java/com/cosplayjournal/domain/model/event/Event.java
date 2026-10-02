@@ -8,6 +8,7 @@ import java.util.Objects;
 public class Event {
 
     private final EventId id;
+    private String externalId;
     private String name;
     private String description;
     private EventDateRange dateRange;
@@ -18,6 +19,7 @@ public class Event {
 
     public Event(
             EventId id,
+            String externalId,
             String name,
             String description,
             EventDateRange dateRange,
@@ -38,6 +40,7 @@ public class Event {
         }
 
         this.id = id;
+        this.externalId = externalId != null ? externalId.trim() : null;
         this.name = name.trim();
         this.description = description != null ? description.trim() : "";
         this.dateRange = dateRange;
@@ -45,6 +48,19 @@ public class Event {
         this.website = website != null ? website.trim() : "";
         this.source = source != null ? source : EventSource.MANUAL_ADMIN;
         this.status = status != null ? status : EventStatus.SCHEDULED;
+    }
+
+    public Event(
+            EventId id,
+            String name,
+            String description,
+            EventDateRange dateRange,
+            EventLocation location,
+            String website,
+            EventSource source,
+            EventStatus status
+    ) {
+        this(id, null, name, description, dateRange, location, website, source, status);
     }
 
     public static Event create(
@@ -59,6 +75,7 @@ public class Event {
     ) {
         return new Event(
                 id,
+                null,
                 name,
                 description,
                 EventDateRange.of(startDate, endDate),
@@ -67,6 +84,73 @@ public class Event {
                 source,
                 EventStatus.SCHEDULED
         );
+    }
+
+    public static Event createWithExternalId(
+            EventId id,
+            String externalId,
+            String name,
+            String description,
+            LocalDate startDate,
+            LocalDate endDate,
+            EventLocation location,
+            String website,
+            EventSource source
+    ) {
+        return new Event(
+                id,
+                externalId,
+                name,
+                description,
+                EventDateRange.of(startDate, endDate),
+                location,
+                website,
+                source,
+                EventStatus.SCHEDULED
+        );
+    }
+
+    public boolean updateExternalDetails(
+            String newName,
+            String newDescription,
+            LocalDate newStartDate,
+            LocalDate newEndDate,
+            EventLocation newLocation,
+            String newWebsite
+    ) {
+        validateName(newName);
+        EventDateRange newDateRange = EventDateRange.of(newStartDate, newEndDate);
+
+        boolean changed = false;
+
+        if (!this.name.equals(newName.trim())) {
+            this.name = newName.trim();
+            changed = true;
+        }
+
+        String trimmedDesc = newDescription != null ? newDescription.trim() : "";
+        if (!this.description.equals(trimmedDesc)) {
+            this.description = trimmedDesc;
+            changed = true;
+        }
+
+        if (!this.dateRange.equals(newDateRange)) {
+            this.dateRange = newDateRange;
+            changed = true;
+        }
+
+        if (newLocation != null && !this.location.equals(newLocation)) {
+            this.location = newLocation;
+            changed = true;
+        }
+
+        String trimmedWeb = newWebsite != null ? newWebsite.trim() : "";
+        if (!this.website.equals(trimmedWeb)) {
+            this.website = trimmedWeb;
+            changed = true;
+        }
+
+        return changed;
     }
 
     public void cancel() {
@@ -101,6 +185,10 @@ public class Event {
 
     public EventId getId() {
         return id;
+    }
+
+    public String getExternalId() {
+        return externalId;
     }
 
     public String getName() {
@@ -148,6 +236,7 @@ public class Event {
     public String toString() {
         return "Event{" +
                 "id=" + id +
+                ", externalId='" + externalId + '\'' +
                 ", name='" + name + '\'' +
                 ", dates=" + dateRange +
                 ", city=" + location.city() +

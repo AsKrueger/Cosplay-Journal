@@ -2,6 +2,7 @@ package com.cosplayjournal.application.service;
 
 import com.cosplayjournal.application.port.in.*;
 import com.cosplayjournal.application.port.out.CosplayRepositoryPort;
+import com.cosplayjournal.application.port.out.CurrentUserPort;
 import com.cosplayjournal.application.port.out.DomainEventPublisherPort;
 import com.cosplayjournal.application.port.out.EventRepositoryPort;
 import com.cosplayjournal.application.port.out.ParticipationRepositoryPort;
@@ -9,10 +10,12 @@ import com.cosplayjournal.domain.event.ParticipantJoinedEvent;
 import com.cosplayjournal.domain.event.ParticipationCreatedEvent;
 import com.cosplayjournal.domain.exception.CosplayNotFoundException;
 import com.cosplayjournal.domain.exception.EventNotFoundException;
+import com.cosplayjournal.domain.exception.ForbiddenAccessException;
 import com.cosplayjournal.domain.exception.ParticipationNotFoundException;
 import com.cosplayjournal.domain.model.Cosplay;
 import com.cosplayjournal.domain.model.event.Event;
 import com.cosplayjournal.domain.model.participation.*;
+import com.cosplayjournal.domain.model.user.UserId;
 import com.cosplayjournal.domain.service.ParticipationValidationDomainService;
 
 import java.util.List;
@@ -28,6 +31,7 @@ public class ParticipationApplicationService implements
     private final EventRepositoryPort eventRepositoryPort;
     private final CosplayRepositoryPort cosplayRepositoryPort;
     private final DomainEventPublisherPort eventPublisherPort;
+    private final CurrentUserPort currentUserPort;
     private final ParticipationValidationDomainService validationDomainService;
 
     public ParticipationApplicationService(
@@ -35,12 +39,14 @@ public class ParticipationApplicationService implements
             EventRepositoryPort eventRepositoryPort,
             CosplayRepositoryPort cosplayRepositoryPort,
             DomainEventPublisherPort eventPublisherPort,
+            CurrentUserPort currentUserPort,
             ParticipationValidationDomainService validationDomainService
     ) {
         this.participationRepositoryPort = participationRepositoryPort;
         this.eventRepositoryPort = eventRepositoryPort;
         this.cosplayRepositoryPort = cosplayRepositoryPort;
         this.eventPublisherPort = eventPublisherPort;
+        this.currentUserPort = currentUserPort;
         this.validationDomainService = validationDomainService != null ? validationDomainService : new ParticipationValidationDomainService();
     }
 
@@ -49,21 +55,33 @@ public class ParticipationApplicationService implements
             EventRepositoryPort eventRepositoryPort,
             CosplayRepositoryPort cosplayRepositoryPort
     ) {
-        this(participationRepositoryPort, eventRepositoryPort, cosplayRepositoryPort, event -> {}, new ParticipationValidationDomainService());
+        this(
+                participationRepositoryPort, eventRepositoryPort, cosplayRepositoryPort,
+                event -> {},
+                new CurrentUserPort() {
+                    @Override public java.util.Optional<UserId> getCurrentUserId() { return java.util.Optional.of(UserId.of("system-default")); }
+                    @Override public UserId getRequiredCurrentUserId() { return UserId.of("system-default"); }
+                    @Override public boolean isAuthenticated() { return true; }
+                    @Override public boolean isAdmin() { return false; }
+                },
+                new ParticipationValidationDomainService()
+        );
     }
 
     @Override
     public Participation createParticipation(CreateParticipationCommand command) {
+        UserId currentUserId = currentUserPort.getRequiredCurrentUserId();
+
         Event event = eventRepositoryPort.findById(command.eventId())
                 .orElseThrow(() -> new EventNotFoundException(command.eventId()));
 
         Cosplay cosplay = cosplayRepositoryPort.findById(command.cosplayId())
                 .orElseThrow(() -> new CosplayNotFoundException(command.cosplayId()));
 
-        Participant leader = Participant.createLeader(command.leaderUserId(), command.leaderName());
+        Participant leader = Participant.createLeader(currentUserId.value(), command.leaderName());
         ParticipationId newId = ParticipationId.generate();
 
-        Participation participation = Participation.create(newId, event.getId(), cosplay.getId(), command.type(), leader);
+        Participation participation = Participation.create(newId, currentUserId, event.getId(), cosplay.getId(), command.type(), leader);
         if (command.groupName() != null && !command.groupName().trim().isEmpty()) {
             participation.setGroupName(command.groupName());
         }
@@ -91,8 +109,14 @@ public class ParticipationApplicationService implements
     @Override
     public Participation joinParticipation(JoinParticipationCommand command) {
         Participation participation = getParticipationById(command.participationId());
-        Participant newParticipant = Participant.create(command.userId(), command.name(), command.role());
+        UserId currentUserId = currentUserPort.getRequiredCurrentUserId();
 
+        // El usuario solo puede unirse a sí mismo o el creador/admin gestiona miembros
+        if (!currentUserId.value().equalsIgnoreCase(command.userId()) && !participation.isCreatedBy(currentUserId) && !currentUserPort.isAdmin()) {
+            throw new ForbiddenAccessException("No dispone de permisos para unir a otro usuario a esta participación");
+        }
+
+        Participant newParticipant = Participant.create(command.userId(), command.name(), command.role());
         participation.addParticipant(newParticipant);
 
         Event event = eventRepositoryPort.findById(participation.getEventId()).orElse(null);
@@ -109,16 +133,26 @@ public class ParticipationApplicationService implements
     @Override
     public Participation leaveParticipation(LeaveParticipationCommand command) {
         Participation participation = getParticipationById(command.participationId());
-        participation.removeParticipant(command.userId());
+        UserId currentUserId = currentUserPort.getRequiredCurrentUserId();
 
+        if (!currentUserId.value().equalsIgnoreCase(command.userId()) && !participation.isCreatedBy(currentUserId) && !currentUserPort.isAdmin()) {
+            throw new ForbiddenAccessException("No dispone de permisos para retirar a otro usuario de esta participación");
+        }
+
+        participation.removeParticipant(command.userId());
         return participationRepositoryPort.save(participation);
     }
 
     @Override
     public Participation assignCharacter(AssignCharacterCommand command) {
         Participation participation = getParticipationById(command.participationId());
-        participation.assignCharacterToParticipant(command.userId(), command.characterName());
+        UserId currentUserId = currentUserPort.getRequiredCurrentUserId();
 
+        if (!participation.isCreatedBy(currentUserId) && !currentUserId.value().equalsIgnoreCase(command.userId()) && !currentUserPort.isAdmin()) {
+            throw new ForbiddenAccessException("No dispone de permisos para asignar personajes en esta participación");
+        }
+
+        participation.assignCharacterToParticipant(command.userId(), command.characterName());
         return participationRepositoryPort.save(participation);
     }
 }

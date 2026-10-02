@@ -11,10 +11,13 @@ public class EventJpaEntity {
     @Column(name = "id", nullable = false, length = 100)
     private String id;
 
+    @Column(name = "external_id", length = 100)
+    private String externalId;
+
     @Column(name = "name", nullable = false, length = 150)
     private String name;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description", length = 1000)
     private String description;
 
     @Column(name = "start_date", nullable = false)
@@ -32,7 +35,7 @@ public class EventJpaEntity {
     @Column(name = "province", length = 100)
     private String province;
 
-    @Column(name = "country", nullable = false, length = 100)
+    @Column(name = "country", length = 100)
     private String country;
 
     @Column(name = "address", length = 255)
@@ -56,8 +59,26 @@ public class EventJpaEntity {
     public EventJpaEntity() {
     }
 
-    public EventJpaEntity(String id, String name, String description, LocalDate startDate, LocalDate endDate, String city, String venue, String province, String country, String address, Double latitude, Double longitude, String website, String source, String status) {
+    public EventJpaEntity(
+            String id,
+            String externalId,
+            String name,
+            String description,
+            LocalDate startDate,
+            LocalDate endDate,
+            String city,
+            String venue,
+            String province,
+            String country,
+            String address,
+            Double latitude,
+            Double longitude,
+            String website,
+            String source,
+            String status
+    ) {
         this.id = id;
+        this.externalId = externalId;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
@@ -80,6 +101,14 @@ public class EventJpaEntity {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     public String getName() {
