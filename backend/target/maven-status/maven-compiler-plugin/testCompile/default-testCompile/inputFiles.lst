@@ -14,6 +14,7 @@ C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjou
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\domain\ParticipationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\domain\PhotoTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\domain\UserTest.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\AbstractTestcontainersIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\kafka\ParticipantJoinedKafkaConsumerAdapterTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\rest\admin\AdminEventControllerIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\rest\auth\AuthControllerIntegrationTest.java
@@ -33,3 +34,6 @@ C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjou
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\out\persistence\PhotoJpaAdapterIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\out\persistence\UserJpaAdapterIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\out\security\JwtTokenProviderAdapterTest.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\EndToEndIntegrationWorkflowTest.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\KafkaMessagingIntegrationTest.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\PostgresFlywayRepositoryIntegrationTest.java
