@@ -1,12 +1,13 @@
 package com.cosplayjournal.infrastructure.adapter.in.rest.mapper;
 
+import com.cosplayjournal.application.port.in.AssignCharacterCommand;
 import com.cosplayjournal.application.port.in.CreateParticipationCommand;
+import com.cosplayjournal.application.port.in.JoinParticipationCommand;
 import com.cosplayjournal.domain.model.event.EventId;
 import com.cosplayjournal.domain.model.participation.Participant;
 import com.cosplayjournal.domain.model.participation.Participation;
-import com.cosplayjournal.infrastructure.adapter.in.rest.dto.CreateParticipationRequest;
-import com.cosplayjournal.infrastructure.adapter.in.rest.dto.ParticipantResponse;
-import com.cosplayjournal.infrastructure.adapter.in.rest.dto.ParticipationResponse;
+import com.cosplayjournal.domain.model.participation.ParticipationId;
+import com.cosplayjournal.infrastructure.adapter.in.rest.dto.*;
 
 import java.util.List;
 
@@ -20,6 +21,23 @@ public class ParticipationRestMapper {
                 request.leaderUserId(),
                 request.leaderName(),
                 request.groupName()
+        );
+    }
+
+    public static JoinParticipationCommand toJoinCommand(String id, JoinParticipationRequest request) {
+        return new JoinParticipationCommand(
+                ParticipationId.of(id),
+                request.userId(),
+                request.name(),
+                request.role()
+        );
+    }
+
+    public static AssignCharacterCommand toAssignCharacterCommand(String id, AssignCharacterRequest request) {
+        return new AssignCharacterCommand(
+                ParticipationId.of(id),
+                request.userId(),
+                request.characterName()
         );
     }
 

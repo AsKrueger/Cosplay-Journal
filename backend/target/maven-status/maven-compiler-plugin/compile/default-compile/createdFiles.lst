@@ -1,6 +1,7 @@
 com\cosplayjournal\domain\model\event\Event.class
 com\cosplayjournal\infrastructure\adapter\in\rest\EventController.class
 com\cosplayjournal\application\port\in\CreateParticipationUseCase.class
+com\cosplayjournal\infrastructure\adapter\out\external\listadomanga\exception\ListadoMangaUnavailableException.class
 com\cosplayjournal\application\service\ParticipationApplicationService.class
 com\cosplayjournal\infrastructure\adapter\in\rest\mapper\EventRestMapper.class
 com\cosplayjournal\application\port\in\CreateParticipationCommand.class
@@ -124,6 +125,7 @@ com\cosplayjournal\application\port\in\JoinParticipationCommand.class
 com\cosplayjournal\application\port\in\GetCosplayUseCase.class
 com\cosplayjournal\infrastructure\adapter\in\rest\dto\AuthTokenResponse.class
 com\cosplayjournal\domain\model\CosplayStatus.class
+com\cosplayjournal\infrastructure\config\OpenApiConfig.class
 com\cosplayjournal\application\service\CosplayApplicationService.class
 com\cosplayjournal\domain\model\user\UserRole.class
 com\cosplayjournal\infrastructure\adapter\out\messaging\kafka\dto\PhotoUploadedMessage.class

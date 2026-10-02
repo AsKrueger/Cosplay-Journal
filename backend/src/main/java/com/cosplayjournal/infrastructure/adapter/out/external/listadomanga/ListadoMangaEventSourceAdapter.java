@@ -2,12 +2,14 @@ package com.cosplayjournal.infrastructure.adapter.out.external.listadomanga;
 
 import com.cosplayjournal.application.dto.ExternalEventData;
 import com.cosplayjournal.application.port.out.ExternalEventSourcePort;
+import com.cosplayjournal.infrastructure.adapter.out.external.listadomanga.exception.ListadoMangaUnavailableException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +29,11 @@ public class ListadoMangaEventSourceAdapter implements ExternalEventSourcePort {
     private static final Logger log = LoggerFactory.getLogger(ListadoMangaEventSourceAdapter.class);
 
     private final String baseUrl;
-    private final int timeoutMs;
+    private final int connectTimeoutMs;
+    private final int readTimeoutMs;
+    private final boolean retryEnabled;
+    private final int maxAttempts;
+    private final long backoffMs;
 
     private static final Map<String, Month> SPANISH_MONTHS = Map.ofEntries(
             Map.entry("enero", Month.JANUARY), Map.entry("ene", Month.JANUARY),
@@ -44,27 +50,58 @@ public class ListadoMangaEventSourceAdapter implements ExternalEventSourcePort {
             Map.entry("diciembre", Month.DECEMBER), Map.entry("dic", Month.DECEMBER)
     );
 
+    @Autowired
     public ListadoMangaEventSourceAdapter(
             @Value("${integrations.listadomanga.url:https://www.listadomanga.es/salones.php}") String baseUrl,
-            @Value("${integrations.listadomanga.connect-timeout:5000}") int timeoutMs
+            @Value("${integrations.listadomanga.connect-timeout:5000}") int connectTimeoutMs,
+            @Value("${integrations.listadomanga.read-timeout:10000}") int readTimeoutMs,
+            @Value("${integrations.listadomanga.retry.enabled:true}") boolean retryEnabled,
+            @Value("${integrations.listadomanga.retry.max-attempts:3}") int maxAttempts,
+            @Value("${integrations.listadomanga.retry.backoff-ms:1000}") long backoffMs
     ) {
         this.baseUrl = baseUrl;
-        this.timeoutMs = timeoutMs;
+        this.connectTimeoutMs = connectTimeoutMs;
+        this.readTimeoutMs = readTimeoutMs;
+        this.retryEnabled = retryEnabled;
+        this.maxAttempts = Math.max(1, maxAttempts);
+        this.backoffMs = backoffMs;
+    }
+
+    public ListadoMangaEventSourceAdapter(String baseUrl, int timeoutMs) {
+        this(baseUrl, timeoutMs, timeoutMs, true, 3, 100L);
     }
 
     @Override
     public List<ExternalEventData> fetchEvents() {
-        try {
-            log.info("Conectando a fuente ListadoManga en URL: {}", baseUrl);
-            Document doc = Jsoup.connect(baseUrl)
-                    .timeout(timeoutMs)
-                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) CosplayJournalBot/1.0")
-                    .get();
-            return parseHtmlDocument(doc);
-        } catch (IOException e) {
-            log.error("Error al descargar HTML desde ListadoManga URL '{}': {}", baseUrl, e.getMessage());
-            throw new RuntimeException("No se pudo conectar a la fuente externa ListadoManga", e);
+        int attempts = retryEnabled ? maxAttempts : 1;
+        IOException lastException = null;
+
+        for (int attempt = 1; attempt <= attempts; attempt++) {
+            try {
+                log.info("Conectando a fuente ListadoManga [Intento {}/{}]: {}", attempt, attempts, baseUrl);
+                Document doc = Jsoup.connect(baseUrl)
+                        .timeout(connectTimeoutMs + readTimeoutMs)
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) CosplayJournalBot/1.0")
+                        .get();
+                return parseHtmlDocument(doc);
+            } catch (IOException e) {
+                lastException = e;
+                log.warn("[Intento {}/{}] Falló la conexión con ListadoManga URL '{}': {}", attempt, attempts, baseUrl, e.getMessage());
+
+                if (attempt < attempts && retryEnabled) {
+                    long sleepTime = backoffMs * (1L << (attempt - 1));
+                    try {
+                        Thread.sleep(sleepTime);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        throw new ListadoMangaUnavailableException("Interrumpido durante la espera de reintento de ListadoManga", ie);
+                    }
+                }
+            }
         }
+
+        log.error("Todos los reintentos ({}/{}) fallaron para la fuente ListadoManga en URL '{}'", attempts, attempts, baseUrl);
+        throw new ListadoMangaUnavailableException("No se pudo conectar a la fuente externa ListadoManga tras " + attempts + " intentos", lastException);
     }
 
     public List<ExternalEventData> parseHtmlContent(String htmlContent) {
