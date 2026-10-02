@@ -22,6 +22,7 @@ C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjou
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\rest\ParticipationControllerIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\rest\PhotoControllerIntegrationTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\in\scheduler\ScheduledEventSynchronizationAdapterTest.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\out\external\listadomanga\ListadoMangaEventSourceAdapterResilienceTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\out\external\listadomanga\ListadoMangaEventSourceAdapterTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\out\messaging\kafka\KafkaDomainEventPublisherAdapterTest.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\test\java\com\cosplayjournal\infrastructure\adapter\out\messaging\kafka\KafkaEventMapperTest.java

@@ -21,6 +21,7 @@ com\cosplayjournal\infrastructure\adapter\in\rest\PhotoControllerIntegrationTest
 com\cosplayjournal\infrastructure\adapter\in\rest\auth\AuthControllerIntegrationTest.class
 com\cosplayjournal\application\CosplayApplicationServiceTest.class
 com\cosplayjournal\infrastructure\adapter\out\persistence\CosplayJpaAdapterIntegrationTest.class
+com\cosplayjournal\infrastructure\adapter\out\external\listadomanga\ListadoMangaEventSourceAdapterResilienceTest.class
 com\cosplayjournal\infrastructure\adapter\out\security\JwtTokenProviderAdapterTest.class
 com\cosplayjournal\domain\CosplayTest.class
 com\cosplayjournal\domain\EventDateRangeTest.class
