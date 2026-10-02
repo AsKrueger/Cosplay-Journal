@@ -30,3 +30,4 @@ com\cosplayjournal\domain\ParticipantTest.class
 com\cosplayjournal\domain\ParticipationTest.class
 com\cosplayjournal\application\ImportExternalEventsServiceTest.class
 com\cosplayjournal\application\PhotoApplicationServiceTest.class
+com\cosplayjournal\infrastructure\adapter\in\scheduler\ScheduledEventSynchronizationAdapterTest.class

@@ -149,6 +149,7 @@ com\cosplayjournal\infrastructure\adapter\out\messaging\kafka\adapter\KafkaDomai
 com\cosplayjournal\application\port\out\CurrentUserPort.class
 com\cosplayjournal\application\service\ImportExternalEventsService.class
 com\cosplayjournal\application\port\in\GetPhotoUseCase.class
+com\cosplayjournal\infrastructure\adapter\in\scheduler\ScheduledEventSynchronizationAdapter.class
 com\cosplayjournal\infrastructure\adapter\out\persistence\entity\CosplayJpaEntity.class
 com\cosplayjournal\infrastructure\adapter\out\persistence\entity\PhotoJpaEntity.class
 com\cosplayjournal\domain\event\CosplayCreatedEvent.class

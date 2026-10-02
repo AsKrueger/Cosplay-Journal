@@ -121,6 +121,7 @@ C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjou
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\in\rest\PhotoController.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\in\rest\security\JwtAuthenticationFilter.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\in\rest\security\SpringSecurityConfig.java
+C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\in\scheduler\ScheduledEventSynchronizationAdapter.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\out\external\listadomanga\ListadoMangaEventSourceAdapter.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\out\messaging\kafka\adapter\KafkaDomainEventPublisherAdapter.java
 C:\Users\lovei\Documents\XD\Cosplay-Journal\backend\src\main\java\com\cosplayjournal\infrastructure\adapter\out\messaging\kafka\dto\EventUpdatedMessage.java
