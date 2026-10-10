@@ -1,0 +1,52 @@
+name: Cosplay Journal Backend CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - 'feature/**'
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-and-test:
+    name: Build, Test & Quality Pipeline
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21 LTS (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Grant Execute Permission for Maven Wrapper
+        run: chmod +x backend/mvnw
+
+      - name: Build and Run Tests (Unit, Architecture, Resilience, Testcontainers)
+        run: |
+          cd backend
+          ./mvnw clean verify -B
+
+      - name: Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-test-reports
+          path: backend/target/surefire-reports/
+          retention-days: 7
+
+      - name: Upload Build Artifact (JAR)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cosplay-journal-backend-jar
+          path: backend/target/*.jar
+          retention-days: 7
