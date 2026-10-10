@@ -28,6 +28,7 @@ El proyecto evoluciona hacia una arquitectura cliente-servidor basada en **Arqui
 - **Integraciones Externas:** Scraper ListadoManga + Jsoup + Sincronización Idempotente ([docs/integrations/LISTADOMANGA.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/integrations/LISTADOMANGA.md))
 - **Resiliencia & Operaciones:** Timeouts, Reintentos con Backoff Exponencial y Scheduler ([docs/operations/RESILIENCE.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/operations/RESILIENCE.md) / [docs/operations/OBSERVABILITY.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/operations/OBSERVABILITY.md))
 - **API REST & Contrato OpenAPI:** Especificación OpenAPI 3.0 / Swagger UI / `/api/v1/` ([docs/api/API.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/api/API.md))
+- **CI/CD & Calidad Automatizada:** GitHub Actions, Maven Wrapper (`mvnw`), Testcontainers (PostgreSQL 16 & Kafka) ([docs/ci/CI_CD.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/ci/CI_CD.md) / [docs/testing/TESTCONTAINERS.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/testing/TESTCONTAINERS.md))
 - **Cliente Móvil:** Android (Jetpack Compose, Material 3, Coroutines)
 - **DevOps & Infraestructura:** Docker, Docker Compose, Kubernetes, GitHub Actions
 - **Testing:** JUnit 5, Mockito, Testcontainers
@@ -46,13 +47,15 @@ La documentación detallada del proyecto se encuentra en el directorio [`docs/`]
 - ⚡ [**Mensajería y Eventos Kafka**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/messaging/KAFKA.md) — Topics, DTOs de mensajería, claves y consumidores asíncronos.
 - ⚙️ [**Casos de Uso e Integración API**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/use-cases/USE_CASES.md) — Servicios de aplicación, puertos de entrada/salida y endpoints REST.
 - 📖 [**Especificación de API REST (OpenAPI 3)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/api/API.md) — Swagger UI, contratos, DTOs, esquemas JWT y códigos HTTP.
+- 🚀 [**Integración Continua (CI/CD)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/ci/CI_CD.md) — Pipeline de GitHub Actions, Maven Wrapper, Testcontainers e informes.
+- 🧪 [**Testing con Testcontainers**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/testing/TESTCONTAINERS.md) — Integración sobre contenedores efímeros de PostgreSQL 16 y Kafka.
 - 🔒 [**Seguridad y Autenticación**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/security/SECURITY.md) — Modelo de tokens JWT, BCrypt, roles y filtros.
 - 🛡️ [**Propiedad de Recursos (Ownership)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/security/AUTHORIZATION.md) — Abstracción `CurrentUserPort`, matriz de permisos y respuestas 403 Forbidden.
 - 🌐 [**Integración Externa ListadoManga**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/integrations/LISTADOMANGA.md) — Scraper Jsoup, clave externa, sincronización e idempotencia.
 - 🏥 [**Resiliencia y Timeouts**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/operations/RESILIENCE.md) — Reintentos exponenciales, timeouts HTTP y excepciones técnicas.
 - 📊 [**Observabilidad y Métricas**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/operations/OBSERVABILITY.md) — Métricas Micrometer, Spring Boot Actuator y salud del sistema.
 - 🗄️ [**Esquema de Base de Datos**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/database/DATABASE.md) — Tablas, índices, claves y Docker Compose local.
-- 📋 [**Auditoría y Decisiones (ADR)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/AUDIT_AND_DECISIONS.md) — Decisiones técnicas ([ADR 0001](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0001-architecture-and-product-redefinition.md) - [ADR 0011](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0011-openapi-api-contract-and-swagger.md)).
+- 📋 [**Auditoría y Decisiones (ADR)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/AUDIT_AND_DECISIONS.md) — Decisiones técnicas ([ADR 0001](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0001-architecture-and-product-redefinition.md) - [ADR 0013](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0013-github-actions-ci-pipeline.md)).
 - 📋 [**Próximas Issues**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/NEXT_ISSUES.md) — Backlog detallado de tareas de implementación.
 
 ---
@@ -74,7 +77,9 @@ La documentación detallada del proyecto se encuentra en el directorio [`docs/`]
 - ✅ **Issue #12 (Automatización de la sincronización y configuración operativa):** Completada.
 - ✅ **Issue #13 (Resiliencia, timeouts y control de fallos de la fuente externa):** Completada.
 - ✅ **Issue #14 (Contrato de API REST y documentación OpenAPI):** Completada.
-- 🚀 **Próxima:** **Issue #15 (Integración del Cliente Móvil Android con la API REST)**.
+- ✅ **Issue #15 (Testing de integración con Testcontainers):** Completada.
+- ✅ **Issue #16 (CI/CD y calidad automatizada con GitHub Actions):** Completada.
+- 🚀 **Próxima:** **Issue #17 (Integración del Cliente Móvil Android con la API REST)**.
 
 ---
 Desarrollado con ❤️ para la comunidad de cosplay.
