@@ -23,6 +23,10 @@ class EventViewModel(
     private val _events = MutableStateFlow<List<Event>>(emptyList())
     val events: StateFlow<List<Event>> = _events
 
+    private val _loadError = MutableStateFlow(false)
+    /** true cuando la última carga desde el backend ha fallado. */
+    val loadError: StateFlow<Boolean> = _loadError
+
     val userEventData: StateFlow<List<UserEventData>> = cosplayRepository.allUserEventData.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -33,9 +37,27 @@ class EventViewModel(
         loadEvents()
     }
 
-    private fun loadEvents() {
+    /**
+     * Muestra primero lo que hay en el backend y, después, pide una sincronización con ListadoManga
+     * y vuelve a cargar. Si la sincronización falla, se conserva lo ya mostrado.
+     */
+    fun loadEvents() {
         viewModelScope.launch {
-            _events.value = repository.getEvents()
+            try {
+                _events.value = repository.getEvents()
+                _loadError.value = false
+            } catch (e: Exception) {
+                // No se conservan datos anteriores: un catálogo desactualizado induce a error
+                _events.value = emptyList()
+                _loadError.value = true
+                return@launch
+            }
+            try {
+                repository.refresh()
+                _events.value = repository.getEvents()
+            } catch (e: Exception) {
+                // La sincronización es opcional: el catálogo mostrado sigue siendo válido
+            }
         }
     }
 

@@ -16,6 +16,8 @@ data class ProfileUiState(
     val totalEvents: Int = 0,
     val favoriteCosplays: List<Cosplay> = emptyList(),
     val favoriteEvents: List<Event> = emptyList(),
+    /** Estado de participación del usuario por id de evento (ATTENDING, ATTENDED, INTERESTED, PLANNING, NONE). */
+    val favoriteEventStatus: Map<String, String> = emptyMap(),
     val allCosplays: List<Cosplay> = emptyList(),
     val allCosplans: List<Cosplan> = emptyList()
 )
@@ -39,7 +41,7 @@ class ProfileViewModel(
                 cosplayRepository.favoriteCosplays,
                 cosplayRepository.allUserEventData,
                 cosplayRepository.allCosplays,
-                flow { emit(eventRepository.getEvents()) }
+                flow { emit(runCatching { eventRepository.getEvents() }.getOrDefault(emptyList())) }
             ) { cosplans, favCosplays, userEventData, allCosplays, allEvents ->
                 
                 val favEventIds = userEventData.filter { it.isFavorite }.map { it.eventId }
@@ -50,6 +52,7 @@ class ProfileViewModel(
                     totalEvents = favEvents.size,
                     favoriteCosplays = favCosplays,
                     favoriteEvents = favEvents,
+                    favoriteEventStatus = userEventData.associate { it.eventId to it.status },
                     allCosplays = allCosplays,
                     allCosplans = cosplans
                 )
