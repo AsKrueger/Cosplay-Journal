@@ -16,7 +16,7 @@ import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
 /** Subconjunto de la API REST del backend (`/api/v1`) que usa la app. */
-interface CosplayJournalApi {
+interface CosplayJournalApi : FriendsApi {
 
     @GET("api/v1/events")
     suspend fun getEvents(
