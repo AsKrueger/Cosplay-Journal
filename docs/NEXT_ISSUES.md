@@ -1,5 +1,7 @@
 # Próximas Issues de Implementación — Cosplay Journal
 
+> **Documento histórico.** Este backlog se redactó al inicio del proyecto y todavía menciona Gradle, aunque el backend usa Maven. El estado vigente y las tareas pendientes están en las [issues de GitHub](https://github.com/AsKrueger/Cosplay-Journal/issues).
+
 A continuación se detallan las especificaciones técnicas de las próximas tareas listas para desarrollo tras la finalización de la **Issue #0**.
 
 ---

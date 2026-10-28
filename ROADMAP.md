@@ -14,7 +14,7 @@ La evolución de **Cosplay Journal** se divide en fases consecutivas e increment
 
 ## 🏗️ Fase 1: Arquitectura Base del Backend Hexagonal (Issue #1)
 - Creación de la estructura del proyecto Java 21 / Spring Boot 3 con módulos Hexagonales.
-- Configuración de Gradle, JUnit 5, Mockito y Jacoco.
+- Configuración de Maven, JUnit 5, Mockito y Jacoco.
 - Definición de entidades de dominio puras: `Event`, `CosplayProject`, `Participation`.
 - Definición de Puertos de Entrada (`Inbound Ports`) y Puertos de Salida (`Outbound Ports`).
 - Tests unitarios de dominio sin dependencias externas (100% cobertura en dominio).
