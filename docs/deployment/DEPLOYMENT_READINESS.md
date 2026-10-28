@@ -70,6 +70,8 @@ Para evolucionar la Integración Continua actual ([`.github/workflows/backend-ci
 1. **Fase Inicial MVP / Portfolio (Fase Actual):** Desplegar en **PaaS (Render / Railway / Fly.io)** o **AWS ECS Fargate + RDS PostgreSQL** usando la imagen [`Dockerfile`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/Dockerfile) recién creada. Esto mantiene los costes por debajo de **$15/mes** sin comprometer la arquitectura.
 2. **Fase Enterprise / Escala (> 10.000 usuarios activos):** Migrar a **AWS App Runner / EKS + Amazon RDS Multi-AZ + Amazon MSK** cuando la carga y alta disponibilidad lo justifiquen.
 
+Para una alternativa de coste cero con límites verificados, ver [`COST_OPTIMIZED_ARCHITECTURE.md`](COST_OPTIMIZED_ARCHITECTURE.md). Sustituye la estimación de la fase inicial por cuotas comprobadas en fuentes oficiales.
+
 ### Próximas Tareas Recomendadas:
 1. **[Fase Android] Issue #17:** Integración del Cliente Móvil Android con la API REST de Cosplay Journal.
 2. **[Fase Media] Issue #18:** Integración de Amazon S3 / MinIO para el almacenamiento real de fotografías de cosplay ([`PhotoStoragePort`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/application/port/out/PhotoRepositoryPort.java)).
