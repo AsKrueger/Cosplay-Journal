@@ -46,18 +46,22 @@ Se descarta el plan gratuito de Render Postgres porque las bases de datos gratui
 | Proveedor | Cuota Gratuita / Precio | Persistencia | Copias de Seguridad | Riesgo / Recomendación |
 |---|---|---|---|---|
 | **Neon PostgreSQL** | 0,5 GB de almacenamiento y 100 CU-hora/mes de cómputo por proyecto ($0/mes) | El plan gratuito no expira; al agotar la cuota mensual se suspende el cómputo hasta el siguiente ciclo | **Sin copias diarias en el plan gratuito.** Solo una ventana de historial de 6 horas (1 GB) y 1 snapshot manual. Requiere `pg_dump` periódico propio | **RECOMENDADO ($0/mes)**, con 0,5 GB como límite duro y copias externas obligatorias |
-| **Supabase Postgres** | 500 MB de base de datos, máximo 2 proyectos activos ($0/mes) | Se pausa tras 1 semana de inactividad; los datos no se borran, pero la base no responde hasta reactivarla | Manual con `pg_dump` | Aceptable con reactivación manual |
-| **Railway Postgres** | Crédito de prueba único de 5 $; no hay plan gratuito permanente. Después, plan Hobby desde 5 $/mes | Persistente | Automáticas | **Descartado para $0/mes** |
+| **Supabase Postgres** | 500 MB de base de datos, 5 GB de egreso según la tabla oficial (fuentes de terceros dan 10 GB), máximo 2 proyectos activos ($0/mes) | Se pausa tras 1 semana de inactividad; los datos no se borran, pero la base no responde hasta reactivarla | Manual con `pg_dump` | Aceptable con reactivación manual |
+| **Railway Postgres** | Prueba de 30 días con 5 $ únicos. Después, plan Free con 1 $/mes de crédito que no se acumula, o Hobby desde 5 $/mes. Los volúmenes de cuentas de prueba se eliminan 30 días después de agotar el crédito | Persistente mientras la cuenta esté activa | Automáticas | **Descartado para $0/mes**: el crédito de 1 $ no garantiza un servicio siempre activo |
 | **Oracle Always Free** | 200 GB de volúmenes de bloque en total (arranque y datos), y 2 bases Autonomous de 20 GB cada una según páginas regionales de Oracle | Persistente | Hasta 5 copias de volumen incluidas en el límite; sin copias automáticas de la base sin configurar | Viable, pero requiere mantener una VM o gestionar la base de forma propia |
 
 ---
 
 ## 5. Alojamiento del Backend Java 21 (PaaS vs Serverless)
 
-- **Render / Railway / Fly.io (Plan Free / Starter):**
-  - Ejecución de la imagen Docker `eclipse-temurin:21-jre-alpine` (300 MB - 512 MB RAM).
-  - Suspensión tras 15 min de inactividad (Cold start de ~10-15s en Render Free).
-  - Coste: **0 €/mes** (Render) o **<$5/mes** (Railway / Fly.io).
+- **Render (Plan Free):**
+  - Ejecución de la imagen Docker `eclipse-temurin:21-jre-alpine`. **La cifra de RAM no está confirmada** en las fuentes consultadas.
+  - Se suspende tras 15 minutos sin tráfico entrante. Vuelve en unos segundos al recibir una petición (cold start).
+  - 750 horas de instancia gratuitas al mes. Las horas suspendidas no cuentan.
+  - **Sistema de archivos efímero:** todo fichero escrito en disco (por ejemplo, imágenes subidas) se pierde en cada redeploy, reinicio o suspensión.
+  - Coste: **0 €/mes**.
+- **Railway (Plan Free tras la prueba):** 0,5 GB de RAM y 1 vCPU por servicio, con 1 $ de crédito mensual que no se acumula. Tras 30 días o al agotar los 5 $ de prueba, el servicio pasa a este plan. Un backend que esté siempre activo puede agotar ese crédito. **Riesgo de cargo** si se pasa a Hobby (5 $/mes).
+- **Fly.io:** no revisado en esta pasada.
 
 ---
 
@@ -121,11 +125,14 @@ Revisión del 28/10/2026 contra las fuentes oficiales indicadas. Los precios cam
 - Render: [expiración de bases gratuitas a 30 días](https://render.com/changelog/free-postgresql-instances-now-expire-after-30-days-previously-90) y [planes gratuitos](https://render.com/docs/free).
 - Upstash Kafka: [precios](https://upstash.com/pricing/kafka) y [documentación](https://upstash.com/docs/kafka/overall/pricing).
 - Supabase: [precios](https://supabase.com/pricing) (500 MB, pausa tras una semana de inactividad).
-- Railway: [planes](https://docs.railway.com/pricing/plans) (crédito de prueba único de 5 $).
+- Railway: [planes](https://docs.railway.com/pricing/plans), [prueba gratuita](https://docs.railway.com/pricing/free-trial) (prueba de 30 días con 5 $, plan Free con 0,5 GB de RAM y 1 $/mes de crédito).
+- Render: [planes gratuitos](https://render.com/docs/free) (suspensión tras 15 minutos, sistema de archivos efímero, 750 horas al mes).
+- Supabase: tabla de egreso de [precios](https://supabase.com/pricing) (5 GB para el plan Free).
 - Cloudinary: [facturación](https://cloudinary.com/documentation/billing_and_plans) (pool de créditos mensuales).
 
 **Pendiente de verificar en la página oficial:**
-- Tamaño de RAM y suspensión por inactividad de Render y Railway (sección 5). No se han revisado en esta pasada.
-- Egreso de Supabase: las fuentes de terceros dan cifras distintas.
+- RAM del plan gratuito de Render: no confirmada.
+- Fly.io: no revisado.
+- Egreso de Supabase: 5 GB según la tabla oficial, pero las fuentes de terceros dan 10 GB. Confirmar en la página de precios antes de desplegar.
 - Bases Autonomous de 20 GB de Oracle: solo confirmadas en páginas regionales y guías de terceros.
 - Uso del historial de Neon: las páginas antiguas de neon.tech dan 24 horas o 7 días; la vigente indica 6 horas.
