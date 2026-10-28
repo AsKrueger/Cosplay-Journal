@@ -1,7 +1,7 @@
 package com.cosplayjournal.app.ui.viewmodel
 
 import com.cosplayjournal.app.data.model.Event
-import com.cosplayjournal.app.data.repository.CosplayRepository
+import com.cosplayjournal.app.data.repository.UserEventRepository
 import com.cosplayjournal.app.data.repository.EventRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -28,14 +28,14 @@ class EventViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
     private lateinit var repository: EventRepository
-    private lateinit var cosplayRepository: CosplayRepository
+    private lateinit var userEventRepository: UserEventRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
         repository = mockk()
-        cosplayRepository = mockk()
-        every { cosplayRepository.allUserEventData } returns flowOf(emptyList())
+        userEventRepository = mockk()
+        every { userEventRepository.all } returns flowOf(emptyList())
     }
 
     @After
@@ -47,7 +47,7 @@ class EventViewModelTest {
     fun `si falla la primera carga, muestra error y lista vacia`() = runTest(dispatcher) {
         coEvery { repository.getEvents() } throws IOException("sin conexion")
 
-        val viewModel = EventViewModel(repository, cosplayRepository)
+        val viewModel = EventViewModel(repository, userEventRepository)
         advanceUntilIdle()
 
         assertTrue(viewModel.loadError.value)
@@ -59,7 +59,7 @@ class EventViewModelTest {
         coEvery { repository.getEvents() } returns listOf(event("1"))
         coEvery { repository.refresh() } throws IOException("backend ocupado")
 
-        val viewModel = EventViewModel(repository, cosplayRepository)
+        val viewModel = EventViewModel(repository, userEventRepository)
         advanceUntilIdle()
 
         assertFalse(viewModel.loadError.value)
@@ -74,7 +74,7 @@ class EventViewModelTest {
         )
         coEvery { repository.refresh() } returns Unit
 
-        val viewModel = EventViewModel(repository, cosplayRepository)
+        val viewModel = EventViewModel(repository, userEventRepository)
         advanceUntilIdle()
 
         coVerify(exactly = 1) { repository.refresh() }
