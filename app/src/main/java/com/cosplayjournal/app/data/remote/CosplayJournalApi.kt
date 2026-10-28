@@ -21,9 +21,13 @@ interface CosplayJournalApi {
         @Query("size") size: Int = PAGE_SIZE
     ): RemoteEventPage
 
-    /** Pide al backend que sincronice con ListadoManga si la última sincronización es antigua. */
+    /** Pide al backend que sincronice con ListadoManga en segundo plano. Responde 202 de inmediato. */
     @POST("api/v1/events/refresh")
     suspend fun refreshEvents(): Response<Unit>
+
+    /** Estado de la sincronización en curso. */
+    @GET("api/v1/events/refresh")
+    suspend fun refreshStatus(): RemoteRefreshStatus
 
     companion object {
         const val PAGE_SIZE = 100
@@ -44,6 +48,12 @@ interface CosplayJournalApi {
         }
     }
 }
+
+/** Equivale a `RefreshStatus` del backend. Solo interesa si hay una sincronización en curso. */
+@Serializable
+data class RemoteRefreshStatus(
+    val running: Boolean
+)
 
 /** Equivale a `PageResult<EventResponse>` del backend. */
 @Serializable

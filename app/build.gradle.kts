@@ -6,6 +6,10 @@ plugins {
     alias(libs.plugins.serialization)
 }
 
+// Marcador que hace fallar las compilaciones de release si no se indica la URL de producción
+val placeholderApiUrl = "https://api.cosplayjournal.invalid/"
+val releaseApiBaseUrl: String = (findProperty("apiBaseUrl") as String?) ?: placeholderApiUrl
+
 android {
     namespace = "com.cosplayjournal.app"
     compileSdk = 34
@@ -29,8 +33,8 @@ android {
             buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:8080/\"")
         }
         release {
-            // TODO: sustituir por la URL pública del backend antes de publicar
-            buildConfigField("String", "API_BASE_URL", "\"https://api.cosplayjournal.invalid/\"")
+            // URL pública del backend: se pasa al compilar con -PapiBaseUrl=https://...
+            buildConfigField("String", "API_BASE_URL", "\"$releaseApiBaseUrl\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -107,4 +111,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+// Ninguna compilación de release sale con la URL de marcador: falla antes de empaquetar
+tasks.matching { it.name.matches(Regex("(assemble|bundle|package)Release.*")) }.configureEach {
+    doFirst {
+        if (releaseApiBaseUrl == placeholderApiUrl) {
+            throw GradleException("Falta la URL del backend de producción: compila con -PapiBaseUrl=https://tu-dominio/")
+        }
+    }
 }

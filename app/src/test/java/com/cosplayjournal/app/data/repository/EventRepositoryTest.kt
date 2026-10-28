@@ -68,6 +68,25 @@ class EventRepositoryTest {
         }
     }
 
+    @Test
+    fun `refresh espera mientras el backend sincroniza y despues vuelve`() = runBlocking {
+        val polling = EventRepository(
+            CosplayJournalApi.create(server.url("/").toString()),
+            initialDelayMs = 0, pollIntervalMs = 0, maxPolls = 5
+        )
+        server.enqueue(MockResponse().setResponseCode(202))
+        server.enqueue(MockResponse().setBody("""{"running":true}"""))
+        server.enqueue(MockResponse().setBody("""{"running":true}"""))
+        server.enqueue(MockResponse().setBody("""{"running":false}"""))
+
+        polling.refresh()
+
+        assertEquals("POST", server.takeRequest().method)
+        assertEquals("GET", server.takeRequest().method)
+        assertEquals("GET", server.takeRequest().method)
+        assertEquals("GET", server.takeRequest().method)
+    }
+
     companion object {
         private const val PAGE_0 = """
             {"content":[
