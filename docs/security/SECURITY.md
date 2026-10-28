@@ -87,5 +87,6 @@ El token emitido es stateless y firmado digitalmente mediante algoritmo HMAC-SHA
 
 | Propiedad / Variable de Entorno | Valor por Defecto Local | Descripción |
 |---|---|---|
-| `JWT_SECRET` | `cosplayJournalSuperSecretKeyForDevelopmentPhase2026!` | Clave secreta HMAC para firma de tokens (mínimo 256 bits). |
-| `JWT_EXPIRATION` | `3600000` (1 hora) | Tiempo de validez del JWT en milisegundos. |
+| `JWT_SECRET` | `cosplayJournalSuperSecretKeyForDevelopmentPhase2026!` (solo perfiles no productivos) | Clave secreta HMAC para firma de tokens (mínimo 256 bits). **Obligatoria en `prod`:** sin valor por defecto, el arranque falla si no se define. |
+| `JWT_EXPIRATION` | `3600000` (1 hora) en local; `86400000` (24 horas) en `prod` | Tiempo de validez del JWT en milisegundos. |
+| `POSTGRES_PASSWORD` | `cosplay_pass` (solo perfil local, incluido en `docker-compose.yml`) | Contraseña de PostgreSQL. **Obligatoria en `prod`:** sin valor por defecto. |

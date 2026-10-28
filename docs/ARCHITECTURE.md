@@ -205,7 +205,7 @@ Flyway gestionará los scripts de migración SQL en `src/main/resources/db/migra
 ## 12. CI/CD y DevOps
 
 - **Pipeline GitHub Actions:**
-  - `build`: Compilación Gradle con Java 21.
-  - `test`: Ejecución de tests unitarios e integración con Testcontainers.
-  - `lint/quality`: Análisis de código y cumplimiento de arquitectura.
-  - `docker-build`: Creación de imagen Docker del backend.
+  - `build`: Compilación Maven (`./mvnw clean verify`) con Java 21. Implementado en `.github/workflows/backend-ci.yml`.
+  - `test`: Ejecución de tests unitarios e integración con Testcontainers. Implementado en el mismo job (`verify`).
+  - `lint/quality`: Análisis de código y cumplimiento de arquitectura. Pendiente; la arquitectura se valida hoy mediante `ArchitectureIsolationTest`.
+  - `docker-build`: Creación de imagen Docker del backend. Pendiente; `backend/Dockerfile` existe pero no se construye en CI.
