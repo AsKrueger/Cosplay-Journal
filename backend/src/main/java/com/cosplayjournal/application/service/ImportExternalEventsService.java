@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import com.cosplayjournal.application.dto.RefreshStatus;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,8 +34,9 @@ public class ImportExternalEventsService implements ImportExternalEventsUseCase 
     private final DomainEventPublisherPort eventPublisherPort;
 
     private final Clock clock;
-    private Instant lastRunAt;
-    private ImportEventsResult lastResult;
+    private volatile Instant lastRunAt;
+    private volatile ImportEventsResult lastResult;
+    private volatile boolean running;
 
     public ImportExternalEventsService(
             ExternalEventSourcePort externalEventSourcePort,
@@ -62,10 +64,20 @@ public class ImportExternalEventsService implements ImportExternalEventsUseCase 
         if (lastRunAt != null && Duration.between(lastRunAt, now).compareTo(MIN_REFRESH_INTERVAL) < 0) {
             return lastResult;
         }
-        ImportEventsResult result = importEvents();
-        lastRunAt = now;
-        lastResult = result;
-        return result;
+        running = true;
+        try {
+            ImportEventsResult result = importEvents();
+            lastRunAt = now;
+            lastResult = result;
+            return result;
+        } finally {
+            running = false;
+        }
+    }
+
+    @Override
+    public RefreshStatus refreshStatus() {
+        return new RefreshStatus(running, lastRunAt);
     }
 
     @Override

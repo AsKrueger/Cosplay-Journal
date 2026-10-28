@@ -1,18 +1,21 @@
 package com.cosplayjournal.infrastructure.adapter.in.rest;
 
-import com.cosplayjournal.application.dto.ImportEventsResult;
+import com.cosplayjournal.application.dto.RefreshStatus;
 import com.cosplayjournal.application.port.in.ImportExternalEventsUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
- * Actualización del catálogo al abrir la app. Es pública porque no expone datos privados,
- * pero solo consulta ListadoManga si la última sincronización tiene más de 30 minutos.
+ * Actualización del catálogo al abrir la app. Es pública porque no expone datos privados.
+ * La sincronización se ejecuta en segundo plano, con límite de frecuencia en el servicio.
  */
 @RestController
 @RequestMapping("/api/v1/events/refresh")
@@ -26,9 +29,17 @@ public class EventRefreshController {
     }
 
     @PostMapping
-    @Operation(summary = "Actualizar el catálogo desde ListadoManga", description = "Sincroniza todos los meses del periodo si la última sincronización tiene más de 30 minutos. En caso contrario devuelve el resultado de la última sincronización.")
-    @ApiResponse(responseCode = "200", description = "Resultado de la sincronización")
-    public ResponseEntity<ImportEventsResult> refresh() {
-        return ResponseEntity.ok(importExternalEventsUseCase.refreshIfStale());
+    @Operation(summary = "Actualizar el catálogo desde ListadoManga", description = "Lanza la sincronización en segundo plano si la última tiene más de 30 minutos. Responde de inmediato; el progreso se consulta con GET.")
+    @ApiResponse(responseCode = "202", description = "Actualización aceptada (se ejecuta en segundo plano)")
+    public ResponseEntity<Void> refresh() {
+        CompletableFuture.runAsync(importExternalEventsUseCase::refreshIfStale);
+        return ResponseEntity.accepted().build();
+    }
+
+    @GetMapping
+    @Operation(summary = "Estado de la actualización del catálogo", description = "Indica si hay una sincronización en curso y cuándo terminó la última.")
+    @ApiResponse(responseCode = "200", description = "Estado de la actualización")
+    public ResponseEntity<RefreshStatus> status() {
+        return ResponseEntity.ok(importExternalEventsUseCase.refreshStatus());
     }
 }

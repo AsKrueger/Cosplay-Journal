@@ -1,6 +1,7 @@
 package com.cosplayjournal.application;
 
 import com.cosplayjournal.application.dto.ImportEventsResult;
+import com.cosplayjournal.application.dto.RefreshStatus;
 import com.cosplayjournal.application.port.out.DomainEventPublisherPort;
 import com.cosplayjournal.application.port.out.EventRepositoryPort;
 import com.cosplayjournal.application.port.out.ExternalEventSourcePort;
@@ -19,6 +20,7 @@ import java.time.ZoneId;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -67,6 +69,18 @@ class ImportExternalEventsRefreshTest {
         service.refreshIfStale();
 
         verify(externalEventSourcePort, times(2)).fetchEvents();
+    }
+
+    @Test
+    @DisplayName("El estado indica que no hay sincronización en curso y registra la hora de la última")
+    void shouldReportLastRunAndNotRunningAfterRefresh() {
+        when(externalEventSourcePort.fetchEvents()).thenReturn(List.of());
+
+        service.refreshIfStale();
+        RefreshStatus status = service.refreshStatus();
+
+        assertFalse(status.running());
+        assertEquals(Instant.parse("2026-10-28T10:00:00Z"), status.lastRunAt());
     }
 
     /** Reloj controlable para probar el intervalo sin esperar. */
