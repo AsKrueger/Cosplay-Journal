@@ -4,6 +4,7 @@ import com.cosplayjournal.infrastructure.adapter.in.rest.dto.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -43,6 +44,10 @@ public class SpringSecurityConfig {
                         .requestMatchers("/api/v1/health").permitAll()
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        // Catálogo de eventos: lectura pública. La creación, modificación e importación siguen protegidas.
+                        .requestMatchers(HttpMethod.GET, "/api/v1/events", "/api/v1/events/**").permitAll()
+                        // Actualización del catálogo al abrir la app; tiene límite de frecuencia en el servicio
+                        .requestMatchers(HttpMethod.POST, "/api/v1/events/refresh").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

@@ -1,38 +1,816 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Salones de Manga y Cosplay - ListadoManga</title>
-</head>
-<body>
-    <div id="content">
-        <h1>Salones y Eventos de Manga</h1>
-        <table class="salones">
-            <thead>
-                <tr>
-                    <th>Evento</th>
-                    <th>Lugar</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><a href="salon.php?id=101">Japan Weekend Madrid 2026</a></td>
-                    <td>IFEMA (Madrid)</td>
-                    <td>19 a 20 de septiembre de 2026</td>
-                </tr>
-                <tr>
-                    <td><a href="salon.php?id=102">Manga Fest Sevilla 2026</a></td>
-                    <td>FIBES - Sevilla</td>
-                    <td>4 a 6 de diciembre de 2026</td>
-                </tr>
-                <tr>
-                    <td><a href="salon.php?id=103">Comic Con Barcelona 2026</a></td>
-                    <td>Fira Barcelona (Barcelona)</td>
-                    <td>15 a 17 de mayo de 2026</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+	<head>
+<script type="text/javascript" async=true>
+(function(){var v="listadomanga.es",d=document.createElement("script"),g=document.getElementsByTagName("script")[0],w="https://cmp.inmobi.com".concat("/choice/","5v7tPMBHfnKZ4","/",v,"/choice.js?tag_version=V3"),f=0,y=3;d.async=!0,d.type="text/javascript",d.src=w,g.parentNode.insertBefore(d,g);function S(){var o="__tcfapiLocator",u=[],e=window,s;function n(){var a=e.document,t=!!e.frames[o];if(!t)if(a.body){var i=a.createElement("iframe");i.style.cssText="display:none",i.name=o,a.body.appendChild(i)}else setTimeout(n,5);return!t}function p(){var a,t=arguments;if(t.length)if(t[0]==="setGdprApplies")t.length>3&&t[2]===2&&typeof t[3]=="boolean"&&(a=t[3],typeof t[2]=="function"&&t[2]("set",!0));else if(t[0]==="ping"){var i={gdprApplies:a,cmpLoaded:!1,cmpStatus:"stub"};typeof t[2]=="function"&&t[2](i)}else t[0]==="init"&&typeof t[3]=="object"&&(t[3]=Object.assign(t[3],{tag_version:"V3"})),u.push(t);else return u}function r(a){var t=typeof a.data=="string",i={};try{t?i=JSON.parse(a.data):i=a.data}catch(m){}var c=i.__tcfapiCall;c&&window.__tcfapi(c.command,c.version,function(m,P){var _={__tcfapiReturn:{returnValue:m,success:P,callId:c.callId}};t&&(_=JSON.stringify(_)),a&&a.source&&a.source.postMessage&&a.source.postMessage(_,"*")},c.parameter)}for(;e;){try{if(e.frames[o]){s=e;break}}catch(a){}if(e===window.top)break;e=e.parent}s||(n(),e.__tcfapi=p,e.addEventListener("message",r,!1))}S();function b(){const u=["2:tcfeuv2","6:uspv1","7:usnatv1","8:usca","9:usvav1","10:uscov1","11:usutv1","12:usctv1"];window.__gpp_addFrame=function(e){if(!window.frames[e])if(document.body){var s=document.createElement("iframe");s.style.cssText="display:none",s.name=e,document.body.appendChild(s)}else window.setTimeout(window.__gpp_addFrame,10,e)},window.__gpp_stub=function(){var e=arguments;if(__gpp.queue=__gpp.queue||[],__gpp.events=__gpp.events||[],!e.length||e.length==1&&e[0]=="queue")return __gpp.queue;if(e.length==1&&e[0]=="events")return __gpp.events;var s=e[0],n=e.length>1?e[1]:null,p=e.length>2?e[2]:null;if(s==="ping")n({gppVersion:"1.1",cmpStatus:"stub",cmpDisplayStatus:"hidden",signalStatus:"not ready",supportedAPIs:u,cmpId:10,sectionList:[],applicableSections:[-1],gppString:"",parsedSections:{}},!0);else if(s==="addEventListener"){"lastId"in __gpp||(__gpp.lastId=0),__gpp.lastId++;var r=__gpp.lastId;__gpp.events.push({id:r,callback:n,parameter:p}),n({eventName:"listenerRegistered",listenerId:r,data:!0,pingData:{gppVersion:"1.1",cmpStatus:"stub",cmpDisplayStatus:"hidden",signalStatus:"not ready",supportedAPIs:u,cmpId:10,sectionList:[],applicableSections:[-1],gppString:"",parsedSections:{}}},!0)}else if(s==="removeEventListener"){for(var a=!1,t=0;t<__gpp.events.length;t++)if(__gpp.events[t].id==p){__gpp.events.splice(t,1),a=!0;break}n({eventName:"listenerRemoved",listenerId:p,data:a,pingData:{gppVersion:"1.1",cmpStatus:"stub",cmpDisplayStatus:"hidden",signalStatus:"not ready",supportedAPIs:u,cmpId:10,sectionList:[],applicableSections:[-1],gppString:"",parsedSections:{}}},!0)}else s==="hasSection"?n(!1,!0):s==="getSection"||s==="getField"?n(null,!0):__gpp.queue.push([].slice.apply(e))},window.__gpp_msghandler=function(e){var s=typeof e.data=="string";try{var n=s?JSON.parse(e.data):e.data}catch(r){var n=null}if(typeof n=="object"&&n!==null&&"__gppCall"in n){var p=n.__gppCall;window.__gpp(p.command,function(r,a){var t={__gppReturn:{returnValue:r,success:a,callId:p.callId}};e.source.postMessage(s?JSON.stringify(t):t,"*")},"parameter"in p?p.parameter:null,"version"in p?p.version:"1.1")}},(!("__gpp"in window)||typeof window.__gpp!="function")&&(window.__gpp=window.__gpp_stub,window.addEventListener("message",window.__gpp_msghandler,!1),window.__gpp_addFrame("__gppLocator"))}b();var l=function(){var o=arguments;typeof window.__uspapi!==l&&setTimeout(function(){typeof window.__uspapi!="undefined"&&window.__uspapi.apply(window.__uspapi,o)},500)},h=function(){f++,window.__uspapi===l&&f<y?console.warn("USP is not accessible"):clearInterval(I)};if(typeof window.__uspapi=="undefined"){window.__uspapi=l;var I=setInterval(h,6e3)}})(),window.gtag_enable_tcf_support=!0;
+</script>
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TFD7SBV');</script>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Listado Manga · Salones · Octubre 2026</title>
+		<link rel="stylesheet" href="https://static.listadomanga.com/004a1b57c9c3accd014e3c1f041c6cc4.css" type="text/css" />
+		<meta name="viewport" content="width=1120"/>
+		<link rel="shortcut icon" href="/favicon.gif" type="image/gif" />
+		<link rel="icon" href="/favicon.gif" type="image/gif" />
+		<link rel="apple-touch-icon" href="/favicon-apple.png" type="image/png" >
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
+		<link rel="canonical" href="https://www.listadomanga.es/salones.php"/>
+		<meta name="description" content="Salones y eventos de manga y cómic en España en Octubre de 2026: 35 convocatorias con sus fechas, ciudad y programa."/>
+		<meta property="og:site_name" content="Listado Manga"/>
+		<meta property="og:type" content="website"/>
+		<meta property="og:locale" content="es_ES"/>
+		<meta property="og:title" content="Listado Manga · Salones · Octubre 2026"/>
+		<meta property="og:url" content="https://www.listadomanga.es/salones.php"/>
+		<meta property="og:description" content="Salones y eventos de manga y cómic en España en Octubre de 2026: 35 convocatorias con sus fechas, ciudad y programa."/>
+		<meta name="twitter:card" content="summary"/>
+		<meta name="twitter:site" content="@ListadoManga"/>
+	</head>
+
+	<body>
+		<div class="fondo_cabecera">
+			<div class="bloque_logo_cabecera">
+				<img class="logo_cabecera" src="https://static.listadomanga.com/f674914c11c2e2223329a079322b66b1.svg" width="300" height="60" alt="Listado Manga"/>
+			</div>
+			<div class="menu_cabecera">
+				<center>
+					<table class="menu" cellpadding="0" cellspacing="0">
+						<tr>
+							<td class="sprites borde_izq"></td>
+							<td class="sprites borde_cen">
+								<center>
+									<table class="menu" cellpadding="0" cellspacing="0">
+										<tr>
+											<td class="sprites pest_izq"></td>
+											<td class="sprites pest_cen"><a href="/"><span style="color: #AAAAAA;">BLOG</span></a></td>
+											<td class="sprites pest_der"></td>
+											<td class="sprites pest_izq"></td>
+											<td class="sprites pest_cen"><a href="/novedades.php"><span style="color: #AAAAAA;">NOVEDADES</span></a></td>
+											<td class="sprites pest_der"></td>
+											<td class="sprites pest_izq"></td>
+											<td class="sprites pest_cen"><a href="/calendario.php"><span style="color: #AAAAAA;">CALENDARIO</span></a></td>
+											<td class="sprites pest_der"></td>
+											<td class="sprites pest_izq"></td>
+											<td class="sprites pest_cen"><a href="/lista.php"><span style="color: #AAAAAA;">LISTADO</span></a></td>
+											<td class="sprites pest_der"></td>
+											<td class="sprites pest_izq"></td>
+											<td class="sprites pest_cen"><a href="/autores.php"><span style="color: #AAAAAA;">AUTORES</span></a></td>
+											<td class="sprites pest_der"></td>
+											<td class="sprites pest_sel_izq"></td>
+											<td class="sprites pest_sel_cen"><b><a href="/salones.php"><span style="color: #EEEEEE;">SALONES</span></a></b></td>
+											<td class="sprites pest_sel_der"></td>
+											<td class="sprites pest_izq"></td>
+											<td class="sprites pest_cen"><a href="/buscador.php"><span style="color: #AAAAAA;">BUSCADOR</span></a></td>
+											<td class="sprites pest_der"></td>
+											<td class="sprites pest_izq"></td>
+											<td class="sprites pest_cen"><a href="/contacto.php"><span style="color: #AAAAAA;">CONTACTO</span></a></td>
+											<td class="sprites pest_der"></td>
+											<td class="sprites pest_izq"></td>
+											<td class="sprites pest_cen"><a href="http://www.facebook.com/ListadoManga" target="_blank"><span style="color: #AAAAAA;"><i class="fab fa-facebook icono-margen"></i></span></a></td>
+											<td class="sprites pest_der"></td>
+											<td class="sprites pest_izq"></td>
+											<td class="sprites pest_cen"><a href="http://twitter.com/ListadoManga" target="_blank"><span style="color: #AAAAAA;"><i class="fab fa-twitter icono-margen"></i></span></a></td>
+											<td class="sprites pest_der"></td>
+											<td class="sprites pest_izq"></td>
+											<td class="sprites pest_cen"><a href="http://instagram.com/listadomanga" target="_blank"><span style="color: #AAAAAA;"><i class="fab fa-instagram icono-margen"></i></span></a></td>
+											<td class="sprites pest_der"></td>
+											<td class="sprites pest_izq"></td>
+											<td class="sprites pest_cen"><a href="http://es.scribd.com/ListadoManga" target="_blank"><span style="color: #AAAAAA;"><i class="fab fa-scribd icono-margen"></i></span></a></td>
+											<td class="sprites pest_der"></td>
+										</tr>
+									</table>
+								</center>
+							</td>
+							<td class="sprites borde_der"></td>
+						</tr>
+					</table>
+				</center>
+			</div>
+		</div>
+		<div class="hueco_superior">
+			<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6131773857373702" crossorigin="anonymous"></script>
+			<ins class="adsbygoogle"
+				style="display:block;width:970px;height:90px"
+				data-ad-client="ca-pub-6131773857373702"
+				data-ad-slot="7897397770"
+				data-ad-format="horizontal"
+				data-full-width-responsive="false"></ins>
+			<script>
+				(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+		</div>
+		<center>
+		<nav class="migas" aria-label="Migas de pan" style="width: 974px"><a href="/">Inicio</a> <span class="migas_flecha">&rsaquo;</span> <span class="migas_actual">Salones de Octubre 2026</span></nav>
+<table><tr><td><table class="ventana_id1" style="width: 974px"><tr><td class="izq" width="184" style="vertical-align: middle"><a href="/salones.php?mes=9&ano=2026"><div class="rotulo"><i class="fas fa-caret-left"></i>&nbsp;Septiembre 2026</div></a></td><td class="cen"><h1>Salones de Octubre 2026</h1></td><td class="der" width="184" style="vertical-align: middle"><a href="/salones.php?mes=11&ano=2026"><div class="rotulo">Noviembre 2026&nbsp;<i class="fas fa-caret-right"></i></div></a></td></tr></table></td></tr></table>  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://sandiegocomicconmalaga.com/"  target="_blank"/><img src="https://static.listadomanga.com/cc9855a55448cecf6222f186efd64d25.jpg" border="0" alt="San Diego Comic-Con Málaga 2026" loading="eager" fetchpriority="high" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>San Diego Comic-Con Málaga 2026<br /></h2>
+	Del 1 al 4 de Octubre de 2026<hr />INVITADOS JAPONESES<br />
+Yoichi Takahashi, Shin’ichirō Watanabe, Yoshihiro Ueda y Akira Yamaoka.<br />
+<br />
+INVITADOS CÓMIC<br />
+John Romita Jr., Dan Mora, Michael Golden, Stefano Caselli, Rick Leonardi, Pat Mills, Phillip Kennedy Johnson, Michael Walsh, Chris Condon, además de Juanjo Guarnido, Laia López, Jorge Jiménez, Pepe Larraz, Carmen Carnero, Álvaro Martínez Bueno, David Messina, Glen Fabry, Natacha Bustos e Iban Coello.<br />
+<br />
+INVITADOS CINE / SERIES<br />
+Richard Dean Anderson, Karl Urban, Kevin Smith, Michael Rooker, Sean Astin, Elijah Wood, Iñaki Godoy, Taz Skylar, Kristian Nairn, Sean Gunn, Jason Lee, Alistair Petrie, Manu Bennett, Mira Sorvino, Lukas Ettlin, Deborah Ann Woll, Christopher Lambert, Kevin Sussman, Natasha Liu Bordizzo, Dan Fogler, Denise Gough, Dean Devlin y cinco protagonistas de Starship Troopers: Casper Van Dien, Denise Richards, Dina Meyer, Michael Ironside y Jake Busey.<br />
+<br />
+INVITADOS ANIMACIÓN<br />
+Mingjue Helen Chen, Yingjue Linda Chen, John DiMaggio, Pascu y Rodri, Carolina Jiménez G..<br />
+<br />
+INVITADOS JUEGOS<br />
+Reiner Knizia, Dave Jones y Jeremy Crawford.<br />
+<br />
+DIRECCIÓN<br />
+FYCMA Palacio de Ferias y Congresos de Málaga<br />
+Avenida de José Ortega y Gasset, 201<br />
+29006 Málaga	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://vilafrik.com/"  target="_blank"/><img src="https://static.listadomanga.com/75ed2b29789661328e7285a0a2c336e1.jpg" border="0" alt="Festival Vila Frik" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Festival Vila Frik<br /></h2>
+	Del 2 al 4 de Octubre de 2026<hr />DIRECCIÓN<br />
+Recinto Ferial Cubic<br />
+Passeig de la Marina, 31<br />
+08840 Viladecans (Barcelona)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://gumiparty.es/"  target="_blank"/><img src="https://static.listadomanga.com/42d0a123bedecfd81949331bba1aee4f.jpg" border="0" alt="Gumi Party 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Gumi Party 2026<br /></h2>
+	Del 2 al 4 de Octubre de 2026<hr />DIRECCIÓN<br />
+Palacio de Congresos de Plasencia<br />
+Calle Luis Vélez de Guevara, 3<br />
+10600 Plasencia (Cáceres)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://ohcomicsfest.com/es/"  target="_blank"/><img src="https://static.listadomanga.com/28273d1b4c0f7323569f9d93d055b814.jpg" border="0" alt="OH! Comics Fest Barcelona 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>OH! Comics Fest Barcelona 2026<br /></h2>
+	Del 2 al 4 de Octubre de 2026<hr />Festival de cómics alternativos y fanzines.<br />
+<br />
+¡Regresa Oh! Comics Fest a Barcelona!<br />
+<br />
+Desde su primera edición en Barcelona, en 2018, Oh! Comics Fest se ha convertido en un punto de encuentro imprescindible entre artistas, autoeditores, editoriales independientes y público interesado en los cómics alternativos y fanzines de nuevos autores y autoras.<br />
+<br />
+En Oh! Comics Fest encontrarás exposiciones y una completa programación de actividades de acceso gratuito, que incluye presentaciones de fanzines, mesas redondas, charlas y talleres para público de todas las edades.<br />
+<br />
+La zona de expositores sigue siendo el gran protagonista del evento, con un mercado donde creadores y pequeñas editoriales mostrarán sus últimas publicaciones. Este año contaremos con la participación de 60 expositores, con propuestas locales y también de otros puntos de Cataluña y España: Vic, Terrassa, Lleida, Girona, Zaragoza, Alicante, Cádiz, Madrid, Valencia...<br />
+<br />
+HORARIO<br />
+- Viernes 2 de octubre de 17:30 a 21:30h<br />
+- Sábado 3 de octubre de 11 a 21:30h<br />
+- Domingo 4 de octubre de 11 a 15:00h<br />
+<br />
+PRECIO<br />
+- Entrada y actividades de acceso gratuito.<br />
+- Se regalará un cómic a las primeras 100 visitas.<br />
+<br />
+DIRECCIÓN<br />
+Instituto Martí Pous<br />
+Recinte Fabra i Coats<br />
+Carrer Sant Adrià, 14<br />
+08030 Barcelona	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.festivaldelmanga.com/"  target="_blank"/><img src="https://static.listadomanga.com/dd36d16ecf4256550d253e6e1bcae1a7.jpg" border="0" alt="XV Festival del Manga & Comic-Can de Las Palmas de Gran Canaria" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>XV Festival del Manga & Comic-Can de Las Palmas de Gran Canaria<br /></h2>
+	Del 2 al 4 de Octubre de 2026<hr />DIRECCIONES<br />
+Parque San Telmo<br />
+Avenida Rafael Cabrera, 30<br />
+35002 Las Palmas de Gran Canaria<br />
+<br />
+Museo Castillo de Mata<br />
+Calle Domingo Guerra del Río, 147<br />
+35002 Las Palmas de Gran Canaria	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.instagram.com/friky.asociacion/"  target="_blank"/><img src="https://static.listadomanga.com/8705fba1c423b196c75128dc23ed939b.jpg" border="0" alt="Festival Japonés Matsuri 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Festival Japonés Matsuri 2026<br /></h2>
+	3 de Octubre de 2026<hr />HORARIO<br />
+- 12:00 a 22:00<br />
+<br />
+DIRECCIÓN<br />
+Parque El Canyar de les Portelles<br />
+Carrer Joan XXIII, 48<br />
+03110 Mutxamel (Alicante)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.japanweekend.com/bilbao/"  target="_blank"/><img src="https://static.listadomanga.com/76f2c6447b6e718c9f7992af873dedbc.jpg" border="0" alt="Japan Weekend Bilbao 2026 (II)" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Japan Weekend Bilbao 2026 (II)<br /></h2>
+	3 de Octubre de 2026<hr />DIRECCIÓN<br />
+BEC! Bilbao Exhibition Centre<br />
+Ronda de Azkue, 1<br />
+48903 San Vicente de Barakaldo (Bizkaia)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.instagram.com/firadelmangalavila/"  target="_blank"/><img src="https://static.listadomanga.com/2c0a702436d5d7f44dbe843f8009dd96.jpg" border="0" alt="VI Feria del Manga de la Vila Joiosa" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>VI Feria del Manga de la Vila Joiosa<br /></h2>
+	3 de Octubre de 2026<hr />DIRECCIÓN<br />
+Parc La Barbera<br />
+Carrer Huit de Maig, 15<br />
+03570 La Vila Joiosa (Alacant)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://atomicpixel.es/anime-rave-zaragoza/"  target="_blank"/><img src="https://static.listadomanga.com/5cc85e8161acf9649ea190876cafee05.jpg" border="0" alt="Atomic Pixel Party in the arcade world - Zaragoza" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Atomic Pixel Party in the arcade world - Zaragoza<br /></h2>
+	Del 9 al 10 de Octubre de 2026<hr />La nueva temporada de Atomic Pixel Party llega más pixelada que nunca.<br />
+<br />
+La misión de Atomic Pixel Party es traerte la mejor fusión del mundo nocturno y la música otaku siempre dentro de un entorno seguro. Imaginate una fiesta con cosplayers, openings de one piece, dragon ball o tu anime favorito, cócteles temáticos y actuaciones varias. Un sitio donde puedes retar a un desconocido a unas partidas o perrear hasta el suelo al ritmo de evangelion. Eso es Atomic Pixel Party.<br />
+<br />
+HORARIO<br />
+- Viernes 9 a las 23:59 a Sábado 10 a las 06:00<br />
+<br />
+PRECIO<br />
+- Entrada 16€ (Prohibida la entrada a menores de 18 años)<br />
+<br />
+DIRECCIÓN<br />
+Sala López<br />
+Calle de Sixto Celorrio, 2<br />
+50015 Zaragoza	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.instagram.com/palaciocongresoslalinea/"  target="_blank"/><img src="https://static.listadomanga.com/98beb0650851aa8bee165053627e54be.jpg" border="0" alt="XIV Salón Manga y ComicCon" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>XIV Salón Manga y ComicCon<br /></h2>
+	Del 9 al 11 de Octubre de 2026<hr />HORARIO<br />
+- Viernes 9 de 17:00 a 21:00<br />
+- Sábado 10 de 11:00 a 21:00<br />
+- Domingo 11 de 11:00 a 20:00<br />
+<br />
+DIRECCIÓN<br />
+Palacio de Congresos y Exposiciones de La Línea<br />
+Avenida Príncipe de Asturias<br />
+11300 La Línea de la Concepción (Cádiz)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.eventosgo.es/"  target="_blank"/><img src="https://static.listadomanga.com/c149b7c6b4e5ddb57dce4d528a578e9d.jpg" border="0" alt="Álora GO! 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Álora GO! 2026<br /></h2>
+	Del 10 al 11 de Octubre de 2026<hr />Salón del manga, videojuegos y la cultura alternativa de Álora<br />
+<br />
+HORARIO<br />
+- 11:00 a 20:00<br />
+<br />
+DIRECCIÓN<br />
+Pabellón Cubierto Antonio Henares Sierra<br />
+Avenida Pablo Ruiz Picasso, 24D<br />
+29500 Álora (Málaga)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://atomicpixel.es/anime-rave-bilbao/"  target="_blank"/><img src="https://static.listadomanga.com/5cc85e8161acf9649ea190876cafee05.jpg" border="0" alt="Atomic Pixel Party in the arcade world - Bilbao" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Atomic Pixel Party in the arcade world - Bilbao<br /></h2>
+	Del 10 al 11 de Octubre de 2026<hr />La nueva temporada de Atomic Pixel Party llega más pixelada que nunca.<br />
+<br />
+La misión de Atomic Pixel Party es traerte la mejor fusión del mundo nocturno y la música otaku siempre dentro de un entorno seguro. Imaginate una fiesta con cosplayers, openings de one piece, dragon ball o tu anime favorito, cócteles temáticos y actuaciones varias. Un sitio donde puedes retar a un desconocido a unas partidas o perrear hasta el suelo al ritmo de evangelion. Eso es Atomic Pixel Party.<br />
+<br />
+HORARIO<br />
+- Sábado 10 a las 23:59 a Domingo 11 a las 06:00<br />
+<br />
+PRECIO<br />
+- Entrada 16€ (Prohibida la entrada a menores de 18 años)<br />
+<br />
+DIRECCIÓN<br />
+Sala Multiusos Mytho<br />
+Telleria Kalea, 7<br />
+48004 Bilbao (Bizkaia)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.girocomic.cat/"  target="_blank"/><img src="https://static.listadomanga.com/0c5d62c3de7f50492b4f0535a18f2f8e.jpg" border="0" alt="Girocòmic 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Girocòmic 2026<br /></h2>
+	Del 10 al 12 de Octubre de 2026<hr />La Girocòmic és la fira del còmic, el manga i l’entreteniment de referència a les comarques gironines. L’esdeveniment combina una àmplia zona expositiva amb una programació cultural diversa que inclou autors i autores de renom, presentacions, xerrades, tallers per a adults i infants, exposicions, videojocs i jocs de taula.<br />
+<br />
+La Fira del Còmic de Girona celebrarà la seva 10a edició els dies 10, 11 i 12 d’octubre de 2026.<br />
+<br />
+HORARIO<br />
+- De 10:00 a 19:00<br />
+<br />
+DIRECCIÓN<br />
+Palau de Fires de Girona<br />
+Passeig de la Devesa, 34<br />
+17001 Girona	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.mangamore.eus/"  target="_blank"/><img src="https://static.listadomanga.com/96129fde24840df8e69896cfb8ab7054.jpg" border="0" alt="Mangamore 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Mangamore 2026<br /></h2>
+	Del 10 al 11 de Octubre de 2026<hr />Jornadas de cultura japonesa de Amorebieta-Etxano	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.comicmallorca.com/"  target="_blank"/><img src="https://static.listadomanga.com/0d90a793ff2a4413c5dc89068ef5a424.jpg" border="0" alt="Còmic Nostrum 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Còmic Nostrum 2026<br /></h2>
+	Del 14 al 18 de Octubre de 2026<hr />Festival Internacional de Còmic de Mallorca	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://salondelcomicdegetxo.net/"  target="_blank"/><img src="https://static.listadomanga.com/d9d6cd17f4f868fa911bf66e43ab84f9.jpg" border="0" alt="24 Getxoko Komiki Azoka" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>24 Getxoko Komiki Azoka<br /></h2>
+	Del 16 al 18 de Octubre de 2026<hr />24 Salón del cómic de Getxo<br />
+<br />
+PRECIO<br />
+- Entrada gratuita<br />
+	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://saloncomicgranada.com/"  target="_blank"/><img src="https://static.listadomanga.com/88dc32ea1febfce7e9a00b659cd5d9e1.jpg" border="0" alt="32 Salón del Cómic de Granada" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>32 Salón del Cómic de Granada<br /></h2>
+	Del 16 al 18 de Octubre de 2026<hr />DIRECCIÓN<br />
+Fuente de las Batallas<br />
+Calle Acera del Casino, 15<br />
+18009 Granada	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://atomicpixel.es/anime-rave-valencia/"  target="_blank"/><img src="https://static.listadomanga.com/5cc85e8161acf9649ea190876cafee05.jpg" border="0" alt="Atomic Pixel Party in the arcade world - Valencia" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Atomic Pixel Party in the arcade world - Valencia<br /></h2>
+	Del 16 al 17 de Octubre de 2026<hr />La nueva temporada de Atomic Pixel Party llega más pixelada que nunca.<br />
+<br />
+La misión de Atomic Pixel Party es traerte la mejor fusión del mundo nocturno y la música otaku siempre dentro de un entorno seguro. Imaginate una fiesta con cosplayers, openings de one piece, dragon ball o tu anime favorito, cócteles temáticos y actuaciones varias. Un sitio donde puedes retar a un desconocido a unas partidas o perrear hasta el suelo al ritmo de evangelion. Eso es Atomic Pixel Party.<br />
+<br />
+HORARIO<br />
+- Viernes 16 a las 23:59 a Sábado 17 a las 06:00<br />
+<br />
+PRECIO<br />
+- Entrada 16€ (Prohibida la entrada a menores de 18 años)<br />
+<br />
+DIRECCIÓN<br />
+Tulum Art of Wild<br />
+Avinguda de les Corts Valencianes, 58<br />
+46015 València	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.instagram.com/imaginamalaga/"  target="_blank"/><img src="https://static.listadomanga.com/0b8bc863d3a71c653e026356982e3268.jpg" border="0" alt="Imagina Málaga 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Imagina Málaga 2026<br /></h2>
+	Del 16 al 18 de Octubre de 2026<hr />XIV Salón del cómic y fantasía<br />
+<br />
+PRECIO<br />
+- Entrada gratis<br />
+<br />
+DIRECCIÓN<br />
+La Caja Blanca<br />
+Avenida del Editor Ángel Caffarena, 8<br />
+29010 Málaga	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://frikicon.es/"  target="_blank"/><img src="https://static.listadomanga.com/aafc1c6a62aee4b4066536c7cf019211.jpg" border="0" alt="FrikiCon Madrid 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>FrikiCon Madrid 2026<br /></h2>
+	Del 17 al 18 de Octubre de 2026<hr />FrikiCon es un punto de encuentro para amantes de la cultura geek, con cosplay, cómics, videojuegos y juegos de mesa. Un espacio ideal para disfrutar y compartir la pasión por el mundo friki en Madrid.<br />
+<br />
+DIRECCIÓN<br />
+Pabellón Polideportivo Cubierto Adolfo Suárez<br />
+Calle Villanueva, 12<br />
+28609 Sevilla la Nueva (Madrid)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.eventosgo.es/"  target="_blank"/><img src="https://static.listadomanga.com/1628846808143095d2b877e8c9772e49.jpg" border="0" alt="Huétor-Tájar GO! 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Huétor-Tájar GO! 2026<br /></h2>
+	Del 17 al 18 de Octubre de 2026<hr />Salón del manga, videojuegos y la cultura alternativa de Huétor-Tájar<br />
+<br />
+HORARIO<br />
+- 11:00 a 20:00<br />
+<br />
+PRECIO<br />
+- Entrada gratuita<br />
+<br />
+DIRECCIÓN<br />
+Pabellón de Usos Múltiples Ferial<br />
+Calle Real<br />
+18339 Cijuela (Granada)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.instagram.com/murciaseremanga/"  target="_blank"/><img src="https://static.listadomanga.com/5b52b584f397f49ffd4fb8cb848d0e8d.jpg" border="0" alt="II Manga Sant Joan d'Alacant" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>II Manga Sant Joan d'Alacant<br /></h2>
+	Del 17 al 18 de Octubre de 2026<hr />DIRECCIÓN<br />
+Colegio Cristo de la Paz<br />
+Avinguda de la Rambla 1<br />
+03550 Sant Joan d'Alacant (Alicante)<br />
+	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.facebook.com/mangaexperiencemurcia/"  target="_blank"/><img src="https://static.listadomanga.com/23b444c89f7deeead66e10330dca2eab.jpg" border="0" alt="Manga Experience! Murcia 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Manga Experience! Murcia 2026<br /></h2>
+	Del 17 al 18 de Octubre de 2026<hr />DIRECCIÓN<br />
+Cuartel de Artillería<br />
+Calle Cartagena, s/n<br />
+30002 Murcia	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://the-monkiki.es/"  target="_blank"/><img src="https://static.listadomanga.com/5096c8c503fb82fdf8761037b2a3ae99.jpg" border="0" alt="The-Monkiki Rural Comics - Segunda Edición" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>The-Monkiki Rural Comics - Segunda Edición<br /></h2>
+	Del 17 al 18 de Octubre de 2026<hr />El cómic regresa al entorno rural en su segunda edición. Encuentros, arte independiente y espíritu underground en un festival diferente.<br />
+<br />
+DIRECCIÓN<br />
+Centre Cultural El Palomar<br />
+Carrer Sant Domènech, 29<br />
+46891 El Palomar (Valencia)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<img src="https://static.listadomanga.com/a3a970725a5c26a0be0e157baf40a3e0.jpg" border="0" alt="XIX Semana de cultura japonesa" decoding="async" /><br />	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>XIX Semana de cultura japonesa<br /></h2>
+	Del 19 al 24 de Octubre de 2026<hr />DIRECCIÓN<br />
+Paseo Martínez de León<br />
+41100 Coria del Río (Sevilla)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://linktr.ee/puertoasianfest"  target="_blank"/><img src="https://static.listadomanga.com/089338f93081483300bb05a8807de165.jpg" border="0" alt="Puerto Asian Fest 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Puerto Asian Fest 2026<br /></h2>
+	Del 23 al 25 de Octubre de 2026<hr />Tres días en los que la ciudad se llenará de cosplay, K-Pop, videojuegos, manga, ilustración, actuaciones, concursos, talleres, creadores de contenido, invitados y experiencias que estamos preparando para que esta edición sea MUY grande.<br />
+<br />
+HORARIO<br />
+- Viernes 17:00 a 21:00<br />
+- Sábado 11:00 a 21:00<br />
+- Domingo 11:00 a 20:00<br />
+<br />
+PRECIO<br />
+- 1 día 6€<br />
+- 2 día 10€<br />
+- 3 día 12€<br />
+<br />
+DIRECCIÓN<br />
+Colegio SAFA San Luis<br />
+Avenida San Luis Gonzaga, 1<br />
+11500 El Puerto de Santa María (Cádiz)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.expotaku.com/"  target="_blank"/><img src="https://static.listadomanga.com/ccf9cdf4491711b0ed170c1cabe14f7a.jpg" border="0" alt="ExpOtaku Granada 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>ExpOtaku Granada 2026<br /></h2>
+	Del 24 al 25 de Octubre de 2026<hr />HORARIOS<br />
+- Sábado 24 de Octubre: de 10:00 a 21:00 horas<br />
+- Domingo 25 de Octubre: de 10:00 a 20:00 horas<br />
+<br />
+ENTRADAS Y BONOS (Online)<br />
+- Entrada 1 día: 9€<br />
+- Entrada 2 días: 16€ (8€ / día)<br />
+- Menores de 4 años: Gratis<br />
+<br />
+ENTRADAS Y BONOS (Taquilla física y online a partir del 19/10)<br />
+- Entrada 1 día: 10€<br />
+- Entrada 2 días: 18€ (9€ / día)<br />
+- Menores de 4 años: Gratis<br />
+<br />
+DIRECCIÓN<br />
+Palacio de Deportes de Granada<br />
+Avenida Salvador Allende, s/n<br />
+18001 Granada	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.instagram.com/ibiconoficial/"  target="_blank"/><img src="https://static.listadomanga.com/0587e07af36827c9c1ce516d4dd267c4.jpg" border="0" alt="IBICON 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>IBICON 2026<br /></h2>
+	Del 24 al 25 de Octubre de 2026<hr />III Jornadas de ocio alternativo de Ibi<br />
+<br />
+HORARIO<br />
+De 10:00 a 21:00<br />
+<br />
+DIRECCIÓN<br />
+Centre Cultural Salvador Miró<br />
+Avinguda de la Industria, 5<br />
+03440 Ibi (Alicante)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.instagram.com/mangafactorylepe/"  target="_blank"/><img src="https://static.listadomanga.com/c806a149cf0c485427a872a2824c0d13.jpg" border="0" alt="II MangaFactory" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>II MangaFactory<br /></h2>
+	Del 24 al 25 de Octubre de 2026<hr />DIRECCIÓN<br />
+Asociación Intercultural La Fábrica<br />
+Calle Talabarteros, 9<br />
+21440 Lepe (Huelva)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.instagram.com/eventos_goff/"  target="_blank"/><img src="https://static.listadomanga.com/e15929d6fa74a21e3226f9f607c0a46c.jpg" border="0" alt="Linares Freak GO! 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Linares Freak GO! 2026<br /></h2>
+	Del 24 al 25 de Octubre de 2026<hr />HORARIO<br />
+- 11:00 a 20:00<br />
+<br />
+PRECIO<br />
+- Entrada gratuita<br />
+<br />
+DIRECCIÓN<br />
+Polideportivo San José<br />
+Plaza Juanfra Garrido, s/n<br />
+23700 Linares, Jaén	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://madridotaku.com/"  target="_blank"/><img src="https://static.listadomanga.com/aa192baf7f8b5fe1863e0a18ded67698.jpg" border="0" alt="Madrid Otaku 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Madrid Otaku 2026<br /></h2>
+	Del 24 al 25 de Octubre de 2026<hr />INVITADOS<br />
+- Toshio Maeda<br />
+- Hiroki Takahashi <br />
+<br />
+DIRECCIÓN<br />
+La Caja Mágica<br />
+Camino de Perales, 23<br />
+28041 Madrid	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://santacruzcomic.es/"  target="_blank"/><img src="https://static.listadomanga.com/5c59594b2c10c5d0bc80cd47ac2bb7af.jpg" border="0" alt="Santa Cruz Cómic 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Santa Cruz Cómic 2026<br /></h2>
+	Del 29 de Octubre al 1 de Noviembre de 2026<hr />XXIII Salón Internacional del cómic y la ilustración de Tenerife<br />
+<br />
+PRECIO<br />
+- Entrada Gratuita<br />
+<br />
+DIRECCIÓN<br />
+Plaza del Príncipe<br />
+38002 Santa Cruz de Tenerife	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.instagram.com/eventos_goff/"  target="_blank"/><img src="https://static.listadomanga.com/2fe97c58f9e8162d1e3144d3c7ad494e.jpg" border="0" alt="Estepa GO! 2026  [APLAZADO]" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Estepa GO! 2026  [APLAZADO]<br /></h2>
+	31 de Octubre de 2026<hr />[Por razones logísticas, totalmente ajenas a EventosGO se aplaza la cita de Estepa GO! hasta nueva fecha]<br />
+<br />
+<br />
+Salón del manga, videojuegos y la cultura alternativa de Estepa.<br />
+<br />
+HORARIO<br />
+- De 11:00 a 20:00<br />
+<br />
+PRECIO<br />
+- Entrada gratuita<br />
+<br />
+DIRECCIÓN<br />
+Caseta Municipal<br />
+Recinto Ferial<br />
+41560 Estepa (Sevilla)	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.japonengranada.com/"  target="_blank"/><img src="https://static.listadomanga.com/b9e38c89dd52fab4f07233297641a495.jpg" border="0" alt="Japón en Granada 2026 グラナダの日本 第15回" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Japón en Granada 2026 グラナダの日本 第15回<br /></h2>
+	Del 31 de Octubre al 8 de Noviembre de 2026<hr />15ª Semana de la Cultura Japonesa de Granada<br />
+<br />
+Granada se viste de cultura japonesa con actividades por toda la ciudad:<br />
+<br />
+- Festival Matsuri los días 31 de octubre y 1 de noviembre en Plaza Bibrambla.<br />
+<br />
+- Charlas y conferencias los días 6 y 7 de noviembre.<br />
+<br />
+- Actividades en distintas ubicaciones de Granada	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	  <table><tr><td class="separacionextra"></td></tr>
+		  <tr>
+		    <td><table class="ventana_id1" style="width: 974px">
+		      <tr>
+		        <td width="320" align="center" style="vertical-align: top">
+	<a href="https://www.instagram.com/tarracomanga/"  target="_blank"/><img src="https://static.listadomanga.com/9f32db3de65f9f4ba4b39c373c31d996.jpg" border="0" alt="Tarraco Manga 2026" decoding="async" /><br />Visitar P&aacute;gina Web</a>	</td>
+		        <td width="642" class="ventana_id1" style="vertical-align: top"><h2>Tarraco Manga 2026<br /></h2>
+	Del 31 de Octubre al 1 de Noviembre de 2026<hr />DIRECCIÓN<br />
+Recinte Firal de Tarragona<br />
+Carrer de Pompeu Fabra<br />
+43004 Tarragona	             </td>
+	          </tr>
+		      </table></td>
+      </tr>
+	</table>
+	</td></tr></table></td></tr></table>		</center>
+		<br/>
+		<center>Las im&aacute;genes incluidas en esta web son Copyright &copy; de sus respectivos autores.<br/>
+		Dise&ntilde;o web y base de datos Copyright &copy; 2002-2026 listadomanga.es
+		<div style="padding-top: 10px;"><a class="change-consent" onclick="window.__tcfapi('displayConsentUi', 2, function() {} );">Cambiar configuración de privacidad</a></div>
+		</center>
+<script>
+var imagenPortadaCensurada = "https:\/\/static.listadomanga.com\/08a02c268a6d6b2304c152aa0acdc7a0.png";
+var urlStatic = "https:\/\/static.listadomanga.com\/",dominioCookie = ".listadomanga.es";
+var hayContenidoNSFW = false,hayCookieNSFW = false;
+</script>
+<script async src="https://static.listadomanga.com/7d6d36fb797a6b4d2beb10390b16188c.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0ZG9JWQHWR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {'ad_storage': 'denied','analytics_storage': 'denied'});
+  gtag('js', new Date());
+  gtag('config', 'G-0ZG9JWQHWR');
+</script>
+		<script type="application/ld+json">{"@context":"https:\/\/schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https:\/\/www.listadomanga.es\/"},{"@type":"ListItem","position":2,"name":"Salones de Octubre 2026"}]}]}</script>
+	</body>
+</html>		
