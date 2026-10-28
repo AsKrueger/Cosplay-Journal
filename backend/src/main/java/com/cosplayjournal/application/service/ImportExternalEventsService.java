@@ -15,6 +15,8 @@ import com.cosplayjournal.domain.model.event.EventSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,9 +24,15 @@ public class ImportExternalEventsService implements ImportExternalEventsUseCase 
 
     private static final Logger log = LoggerFactory.getLogger(ImportExternalEventsService.class);
 
+    /** Intervalo mínimo entre sincronizaciones lanzadas desde la app, para no saturar ListadoManga. */
+    static final Duration MIN_REFRESH_INTERVAL = Duration.ofMinutes(30);
+
     private final ExternalEventSourcePort externalEventSourcePort;
     private final EventRepositoryPort eventRepositoryPort;
     private final DomainEventPublisherPort eventPublisherPort;
+
+    private Instant lastRunAt;
+    private ImportEventsResult lastResult;
 
     public ImportExternalEventsService(
             ExternalEventSourcePort externalEventSourcePort,
@@ -34,6 +42,18 @@ public class ImportExternalEventsService implements ImportExternalEventsUseCase 
         this.externalEventSourcePort = externalEventSourcePort;
         this.eventRepositoryPort = eventRepositoryPort;
         this.eventPublisherPort = eventPublisherPort;
+    }
+
+    @Override
+    public synchronized ImportEventsResult refreshIfStale() {
+        Instant now = Instant.now();
+        if (lastRunAt != null && Duration.between(lastRunAt, now).compareTo(MIN_REFRESH_INTERVAL) < 0) {
+            return lastResult;
+        }
+        ImportEventsResult result = importEvents();
+        lastRunAt = now;
+        lastResult = result;
+        return result;
     }
 
     @Override
