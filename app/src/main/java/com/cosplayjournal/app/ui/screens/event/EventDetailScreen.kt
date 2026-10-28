@@ -165,7 +165,8 @@ fun DetailSection(title: String, content: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatusSelector(currentStatus: String, onStatusSelected: (String) -> Unit) {
-    val statuses = listOf("ATTENDING", "INTERESTED", "PLANNING")
+    // ATTENDING: lo tengo seleccionado. ATTENDED: asistí (se usa en eventos pasados).
+    val statuses = listOf("ATTENDING", "ATTENDED", "INTERESTED", "PLANNING")
     Column {
         Text("Mi Estado", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -174,7 +175,7 @@ fun StatusSelector(currentStatus: String, onStatusSelected: (String) -> Unit) {
                 FilterChip(
                     selected = isSelected,
                     onClick = { onStatusSelected(if (isSelected) "NONE" else status) },
-                    label = { Text(status) },
+                    label = { Text(if (status == "ATTENDED") "FUI" else status) },
                     colors = FilterChipDefaults.filterChipColors(
                         selectedContainerColor = MaterialTheme.colorScheme.primary,
                         selectedLabelColor = MaterialTheme.colorScheme.onPrimary,

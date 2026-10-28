@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.cosplayjournal.app.ui.calendar.underlineFor
 import com.cosplayjournal.app.ui.components.EmptyState
 import com.cosplayjournal.app.ui.screens.event.EventCard
 import com.cosplayjournal.app.ui.viewmodel.ProfileViewModel
@@ -72,10 +73,12 @@ fun FavoritesScreen(
                         )
                     }
                     items(uiState.favoriteEvents) { event ->
+                        val participation = uiState.favoriteEventStatus[event.id] ?: "NONE"
                         EventCard(
                             event = event,
-                            status = "INTERESTED", // Or fetch real status
+                            status = uiState.favoriteEventStatus[event.id] ?: "PLANIFICANDO",
                             isFavorite = true,
+                            underlineColor = underlineFor(event.startDate, event.endDate, participation),
                             onClick = { onEventClick(event.id) },
                             onFavoriteClick = { /* Toggle off logic if needed */ }
                         )

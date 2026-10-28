@@ -14,12 +14,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cosplayjournal.app.data.model.Event
+import com.cosplayjournal.app.ui.calendar.underlineFor
 import com.cosplayjournal.app.ui.viewmodel.EventViewModel
 import java.time.LocalDate
 import java.time.YearMonth
@@ -32,7 +36,11 @@ import java.util.*
 fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
     val events by viewModel.events.collectAsState()
     val userEventData by viewModel.userEventData.collectAsState()
-    
+    val loadError by viewModel.loadError.collectAsState()
+
+    // Recarga cada vez que se muestra el calendario, para recoger los eventos importados desde el backend
+    LaunchedEffect(Unit) { viewModel.loadEvents() }
+
     // Locale para español
     val spanishLocale = remember { Locale("es", "ES") }
     
@@ -98,12 +106,22 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
 
             if (filteredEvents.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.Center) {
-                    Text(
-                        "No hay eventos programados para este mes",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center
-                    )
+                    if (loadError) {
+                        Text(
+                            "No se pudo conectar con el servidor. Toca para reintentar",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.error,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.clickable { viewModel.loadEvents() }
+                        )
+                    } else {
+                        Text(
+                            "No hay eventos programados para este mes",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             } else {
                 LazyColumn(
@@ -114,9 +132,10 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
                     items(filteredEvents) { event ->
                         val data = userEventData.find { it.eventId == event.id }
                         EventCard(
-                            event = event, 
+                            event = event,
                             status = data?.status ?: "PLANIFICANDO",
                             isFavorite = data?.isFavorite ?: false,
+                            underlineColor = underlineFor(event.startDate, event.endDate, data?.status ?: "NONE"),
                             onClick = { onEventClick(event.id) },
                             onFavoriteClick = { viewModel.toggleFavorite(event.id) }
                         )
@@ -249,31 +268,45 @@ fun CalendarSection(
 
 @Composable
 fun EventCard(
-    event: Event, 
-    status: String, 
+    event: Event,
+    status: String,
     isFavorite: Boolean,
+    underlineColor: Color,
     onClick: () -> Unit,
     onFavoriteClick: () -> Unit
 ) {
     val statusText = when(status) {
         "ATTENDING" -> "ASISTIRÉ"
+        "ATTENDED" -> "FUI"
         "INTERESTED" -> "INTERESADO"
         "PLANNING" -> "PLANIFICANDO"
+        // "NONE" es el estado por defecto de un evento sin selección: se muestra como planificando
+        "NONE" -> "PLANIFICANDO"
         else -> status
     }
     val statusColor = when(status) {
         "ATTENDING" -> MaterialTheme.colorScheme.primaryContainer
+        "ATTENDED" -> MaterialTheme.colorScheme.primaryContainer
         "INTERESTED" -> MaterialTheme.colorScheme.secondaryContainer
         else -> MaterialTheme.colorScheme.tertiaryContainer
     }
     val statusTextColor = when(status) {
         "ATTENDING" -> MaterialTheme.colorScheme.onPrimaryContainer
+        "ATTENDED" -> MaterialTheme.colorScheme.onPrimaryContainer
         "INTERESTED" -> MaterialTheme.colorScheme.onSecondaryContainer
         else -> MaterialTheme.colorScheme.onTertiaryContainer
     }
 
     Card(
-        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
+        // Subrayado de color según el estado del evento en el calendario
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).drawWithContent {
+            drawContent()
+            drawRect(
+                color = underlineColor,
+                topLeft = Offset(0f, size.height - UNDERLINE_HEIGHT.toPx()),
+                size = Size(size.width, UNDERLINE_HEIGHT.toPx())
+            )
+        },
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -326,3 +359,6 @@ fun EventCard(
         }
     }
 }
+
+/** Grosor del subrayado de color de cada tarjeta de evento. */
+private val UNDERLINE_HEIGHT = 4.dp
