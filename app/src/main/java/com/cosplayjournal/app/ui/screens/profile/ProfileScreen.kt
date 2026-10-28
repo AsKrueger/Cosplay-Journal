@@ -24,7 +24,7 @@ import com.cosplayjournal.app.ui.viewmodel.ProfileViewModel
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(viewModel: ProfileViewModel, onOpenFriends: () -> Unit = {}) {
+fun ProfileScreen(viewModel: ProfileViewModel, onOpenFriends: () -> Unit = {}, onOpenChats: () -> Unit = {}) {
     val state by viewModel.state.collectAsState()
 
     Scaffold(
@@ -49,6 +49,7 @@ fun ProfileScreen(viewModel: ProfileViewModel, onOpenFriends: () -> Unit = {}) {
                     busy = state.busy
                 )
                 Button(onClick = onOpenFriends) { Text("Mis amigos") }
+                Button(onClick = onOpenChats) { Text("Mis chats") }
                 OutlinedButton(onClick = { viewModel.logout() }) { Text("Cerrar sesión") }
             } else {
                 AccessForm(

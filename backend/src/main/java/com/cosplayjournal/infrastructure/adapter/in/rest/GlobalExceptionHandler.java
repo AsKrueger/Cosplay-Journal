@@ -26,7 +26,8 @@ public class GlobalExceptionHandler {
             ParticipationNotFoundException.class,
             PhotoNotFoundException.class,
             UserNotFoundException.class,
-            FriendshipNotFoundException.class
+            FriendshipNotFoundException.class,
+            ConversationNotFoundException.class
     })
     public ResponseEntity<ErrorResponse> handleNotFoundExceptions(RuntimeException ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(
@@ -67,6 +68,7 @@ public class GlobalExceptionHandler {
             InvalidUserDataException.class,
             InvalidStateTransitionException.class,
             InvalidFriendshipException.class,
+            InvalidChatDataException.class,
             IllegalArgumentException.class
     })
     public ResponseEntity<ErrorResponse> handleBadRequestExceptions(RuntimeException ex, HttpServletRequest request) {
