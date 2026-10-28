@@ -26,7 +26,13 @@ import com.cosplayjournal.app.ui.navigation.Screen
 import com.cosplayjournal.app.ui.screens.event.EventDetailScreen
 import com.cosplayjournal.app.ui.screens.event.EventListScreen
 import com.cosplayjournal.app.ui.screens.profile.ProfileScreen
+import com.cosplayjournal.app.ui.screens.chat.ChatRoomScreen
+import com.cosplayjournal.app.ui.screens.chat.ChatsScreen
 import com.cosplayjournal.app.ui.screens.friends.FriendsScreen
+import com.cosplayjournal.app.ui.viewmodel.ChatRoomViewModel
+import com.cosplayjournal.app.ui.viewmodel.ChatRoomViewModelFactory
+import com.cosplayjournal.app.ui.viewmodel.ChatsViewModel
+import com.cosplayjournal.app.ui.viewmodel.ChatsViewModelFactory
 import com.cosplayjournal.app.ui.viewmodel.FriendsViewModel
 import com.cosplayjournal.app.ui.viewmodel.FriendsViewModelFactory
 import com.cosplayjournal.app.ui.theme.CosplayJournalTheme
@@ -112,12 +118,34 @@ fun MainScreen() {
             }
 
             composable(Screen.Profile.route) {
-                ProfileScreen(viewModel = profileViewModel, onOpenFriends = { navController.navigate("friends") })
+                ProfileScreen(
+                    viewModel = profileViewModel,
+                    onOpenFriends = { navController.navigate("friends") },
+                    onOpenChats = { navController.navigate("chats") }
+                )
             }
 
             composable("friends") {
                 val friendsViewModel: FriendsViewModel = viewModel(factory = FriendsViewModelFactory(app.friendsRepository))
                 FriendsScreen(viewModel = friendsViewModel, onNavigateBack = { navController.popBackStack() })
+            }
+
+            composable("chats") {
+                val chatsViewModel: ChatsViewModel = viewModel(factory = ChatsViewModelFactory(app.chatRepository))
+                ChatsScreen(
+                    viewModel = chatsViewModel,
+                    onOpenChat = { id -> navController.navigate("chat/$id") },
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            composable("chat/{conversationId}", arguments = listOf(navArgument("conversationId") { type = NavType.StringType })) { backStackEntry ->
+                val conversationId = backStackEntry.arguments?.getString("conversationId") ?: return@composable
+                val chatRoomViewModel: ChatRoomViewModel = viewModel(
+                    key = conversationId,
+                    factory = ChatRoomViewModelFactory(app.chatRepository, conversationId)
+                )
+                ChatRoomScreen(viewModel = chatRoomViewModel, onNavigateBack = { navController.popBackStack() })
             }
 
             composable(Screen.EventDetail.route, arguments = listOf(navArgument("eventId") { type = NavType.StringType })) { backStackEntry ->

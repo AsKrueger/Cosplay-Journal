@@ -34,6 +34,16 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public ChatApplicationService chatApplicationService(
+            ConversationRepositoryPort conversationRepositoryPort,
+            MessageRepositoryPort messageRepositoryPort,
+            UserRepositoryPort userRepositoryPort,
+            FriendshipRepositoryPort friendshipRepositoryPort
+    ) {
+        return new ChatApplicationService(conversationRepositoryPort, messageRepositoryPort, userRepositoryPort, friendshipRepositoryPort);
+    }
+
+    @Bean
     public FriendshipApplicationService friendshipApplicationService(
             FriendshipRepositoryPort friendshipRepositoryPort,
             UserRepositoryPort userRepositoryPort
