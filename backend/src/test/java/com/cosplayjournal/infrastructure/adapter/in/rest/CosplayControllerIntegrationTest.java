@@ -43,14 +43,9 @@ class CosplayControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST /api/v1/cosplays debe crear un cosplay correctamente asociando el ownerId del usuario autenticado")
+    @DisplayName("POST /api/v1/cosplays debe crear un cosplay con nombre y foto")
     void shouldCreateCosplayViaRest() throws Exception {
-        CreateCosplayRequest request = new CreateCosplayRequest(
-                "Link BotW",
-                "Túnica del elegido",
-                "Link",
-                "Zelda BotW"
-        );
+        CreateCosplayRequest request = new CreateCosplayRequest("Link BotW", "https://img.example.com/link.jpg");
 
         mockMvc.perform(post("/api/v1/cosplays")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -58,21 +53,13 @@ class CosplayControllerIntegrationTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", notNullValue()))
                 .andExpect(jsonPath("$.name", is("Link BotW")))
-                .andExpect(jsonPath("$.description", is("Túnica del elegido")))
-                .andExpect(jsonPath("$.characterName", is("Link")))
-                .andExpect(jsonPath("$.originSeries", is("Zelda BotW")))
-                .andExpect(jsonPath("$.status", is("IDEA")));
+                .andExpect(jsonPath("$.photoUrl", is("https://img.example.com/link.jpg")));
     }
 
     @Test
     @DisplayName("POST /api/v1/cosplays debe retornar 400 Bad Request si el nombre es inválido")
     void shouldReturnBadRequestWhenNameIsInvalid() throws Exception {
-        CreateCosplayRequest request = new CreateCosplayRequest(
-                "",
-                "Descripción",
-                "Personaje",
-                "Serie"
-        );
+        CreateCosplayRequest request = new CreateCosplayRequest("", null);
 
         mockMvc.perform(post("/api/v1/cosplays")
                         .contentType(MediaType.APPLICATION_JSON)

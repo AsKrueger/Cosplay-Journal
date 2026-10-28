@@ -45,7 +45,7 @@ class PostgresFlywayRepositoryIntegrationTest extends AbstractTestcontainersInte
         assertEquals("cosplayer_postgres", foundUser.get().getUsername());
 
         // 2. Guardar Cosplay
-        Cosplay cosplay = Cosplay.createNew("Goku SSJ", "Traje gi naranja", "Goku", "Dragon Ball", userId);
+        Cosplay cosplay = Cosplay.createNew("Goku SSJ", null, userId);
         Cosplay savedCosplay = cosplayRepositoryAdapter.save(cosplay);
         assertNotNull(savedCosplay.getId());
 

@@ -61,7 +61,7 @@ class PhotoJpaAdapterIntegrationTest {
                 EventId.of("evt-photo-1"), "Photo Fest", "Desc",
                 LocalDate.now(), LocalDate.now(), EventLocation.of("Sevilla", "Fibes"), "", EventSource.MANUAL_ADMIN
         ));
-        Cosplay cosplay = cosplayRepositoryAdapter.save(Cosplay.createNew("Naruto", "Desc", "Naruto", "Anime", UserId.of("u1")));
+        Cosplay cosplay = cosplayRepositoryAdapter.save(Cosplay.createNew("Naruto", null, UserId.of("u1")));
 
         ParticipationId participationId = ParticipationId.of("part-photo-1");
         participationRepositoryAdapter.save(Participation.create(

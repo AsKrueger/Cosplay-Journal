@@ -29,6 +29,14 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public FriendshipApplicationService friendshipApplicationService(
+            FriendshipRepositoryPort friendshipRepositoryPort,
+            UserRepositoryPort userRepositoryPort
+    ) {
+        return new FriendshipApplicationService(friendshipRepositoryPort, userRepositoryPort);
+    }
+
+    @Bean
     public ImportExternalEventsService importExternalEventsService(
             ExternalEventSourcePort externalEventSourcePort,
             EventRepositoryPort eventRepositoryPort,

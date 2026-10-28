@@ -2,9 +2,7 @@ package com.cosplayjournal.application.port.in;
 
 public record CreateCosplayCommand(
         String name,
-        String description,
-        String characterName,
-        String originSeries
+        String photoUrl
 ) {
     public CreateCosplayCommand {
         if (name == null || name.trim().isEmpty()) {

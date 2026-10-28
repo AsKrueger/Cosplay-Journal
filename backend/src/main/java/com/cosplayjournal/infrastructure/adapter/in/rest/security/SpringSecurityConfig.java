@@ -46,6 +46,8 @@ public class SpringSecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         // Catálogo de eventos: lectura pública. La creación, modificación e importación siguen protegidas.
                         .requestMatchers(HttpMethod.GET, "/api/v1/events", "/api/v1/events/**").permitAll()
+                        // Perfil público: nickname y foto. Nunca incluye email.
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/**").permitAll()
                         // Actualización del catálogo al abrir la app; tiene límite de frecuencia en el servicio
                         .requestMatchers(HttpMethod.POST, "/api/v1/events/refresh").permitAll()
                         .anyRequest().authenticated()
