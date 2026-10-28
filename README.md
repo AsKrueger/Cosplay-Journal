@@ -47,6 +47,7 @@ La documentación detallada del proyecto se encuentra en el directorio [`docs/`]
 - ⚡ [**Mensajería y Eventos Kafka**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/messaging/KAFKA.md) — Topics, DTOs de mensajería, claves y consumidores asíncronos.
 - ⚙️ [**Casos de Uso e Integración API**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/use-cases/USE_CASES.md) — Servicios de aplicación, puertos de entrada/salida y endpoints REST.
 - 📖 [**Especificación de API REST (OpenAPI 3)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/api/API.md) — Swagger UI, contratos, DTOs, esquemas JWT y códigos HTTP.
+- 💶 [**Arquitectura de Despliegue de Coste Cero**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/deployment/COST_OPTIMIZED_ARCHITECTURE.md) — Alternativas gratuitas con cuotas verificadas, riesgos de pérdida de datos y ruta de migración.
 - 🚀 [**Integración Continua (CI/CD)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/ci/CI_CD.md) — Pipeline de GitHub Actions, Maven Wrapper, Testcontainers e informes.
 - 🧪 [**Testing con Testcontainers**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/testing/TESTCONTAINERS.md) — Integración sobre contenedores efímeros de PostgreSQL 16 y Kafka.
 - 🔒 [**Seguridad y Autenticación**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/security/SECURITY.md) — Modelo de tokens JWT, BCrypt, roles y filtros.
