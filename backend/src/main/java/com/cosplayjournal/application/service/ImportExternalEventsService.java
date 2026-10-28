@@ -15,6 +15,7 @@ import com.cosplayjournal.domain.model.event.EventSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -31,6 +32,7 @@ public class ImportExternalEventsService implements ImportExternalEventsUseCase 
     private final EventRepositoryPort eventRepositoryPort;
     private final DomainEventPublisherPort eventPublisherPort;
 
+    private final Clock clock;
     private Instant lastRunAt;
     private ImportEventsResult lastResult;
 
@@ -39,14 +41,24 @@ public class ImportExternalEventsService implements ImportExternalEventsUseCase 
             EventRepositoryPort eventRepositoryPort,
             DomainEventPublisherPort eventPublisherPort
     ) {
+        this(externalEventSourcePort, eventRepositoryPort, eventPublisherPort, Clock.systemUTC());
+    }
+
+    public ImportExternalEventsService(
+            ExternalEventSourcePort externalEventSourcePort,
+            EventRepositoryPort eventRepositoryPort,
+            DomainEventPublisherPort eventPublisherPort,
+            Clock clock
+    ) {
         this.externalEventSourcePort = externalEventSourcePort;
         this.eventRepositoryPort = eventRepositoryPort;
         this.eventPublisherPort = eventPublisherPort;
+        this.clock = clock;
     }
 
     @Override
     public synchronized ImportEventsResult refreshIfStale() {
-        Instant now = Instant.now();
+        Instant now = clock.instant();
         if (lastRunAt != null && Duration.between(lastRunAt, now).compareTo(MIN_REFRESH_INTERVAL) < 0) {
             return lastResult;
         }
