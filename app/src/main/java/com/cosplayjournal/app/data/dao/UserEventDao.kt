@@ -17,4 +17,10 @@ interface UserEventDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(data: UserEventData)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(data: List<UserEventData>)
+
+    @Query("DELETE FROM user_event_data")
+    suspend fun clear()
 }

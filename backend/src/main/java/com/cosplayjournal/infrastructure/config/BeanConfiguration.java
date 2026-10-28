@@ -29,6 +29,11 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public EventStatusApplicationService eventStatusApplicationService(UserEventStatusRepositoryPort userEventStatusRepositoryPort) {
+        return new EventStatusApplicationService(userEventStatusRepositoryPort);
+    }
+
+    @Bean
     public FriendshipApplicationService friendshipApplicationService(
             FriendshipRepositoryPort friendshipRepositoryPort,
             UserRepositoryPort userRepositoryPort

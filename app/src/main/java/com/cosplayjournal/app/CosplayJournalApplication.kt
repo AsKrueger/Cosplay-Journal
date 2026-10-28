@@ -16,5 +16,5 @@ class CosplayJournalApplication : Application() {
     val eventRepository by lazy { EventRepository(api) }
     val authRepository by lazy { AuthRepository(api, tokenStore) }
     val friendsRepository by lazy { FriendsRepository(api) }
-    val userEventRepository by lazy { UserEventRepository(database.userEventDao()) }
+    val userEventRepository by lazy { UserEventRepository(database.userEventDao(), api) }
 }

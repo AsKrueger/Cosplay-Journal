@@ -56,6 +56,12 @@ class EventViewModel(
             } catch (e: Exception) {
                 // La sincronización es opcional: el catálogo mostrado sigue siendo válido
             }
+            try {
+                // Con sesión iniciada, el estado de asistencia del servidor manda sobre el local
+                userEventRepository.syncFromServer()
+            } catch (e: Exception) {
+                // Sin sesión o sin conexión: se mantiene el estado local
+            }
         }
     }
 
