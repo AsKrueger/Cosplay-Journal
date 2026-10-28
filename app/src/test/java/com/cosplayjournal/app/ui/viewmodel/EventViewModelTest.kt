@@ -36,6 +36,7 @@ class EventViewModelTest {
         repository = mockk()
         userEventRepository = mockk()
         every { userEventRepository.all } returns flowOf(emptyList())
+        coEvery { userEventRepository.syncFromServer() } returns Unit
     }
 
     @After
