@@ -4,32 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.cosplayjournal.app.data.dao.CosplayDao
-import com.cosplayjournal.app.data.dao.LocationDao
-import com.cosplayjournal.app.data.entity.*
+import com.cosplayjournal.app.data.dao.UserEventDao
+import com.cosplayjournal.app.data.entity.UserEventData
 
 @Database(
-    entities = [
-        Cosplan::class,
-        Cosplay::class,
-        HandmadePart::class,
-        PartResource::class,
-        PurchasedItem::class,
-        CharacterReference::class,
-        Location::class,
-        CosplayReferenceCrossRef::class,
-        PhotoSession::class,
-        CosplayPhotoSessionCrossRef::class,
-        UserEventData::class,
-        EventCosplanSelection::class,
-        WigMakeup::class
-    ],
-    version = 6, // Incremented version for WigMakeup addition
+    entities = [UserEventData::class],
+    version = 7, // Se retiran los módulos de cosplans, cosplays y localizaciones
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun cosplayDao(): CosplayDao
-    abstract fun locationDao(): LocationDao
+    abstract fun userEventDao(): UserEventDao
 
     companion object {
         @Volatile

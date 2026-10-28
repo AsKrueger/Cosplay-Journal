@@ -77,25 +77,19 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    // DataStore
-    implementation(libs.androidx.datastore.preferences)
 
-    // OpenStreetMap
-    implementation(libs.osmdroid)
 
-    // PDF (iText7)
-    implementation(libs.itext7.core)
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)
 
-    // Coil (Images)
-    implementation(libs.coil.compose)
 
     // API REST del backend
     implementation(libs.retrofit)
     implementation(libs.okhttp)
     implementation(libs.retrofit.kotlinx.serialization)
+    implementation(libs.androidx.security.crypto)
+    implementation(libs.coil.compose)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockwebserver)
