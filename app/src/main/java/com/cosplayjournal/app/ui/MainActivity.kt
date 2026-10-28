@@ -26,6 +26,9 @@ import com.cosplayjournal.app.ui.navigation.Screen
 import com.cosplayjournal.app.ui.screens.event.EventDetailScreen
 import com.cosplayjournal.app.ui.screens.event.EventListScreen
 import com.cosplayjournal.app.ui.screens.profile.ProfileScreen
+import com.cosplayjournal.app.ui.screens.friends.FriendsScreen
+import com.cosplayjournal.app.ui.viewmodel.FriendsViewModel
+import com.cosplayjournal.app.ui.viewmodel.FriendsViewModelFactory
 import com.cosplayjournal.app.ui.theme.CosplayJournalTheme
 import com.cosplayjournal.app.ui.viewmodel.EventViewModel
 import com.cosplayjournal.app.ui.viewmodel.EventViewModelFactory
@@ -109,7 +112,12 @@ fun MainScreen() {
             }
 
             composable(Screen.Profile.route) {
-                ProfileScreen(viewModel = profileViewModel)
+                ProfileScreen(viewModel = profileViewModel, onOpenFriends = { navController.navigate("friends") })
+            }
+
+            composable("friends") {
+                val friendsViewModel: FriendsViewModel = viewModel(factory = FriendsViewModelFactory(app.friendsRepository))
+                FriendsScreen(viewModel = friendsViewModel, onNavigateBack = { navController.popBackStack() })
             }
 
             composable(Screen.EventDetail.route, arguments = listOf(navArgument("eventId") { type = NavType.StringType })) { backStackEntry ->
