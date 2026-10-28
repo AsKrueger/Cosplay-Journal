@@ -76,7 +76,7 @@ class ParticipationControllerIntegrationTest {
         ));
 
         cosplay = cosplayRepositoryAdapter.save(
-                Cosplay.createNew("Zoro", "3 espadas", "Roronoa Zoro", "One Piece", UserId.of("testuser"))
+                Cosplay.createNew("Zoro", null, UserId.of("testuser"))
         );
     }
 

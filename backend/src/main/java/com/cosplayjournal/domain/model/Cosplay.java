@@ -1,138 +1,88 @@
 package com.cosplayjournal.domain.model;
 
 import com.cosplayjournal.domain.exception.InvalidCosplayDataException;
-import com.cosplayjournal.domain.exception.InvalidStateTransitionException;
 import com.cosplayjournal.domain.model.user.UserId;
 
 import java.time.Instant;
 import java.util.Objects;
-import java.util.Set;
 
+/**
+ * Un cosplay es solo un nombre y una foto. Se usa en la galería y para participar en grupales.
+ */
 public class Cosplay {
 
     private final Long id;
     private final UserId ownerId;
     private final String name;
-    private final String description;
-    private final String characterName;
-    private final String originSeries;
-    private CosplayStatus status;
+    private String photoUrl;
     private final Instant createdAt;
     private Instant updatedAt;
 
-    public Cosplay(Long id, UserId ownerId, String name, String description, String characterName, String originSeries, CosplayStatus status, Instant createdAt, Instant updatedAt) {
+    public Cosplay(Long id, UserId ownerId, String name, String photoUrl, Instant createdAt, Instant updatedAt) {
         validateName(name);
-        if (ownerId == null) {
-            throw new InvalidCosplayDataException("El propietario (ownerId) del cosplay es obligatorio");
-        }
-
+        validatePhotoUrl(photoUrl);
         this.id = id;
         this.ownerId = ownerId;
         this.name = name.trim();
-        this.description = description != null ? description.trim() : "";
-        this.characterName = characterName != null ? characterName.trim() : "";
-        this.originSeries = originSeries != null ? originSeries.trim() : "";
-        this.status = status != null ? status : CosplayStatus.IDEA;
+        this.photoUrl = blankToNull(photoUrl);
         this.createdAt = createdAt != null ? createdAt : Instant.now();
         this.updatedAt = updatedAt != null ? updatedAt : this.createdAt;
     }
 
-    public Cosplay(Long id, String name, String description, String characterName, String originSeries, CosplayStatus status, Instant createdAt, Instant updatedAt) {
-        this(id, UserId.of("system-default"), name, description, characterName, originSeries, status, createdAt, updatedAt);
+    public static Cosplay createNew(String name, String photoUrl, UserId ownerId) {
+        Instant now = Instant.now();
+        return new Cosplay(null, ownerId, name, photoUrl, now, now);
     }
 
-    public static Cosplay createNew(String name, String description, String characterName, String originSeries, UserId ownerId) {
-        return new Cosplay(null, ownerId, name, description, characterName, originSeries, CosplayStatus.IDEA, Instant.now(), Instant.now());
-    }
-
-    public static Cosplay createNew(String name, String description, String characterName, String originSeries) {
-        return createNew(name, description, characterName, originSeries, UserId.of("system-default"));
+    public static Cosplay createNew(String name, String photoUrl) {
+        return createNew(name, photoUrl, UserId.of("system-default"));
     }
 
     public Cosplay withId(Long newId) {
-        return new Cosplay(newId, this.ownerId, this.name, this.description, this.characterName, this.originSeries, this.status, this.createdAt, Instant.now());
+        return new Cosplay(newId, ownerId, name, photoUrl, createdAt, updatedAt);
     }
 
     public boolean isOwnedBy(UserId userId) {
-        return userId != null && this.ownerId.equals(userId);
+        return ownerId != null && ownerId.equals(userId);
     }
 
-    public void changeStatus(CosplayStatus newStatus) {
-        if (newStatus == null) {
-            throw new InvalidCosplayDataException("El estado del cosplay no puede ser nulo");
-        }
-        if (this.status == newStatus) {
-            return;
-        }
-
-        validateTransition(this.status, newStatus);
-        this.status = newStatus;
+    /** Cambia la foto. Una URL vacía la elimina. */
+    public void changePhoto(String newPhotoUrl) {
+        validatePhotoUrl(newPhotoUrl);
+        this.photoUrl = blankToNull(newPhotoUrl);
         this.updatedAt = Instant.now();
-    }
-
-    public void updateStatus(CosplayStatus newStatus) {
-        changeStatus(newStatus);
-    }
-
-    private void validateTransition(CosplayStatus current, CosplayStatus target) {
-        Set<CosplayStatus> allowedTargets = switch (current) {
-            case IDEA -> Set.of(CosplayStatus.IN_PLANNING, CosplayStatus.IN_PROGRESS, CosplayStatus.ABANDONED);
-            case IN_PLANNING -> Set.of(CosplayStatus.IN_PROGRESS, CosplayStatus.ABANDONED, CosplayStatus.IDEA);
-            case IN_PROGRESS -> Set.of(CosplayStatus.COMPLETED, CosplayStatus.ABANDONED, CosplayStatus.IN_PLANNING);
-            case COMPLETED -> Set.of(CosplayStatus.ARCHIVED, CosplayStatus.IN_PROGRESS);
-            case ABANDONED -> Set.of(CosplayStatus.IDEA, CosplayStatus.IN_PLANNING);
-            case ARCHIVED -> Set.of(CosplayStatus.COMPLETED, CosplayStatus.IDEA);
-        };
-
-        if (!allowedTargets.contains(target)) {
-            throw new InvalidStateTransitionException(current.name(), target.name());
-        }
     }
 
     private static void validateName(String name) {
         if (name == null || name.trim().isEmpty()) {
-            throw new InvalidCosplayDataException("El nombre del cosplay no puede estar vacío");
+            throw new InvalidCosplayDataException("El nombre del cosplay es obligatorio");
         }
-        if (name.trim().length() < 2 || name.trim().length() > 100) {
-            throw new InvalidCosplayDataException("El nombre del cosplay debe tener entre 2 y 100 caracteres");
+        if (name.trim().length() > 100) {
+            throw new InvalidCosplayDataException("El nombre del cosplay no puede superar 100 caracteres");
         }
     }
 
-    public Long getId() {
-        return id;
+    private static void validatePhotoUrl(String photoUrl) {
+        if (photoUrl == null || photoUrl.isBlank()) return;
+        String trimmed = photoUrl.trim();
+        if (trimmed.length() > 500) {
+            throw new InvalidCosplayDataException("La URL de la foto no puede superar 500 caracteres");
+        }
+        if (!trimmed.startsWith("https://") && !trimmed.startsWith("http://")) {
+            throw new InvalidCosplayDataException("La foto debe ser una URL http o https");
+        }
     }
 
-    public UserId getOwnerId() {
-        return ownerId;
+    private static String blankToNull(String value) {
+        return value == null || value.isBlank() ? null : value.trim();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getCharacterName() {
-        return characterName;
-    }
-
-    public String getOriginSeries() {
-        return originSeries;
-    }
-
-    public CosplayStatus getStatus() {
-        return status;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
+    public Long getId() { return id; }
+    public UserId getOwnerId() { return ownerId; }
+    public String getName() { return name; }
+    public String getPhotoUrl() { return photoUrl; }
+    public Instant getCreatedAt() { return createdAt; }
+    public Instant getUpdatedAt() { return updatedAt; }
 
     @Override
     public boolean equals(Object o) {
@@ -149,11 +99,6 @@ public class Cosplay {
 
     @Override
     public String toString() {
-        return "Cosplay{" +
-                "id=" + id +
-                ", ownerId=" + ownerId +
-                ", name='" + name + '\'' +
-                ", status=" + status +
-                '}';
+        return "Cosplay{id=" + id + ", name='" + name + "'}";
     }
 }

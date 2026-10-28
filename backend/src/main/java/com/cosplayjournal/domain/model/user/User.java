@@ -15,6 +15,7 @@ public class User {
     private UserStatus status;
     private final Instant createdAt;
     private Instant updatedAt;
+    private String avatarUrl;
 
     public User(
             UserId id,
@@ -26,7 +27,22 @@ public class User {
             Instant createdAt,
             Instant updatedAt
     ) {
+        this(id, username, email, passwordHash, role, status, createdAt, updatedAt, null);
+    }
+
+    public User(
+            UserId id,
+            String username,
+            String email,
+            String passwordHash,
+            UserRole role,
+            UserStatus status,
+            Instant createdAt,
+            Instant updatedAt,
+            String avatarUrl
+    ) {
         validateUsername(username);
+        validateAvatarUrl(avatarUrl);
         validateEmail(email);
         if (id == null) {
             throw new InvalidUserDataException("El ID del usuario no puede ser nulo");
@@ -43,6 +59,25 @@ public class User {
         this.status = status != null ? status : UserStatus.ACTIVE;
         this.createdAt = createdAt != null ? createdAt : Instant.now();
         this.updatedAt = updatedAt != null ? updatedAt : this.createdAt;
+        this.avatarUrl = avatarUrl == null || avatarUrl.isBlank() ? null : avatarUrl.trim();
+    }
+
+    /** Cambia la foto de perfil. Una URL vacía elimina la foto. */
+    public void changeAvatar(String newAvatarUrl) {
+        validateAvatarUrl(newAvatarUrl);
+        this.avatarUrl = newAvatarUrl == null || newAvatarUrl.isBlank() ? null : newAvatarUrl.trim();
+        this.updatedAt = Instant.now();
+    }
+
+    private static void validateAvatarUrl(String avatarUrl) {
+        if (avatarUrl == null || avatarUrl.isBlank()) return;
+        String trimmed = avatarUrl.trim();
+        if (trimmed.length() > 500) {
+            throw new InvalidUserDataException("La URL de la foto de perfil no puede superar 500 caracteres");
+        }
+        if (!trimmed.startsWith("https://") && !trimmed.startsWith("http://")) {
+            throw new InvalidUserDataException("La foto de perfil debe ser una URL http o https");
+        }
     }
 
     public static User create(
@@ -110,6 +145,10 @@ public class User {
 
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
     @Override
