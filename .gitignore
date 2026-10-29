@@ -22,3 +22,6 @@ target/
 /.idea/deploymentTargetSelector.xml
 /.idea/appInsightsSettings.xml
 /.idea/copilot.data.migration.*.xml
+
+# Fotos guardadas en disco en desarrollo
+backend/uploads/

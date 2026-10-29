@@ -37,6 +37,7 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
     val events by viewModel.events.collectAsState()
     val userEventData by viewModel.userEventData.collectAsState()
     val loadError by viewModel.loadError.collectAsState()
+    val sessionExpired by viewModel.sessionExpired.collectAsState()
 
     // Recarga cada vez que se muestra el calendario, para recoger los eventos importados desde el backend
     LaunchedEffect(Unit) { viewModel.loadEvents() }
@@ -47,8 +48,23 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
     // Elevamos el estado del mes para que la lista pueda reaccionar a él
     var currentViewMonth by remember { mutableStateOf(YearMonth.now()) }
 
+    // Acceso rápido: próximos eventos a los que se va, de cualquier mes
+    var onlyAttending by remember { mutableStateOf(false) }
+    val today = remember { LocalDate.now() }
+    val upcomingAttending = remember(events, userEventData) {
+        events.filter { event ->
+            val status = userEventData.find { it.eventId == event.id }?.status
+            status == "ATTENDING" && try {
+                !LocalDate.parse(event.endDate).isBefore(today)
+            } catch (e: Exception) {
+                false
+            }
+        }.sortedBy { it.startDate }
+    }
+
     // Filtramos los eventos basándonos en el mes que se está visualizando en el calendario
-    val filteredEvents = remember(events, currentViewMonth) {
+    val filteredEvents = remember(events, currentViewMonth, onlyAttending, upcomingAttending) {
+        if (onlyAttending) return@remember upcomingAttending
         events.filter { event ->
             try {
                 val start = LocalDate.parse(event.startDate)
@@ -72,6 +88,20 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding).fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+            if (sessionExpired) {
+                Text(
+                    "Tu sesión ha caducado. Tus cambios de asistencia solo se guardan en este móvil. Vuelve a entrar en Perfil.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .background(MaterialTheme.colorScheme.errorContainer, RoundedCornerShape(12.dp))
+                        .padding(12.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
             CalendarSection(
                 events = events,
                 currentMonth = currentViewMonth,
@@ -84,8 +114,17 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
             val monthName = currentViewMonth.month.getDisplayName(TextStyle.FULL, spanishLocale)
                 .replaceFirstChar { if (it.isLowerCase()) it.titlecase(spanishLocale) else it.toString() }
 
+            FilterChip(
+                selected = onlyAttending,
+                onClick = { onlyAttending = !onlyAttending },
+                label = { Text("Solo los que voy (${upcomingAttending.size})") },
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             Text(
-                text = "Eventos en $monthName ${currentViewMonth.year}",
+                text = if (onlyAttending) "Próximos a los que vas" else "Eventos en $monthName ${currentViewMonth.year}",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -104,7 +143,7 @@ fun EventListScreen(viewModel: EventViewModel, onEventClick: (String) -> Unit) {
                         )
                     } else {
                         Text(
-                            "No hay eventos programados para este mes",
+                            if (onlyAttending) "Aún no vas a ningún evento próximo. Marca uno como Voy" else "No hay eventos programados para este mes",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center
