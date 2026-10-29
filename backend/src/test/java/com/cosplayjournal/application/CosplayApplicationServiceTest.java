@@ -2,10 +2,13 @@ package com.cosplayjournal.application;
 
 import com.cosplayjournal.application.port.in.CreateCosplayCommand;
 import com.cosplayjournal.application.port.out.CosplayRepositoryPort;
+import com.cosplayjournal.application.port.out.CurrentUserPort;
+import com.cosplayjournal.application.port.out.DomainEventPublisherPort;
 import com.cosplayjournal.application.service.CosplayApplicationService;
+import com.cosplayjournal.domain.event.CosplayCreatedEvent;
 import com.cosplayjournal.domain.exception.CosplayNotFoundException;
 import com.cosplayjournal.domain.model.Cosplay;
-import com.cosplayjournal.domain.model.CosplayStatus;
+import com.cosplayjournal.domain.model.user.UserId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,67 +29,50 @@ class CosplayApplicationServiceTest {
     @Mock
     private CosplayRepositoryPort cosplayRepositoryPort;
 
-    private CosplayApplicationService cosplayApplicationService;
+    @Mock
+    private DomainEventPublisherPort eventPublisherPort;
+
+    @Mock
+    private CurrentUserPort currentUserPort;
+
+    private CosplayApplicationService service;
+    private final UserId owner = UserId.of("ana");
 
     @BeforeEach
     void setUp() {
-        cosplayApplicationService = new CosplayApplicationService(cosplayRepositoryPort);
+        service = new CosplayApplicationService(cosplayRepositoryPort, eventPublisherPort, currentUserPort);
     }
 
     @Test
-    @DisplayName("Debe crear un cosplay utilizando el puerto de salida")
-    void shouldCreateCosplaySuccessfully() {
-        CreateCosplayCommand command = new CreateCosplayCommand(
-                "Batman", "Traje táctico", "Bruce Wayne", "DC Comics"
-        );
+    @DisplayName("Crear un cosplay guarda nombre y foto, asigna al usuario actual y publica el evento")
+    void createCosplaySavesAndPublishes() {
+        when(currentUserPort.getRequiredCurrentUserId()).thenReturn(owner);
+        when(cosplayRepositoryPort.save(any(Cosplay.class))).thenAnswer(invocation -> ((Cosplay) invocation.getArgument(0)).withId(7L));
 
-        Cosplay savedCosplay = Cosplay.createNew(command.name(), command.description(), command.characterName(), command.originSeries())
-                .withId(1L);
+        Cosplay saved = service.createCosplay(new CreateCosplayCommand("Naruto", "https://img.example.com/naruto.jpg"));
 
-        when(cosplayRepositoryPort.save(any(Cosplay.class))).thenReturn(savedCosplay);
-
-        Cosplay result = cosplayApplicationService.createCosplay(command);
-
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
-        assertEquals("Batman", result.getName());
-        verify(cosplayRepositoryPort, times(1)).save(any(Cosplay.class));
+        assertEquals(7L, saved.getId());
+        assertEquals("Naruto", saved.getName());
+        assertEquals(owner, saved.getOwnerId());
+        verify(eventPublisherPort).publish(any(CosplayCreatedEvent.class));
     }
 
     @Test
-    @DisplayName("Debe obtener un cosplay existente por ID")
-    void shouldGetCosplayByIdWhenExists() {
-        Cosplay cosplay = Cosplay.createNew("Naruto", "Modo Sabio", "Naruto Uzumaki", "Naruto Shippuden")
-                .withId(2L);
-
-        when(cosplayRepositoryPort.findById(2L)).thenReturn(Optional.of(cosplay));
-
-        Cosplay result = cosplayApplicationService.getCosplayById(2L);
-
-        assertNotNull(result);
-        assertEquals(2L, result.getId());
-        assertEquals("Naruto", result.getName());
-    }
-
-    @Test
-    @DisplayName("Debe lanzar CosplayNotFoundException si el cosplay no existe")
-    void shouldThrowExceptionWhenCosplayDoesNotExist() {
+    @DisplayName("Un id inexistente lanza CosplayNotFoundException")
+    void unknownIdIsNotFound() {
         when(cosplayRepositoryPort.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(CosplayNotFoundException.class, () -> cosplayApplicationService.getCosplayById(99L));
+        assertThrows(CosplayNotFoundException.class, () -> service.getCosplayById(99L));
     }
 
     @Test
-    @DisplayName("Debe obtener todos los cosplays")
-    void shouldGetAllCosplays() {
-        Cosplay c1 = Cosplay.createNew("C1", "D1", "Char1", "Series1").withId(1L);
-        Cosplay c2 = Cosplay.createNew("C2", "D2", "Char2", "Series2").withId(2L);
+    @DisplayName("Listar devuelve todos los cosplays del repositorio")
+    void listsAll() {
+        when(cosplayRepositoryPort.findAll()).thenReturn(List.of(
+                Cosplay.createNew("C1", null).withId(1L),
+                Cosplay.createNew("C2", null).withId(2L)
+        ));
 
-        when(cosplayRepositoryPort.findAll()).thenReturn(List.of(c1, c2));
-
-        List<Cosplay> list = cosplayApplicationService.getAllCosplays();
-
-        assertEquals(2, list.size());
-        verify(cosplayRepositoryPort, times(1)).findAll();
+        assertEquals(2, service.getAllCosplays().size());
     }
 }

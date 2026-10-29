@@ -10,7 +10,7 @@ public class UserPersistenceMapper {
 
     public static UserJpaEntity toJpaEntity(User user) {
         if (user == null) return null;
-        return new UserJpaEntity(
+        UserJpaEntity entity = new UserJpaEntity(
                 user.getId().value(),
                 user.getUsername(),
                 user.getEmail(),
@@ -20,6 +20,8 @@ public class UserPersistenceMapper {
                 user.getCreatedAt(),
                 user.getUpdatedAt()
         );
+        entity.setAvatarUrl(user.getAvatarUrl());
+        return entity;
     }
 
     public static User toDomain(UserJpaEntity entity) {
@@ -32,7 +34,8 @@ public class UserPersistenceMapper {
                 UserRole.valueOf(entity.getRole()),
                 UserStatus.valueOf(entity.getStatus()),
                 entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUpdatedAt(),
+                entity.getAvatarUrl()
         );
     }
 }

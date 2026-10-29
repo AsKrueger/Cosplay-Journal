@@ -5,11 +5,15 @@ on:
     branches:
       - main
       - master
+      - develop
       - 'feature/**'
+      - 'chore/**'
+      - 'docs/**'
   pull_request:
     branches:
       - main
       - master
+      - develop
 
 jobs:
   build-and-test:

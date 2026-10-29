@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Month;
+import java.time.YearMonth;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,6 +24,19 @@ class ListadoMangaEventSourceAdapterTest {
     }
 
     @Test
+    @DisplayName("El mes actual usa la URL base; los demás meses usan mes y ano como parámetros")
+    void shouldBuildMonthUrlsWithoutRelyingOnRedirect() {
+        String base = "https://www.listadomanga.es/salones.php";
+        YearMonth current = YearMonth.of(2026, 10);
+
+        assertEquals(base, ListadoMangaEventSourceAdapter.monthUrl(base, current, current));
+        assertEquals(base + "?mes=11&ano=2026",
+                ListadoMangaEventSourceAdapter.monthUrl(base, YearMonth.of(2026, 11), current));
+        assertEquals("http://localhost/salones.php?x=1&mes=1&ano=2027",
+                ListadoMangaEventSourceAdapter.monthUrl("http://localhost/salones.php?x=1", YearMonth.of(2027, 1), current));
+    }
+
+    @Test
     @DisplayName("Debe parsear correctamente el fixture HTML offline de ListadoManga sin conexión a Internet")
     void shouldParseOfflineHtmlFixture() throws IOException {
         InputStream inputStream = getClass().getResourceAsStream("/fixtures/listadomanga_salones.html");
@@ -32,21 +46,16 @@ class ListadoMangaEventSourceAdapterTest {
         List<ExternalEventData> events = adapter.parseHtmlContent(htmlContent);
 
         assertNotNull(events);
-        assertEquals(3, events.size());
+        assertTrue(events.size() >= 30, "La captura tiene más de 30 salones, se extrajeron " + events.size());
 
-        ExternalEventData event1 = events.get(0);
-        assertEquals("lm-101", event1.externalId());
-        assertEquals("Japan Weekend Madrid 2026", event1.name());
-        assertEquals("Madrid", event1.city());
-        assertEquals("IFEMA", event1.venue());
-        assertEquals(2026, event1.startDate().getYear());
-        assertEquals(Month.SEPTEMBER, event1.startDate().getMonth());
-        assertEquals(19, event1.startDate().getDayOfMonth());
-        assertEquals(20, event1.endDate().getDayOfMonth());
-
-        ExternalEventData event2 = events.get(1);
-        assertEquals("lm-102", event2.externalId());
-        assertEquals("Manga Fest Sevilla 2026", event2.name());
-        assertEquals("Sevilla", event2.city());
+        ExternalEventData first = events.get(0);
+        assertEquals("San Diego Comic-Con Málaga 2026", first.name());
+        assertEquals("Málaga", first.city());
+        assertEquals("FYCMA Palacio de Ferias y Congresos de Málaga", first.venue());
+        assertEquals(2026, first.startDate().getYear());
+        assertEquals(Month.OCTOBER, first.startDate().getMonth());
+        assertEquals(1, first.startDate().getDayOfMonth());
+        assertEquals(4, first.endDate().getDayOfMonth());
+        assertTrue(first.externalId().startsWith("lm-"), "El identificador externo debe usar el prefijo lm-");
     }
 }

@@ -71,7 +71,7 @@ class PhotoControllerIntegrationTest {
                 LocalDate.now(), LocalDate.now(), EventLocation.of("Madrid", "IFEMA"), "", EventSource.MANUAL_ADMIN
         ));
 
-        Cosplay cosplay = cosplayRepositoryAdapter.save(Cosplay.createNew("Batman", "Desc", "Batman", "DC", UserId.of("testuser")));
+        Cosplay cosplay = cosplayRepositoryAdapter.save(Cosplay.createNew("Batman", null, UserId.of("testuser")));
 
         participation = participationRepositoryAdapter.save(Participation.create(
                 ParticipationId.of("part-photo-rest"),

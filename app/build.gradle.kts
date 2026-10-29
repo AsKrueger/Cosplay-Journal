@@ -24,13 +24,22 @@ android {
     }
 
     buildTypes {
+        debug {
+            // El emulador de Android alcanza el equipo anfitrión en 10.0.2.2
+            buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:8080/\"")
+        }
         release {
+            // TODO: sustituir por la URL pública del backend antes de publicar
+            buildConfigField("String", "API_BASE_URL", "\"https://api.cosplayjournal.invalid/\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
+    }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -41,6 +50,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
@@ -70,25 +80,24 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    // DataStore
-    implementation(libs.androidx.datastore.preferences)
 
-    // OpenStreetMap
-    implementation(libs.osmdroid)
 
-    // PDF (iText7)
-    implementation(libs.itext7.core)
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)
 
-    // Coil (Images)
+
+    // API REST del backend
+    implementation(libs.retrofit)
+    implementation(libs.okhttp)
+    implementation(libs.retrofit.kotlinx.serialization)
+    implementation(libs.androidx.security.crypto)
     implementation(libs.coil.compose)
 
-    // Web Scraping
-    implementation(libs.jsoup)
-
     testImplementation(libs.junit)
+    testImplementation(libs.mockwebserver)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

@@ -45,7 +45,7 @@ class ParticipationJpaAdapterIntegrationTest {
         eventRepositoryAdapter.save(event);
 
         Cosplay cosplay = cosplayRepositoryAdapter.save(
-                Cosplay.createNew("Goku SSJ", "Traje naranja", "Goku", "Dragon Ball")
+                Cosplay.createNew("Goku SSJ", null)
         );
 
         ParticipationId partId = ParticipationId.of("part-test-1");

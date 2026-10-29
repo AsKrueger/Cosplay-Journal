@@ -15,6 +15,10 @@ import com.cosplayjournal.domain.model.event.EventSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import com.cosplayjournal.application.dto.RefreshStatus;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,18 +26,58 @@ public class ImportExternalEventsService implements ImportExternalEventsUseCase 
 
     private static final Logger log = LoggerFactory.getLogger(ImportExternalEventsService.class);
 
+    /** Intervalo mínimo entre sincronizaciones lanzadas desde la app, para no saturar ListadoManga. */
+    static final Duration MIN_REFRESH_INTERVAL = Duration.ofMinutes(30);
+
     private final ExternalEventSourcePort externalEventSourcePort;
     private final EventRepositoryPort eventRepositoryPort;
     private final DomainEventPublisherPort eventPublisherPort;
+
+    private final Clock clock;
+    private volatile Instant lastRunAt;
+    private volatile ImportEventsResult lastResult;
+    private volatile boolean running;
 
     public ImportExternalEventsService(
             ExternalEventSourcePort externalEventSourcePort,
             EventRepositoryPort eventRepositoryPort,
             DomainEventPublisherPort eventPublisherPort
     ) {
+        this(externalEventSourcePort, eventRepositoryPort, eventPublisherPort, Clock.systemUTC());
+    }
+
+    public ImportExternalEventsService(
+            ExternalEventSourcePort externalEventSourcePort,
+            EventRepositoryPort eventRepositoryPort,
+            DomainEventPublisherPort eventPublisherPort,
+            Clock clock
+    ) {
         this.externalEventSourcePort = externalEventSourcePort;
         this.eventRepositoryPort = eventRepositoryPort;
         this.eventPublisherPort = eventPublisherPort;
+        this.clock = clock;
+    }
+
+    @Override
+    public synchronized ImportEventsResult refreshIfStale() {
+        Instant now = clock.instant();
+        if (lastRunAt != null && Duration.between(lastRunAt, now).compareTo(MIN_REFRESH_INTERVAL) < 0) {
+            return lastResult;
+        }
+        running = true;
+        try {
+            ImportEventsResult result = importEvents();
+            lastRunAt = now;
+            lastResult = result;
+            return result;
+        } finally {
+            running = false;
+        }
+    }
+
+    @Override
+    public RefreshStatus refreshStatus() {
+        return new RefreshStatus(running, lastRunAt);
     }
 
     @Override

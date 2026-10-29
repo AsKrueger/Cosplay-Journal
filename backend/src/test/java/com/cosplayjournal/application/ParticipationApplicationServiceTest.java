@@ -64,7 +64,7 @@ class ParticipationApplicationServiceTest {
         when(currentUserPort.getRequiredCurrentUserId()).thenReturn(userId);
 
         Event event = Event.create(eventId, "Salon Manga", "Desc", LocalDate.now(), LocalDate.now(), EventLocation.of("Sevilla", "Fibes"), "", EventSource.MANUAL_ADMIN);
-        Cosplay cosplay = Cosplay.createNew("Luffy", "Gear 5", "Luffy", "One Piece").withId(cosplayId);
+        Cosplay cosplay = Cosplay.createNew("Luffy", null).withId(cosplayId);
 
         when(eventRepositoryPort.findById(eventId)).thenReturn(Optional.of(event));
         when(cosplayRepositoryPort.findById(cosplayId)).thenReturn(Optional.of(cosplay));

@@ -29,6 +29,29 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public EventStatusApplicationService eventStatusApplicationService(UserEventStatusRepositoryPort userEventStatusRepositoryPort) {
+        return new EventStatusApplicationService(userEventStatusRepositoryPort);
+    }
+
+    @Bean
+    public ChatApplicationService chatApplicationService(
+            ConversationRepositoryPort conversationRepositoryPort,
+            MessageRepositoryPort messageRepositoryPort,
+            UserRepositoryPort userRepositoryPort,
+            FriendshipRepositoryPort friendshipRepositoryPort
+    ) {
+        return new ChatApplicationService(conversationRepositoryPort, messageRepositoryPort, userRepositoryPort, friendshipRepositoryPort);
+    }
+
+    @Bean
+    public FriendshipApplicationService friendshipApplicationService(
+            FriendshipRepositoryPort friendshipRepositoryPort,
+            UserRepositoryPort userRepositoryPort
+    ) {
+        return new FriendshipApplicationService(friendshipRepositoryPort, userRepositoryPort);
+    }
+
+    @Bean
     public ImportExternalEventsService importExternalEventsService(
             ExternalEventSourcePort externalEventSourcePort,
             EventRepositoryPort eventRepositoryPort,

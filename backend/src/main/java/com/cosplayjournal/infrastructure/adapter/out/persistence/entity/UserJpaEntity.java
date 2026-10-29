@@ -32,7 +32,18 @@ public class UserJpaEntity {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Column(name = "avatar_url", length = 500)
+    private String avatarUrl;
+
     public UserJpaEntity() {
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public UserJpaEntity(String id, String username, String email, String passwordHash, String role, String status, Instant createdAt, Instant updatedAt) {

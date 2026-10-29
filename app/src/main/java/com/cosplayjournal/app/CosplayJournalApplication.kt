@@ -2,15 +2,20 @@ package com.cosplayjournal.app
 
 import android.app.Application
 import com.cosplayjournal.app.data.AppDatabase
-import com.cosplayjournal.app.data.repository.CosplayRepository
+import com.cosplayjournal.app.data.auth.AuthRepository
+import com.cosplayjournal.app.data.auth.TokenStore
+import com.cosplayjournal.app.data.friends.FriendsRepository
+import com.cosplayjournal.app.data.remote.CosplayJournalApi
 import com.cosplayjournal.app.data.repository.EventRepository
-import com.cosplayjournal.app.data.repository.LocationRepository
-import com.cosplayjournal.app.data.repository.SettingsRepository
+import com.cosplayjournal.app.data.repository.UserEventRepository
 
 class CosplayJournalApplication : Application() {
-    val database by lazy { AppDatabase.getDatabase(this) }
-    val repository by lazy { CosplayRepository(database.cosplayDao()) }
-    val eventRepository by lazy { EventRepository(this) }
-    val locationRepository by lazy { LocationRepository(database.locationDao()) }
-    val settingsRepository by lazy { SettingsRepository(this) }
+    private val database by lazy { AppDatabase.getDatabase(this) }
+    val tokenStore by lazy { TokenStore(this) }
+    private val api by lazy { CosplayJournalApi.create(BuildConfig.API_BASE_URL) { tokenStore.token() } }
+    val eventRepository by lazy { EventRepository(api) }
+    val authRepository by lazy { AuthRepository(api, tokenStore) }
+    val friendsRepository by lazy { FriendsRepository(api) }
+    val chatRepository by lazy { com.cosplayjournal.app.data.chat.ChatRepository(api) }
+    val userEventRepository by lazy { UserEventRepository(database.userEventDao(), api) }
 }

@@ -3,71 +3,91 @@ package com.cosplayjournal.app.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.cosplayjournal.app.data.entity.Cosplay
-import com.cosplayjournal.app.data.entity.Cosplan
-import com.cosplayjournal.app.data.model.Event
-import com.cosplayjournal.app.data.repository.CosplayRepository
-import com.cosplayjournal.app.data.repository.EventRepository
-import kotlinx.coroutines.flow.*
+import com.cosplayjournal.app.data.auth.AuthRepository
+import com.cosplayjournal.app.data.remote.RemoteOwnProfile
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 
 data class ProfileUiState(
-    val totalCosplans: Int = 0,
-    val totalEvents: Int = 0,
-    val favoriteCosplays: List<Cosplay> = emptyList(),
-    val favoriteEvents: List<Event> = emptyList(),
-    val allCosplays: List<Cosplay> = emptyList(),
-    val allCosplans: List<Cosplan> = emptyList()
+    val loggedIn: Boolean = false,
+    val profile: RemoteOwnProfile? = null,
+    val busy: Boolean = false,
+    val message: String? = null
 )
 
-class ProfileViewModel(
-    private val cosplayRepository: CosplayRepository,
-    private val eventRepository: EventRepository
-) : ViewModel() {
+/** Perfil del usuario: sesión, nickname y foto. */
+class ProfileViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ProfileUiState())
-    val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
+    private val _state = MutableStateFlow(ProfileUiState(loggedIn = authRepository.isLoggedIn))
+    val state: StateFlow<ProfileUiState> = _state.asStateFlow()
 
     init {
-        loadProfileData()
+        if (authRepository.isLoggedIn) {
+            perform { _state.value = _state.value.copy(profile = authRepository.myProfile()) }
+        }
     }
 
-    private fun loadProfileData() {
+    fun login(email: String, password: String) {
+        perform {
+            authRepository.login(email.trim(), password)
+            _state.value = _state.value.copy(loggedIn = true, profile = authRepository.myProfile())
+        }
+    }
+
+    fun register(nickname: String, email: String, password: String) {
+        perform {
+            authRepository.register(nickname.trim(), email.trim(), password)
+            authRepository.login(email.trim(), password)
+            _state.value = _state.value.copy(loggedIn = true, profile = authRepository.myProfile())
+        }
+    }
+
+    fun changeAvatar(url: String) {
+        perform {
+            _state.value = _state.value.copy(profile = authRepository.changeAvatar(url.trim()))
+        }
+    }
+
+    fun logout() {
+        authRepository.logout()
+        _state.value = ProfileUiState(loggedIn = false)
+    }
+
+    private fun perform(block: suspend () -> Unit) {
         viewModelScope.launch {
-            combine(
-                cosplayRepository.allCosplans,
-                cosplayRepository.favoriteCosplays,
-                cosplayRepository.allUserEventData,
-                cosplayRepository.allCosplays,
-                flow { emit(eventRepository.getEvents()) }
-            ) { cosplans, favCosplays, userEventData, allCosplays, allEvents ->
-                
-                val favEventIds = userEventData.filter { it.isFavorite }.map { it.eventId }
-                val favEvents = allEvents.filter { it.id in favEventIds }
-                
-                ProfileUiState(
-                    totalCosplans = cosplans.size,
-                    totalEvents = favEvents.size,
-                    favoriteCosplays = favCosplays,
-                    favoriteEvents = favEvents,
-                    allCosplays = allCosplays,
-                    allCosplans = cosplans
+            _state.value = _state.value.copy(busy = true, message = null)
+            try {
+                block()
+                _state.value = _state.value.copy(busy = false)
+            } catch (e: HttpException) {
+                if (e.code() == 401) authRepository.logout()
+                _state.value = _state.value.copy(
+                    busy = false,
+                    loggedIn = authRepository.isLoggedIn,
+                    message = messageFor(e.code())
                 )
-            }.collect {
-                _uiState.value = it
+            } catch (e: IOException) {
+                _state.value = _state.value.copy(busy = false, message = "Sin conexión con el servidor")
             }
         }
     }
+
+    private fun messageFor(code: Int): String = when (code) {
+        400, 401 -> "Email o contraseña incorrectos"
+        409 -> "Ya existe una cuenta con ese email o nickname"
+        else -> "No se pudo completar la operación (código $code)"
+    }
 }
 
-class ProfileViewModelFactory(
-    private val cosplayRepository: CosplayRepository,
-    private val eventRepository: EventRepository
-) : ViewModelProvider.Factory {
+class ProfileViewModelFactory(private val authRepository: AuthRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProfileViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return ProfileViewModel(cosplayRepository, eventRepository) as T
+            return ProfileViewModel(authRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
