@@ -11,6 +11,8 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -54,6 +56,26 @@ class UserEventRepositoryTest {
         repository.save(UserEventData(eventId = "evt-2", status = "INTERESTED"))
 
         coVerify { dao.insert(UserEventData(eventId = "evt-2", status = "INTERESTED")) }
+    }
+
+    @Test
+    fun `un 401 con token guardado marca la sesion como caducada`() = runBlocking {
+        server.enqueue(MockResponse().setResponseCode(401))
+        val repository = UserEventRepository(dao, CosplayJournalApi.create(server.url("/").toString())) { true }
+
+        repository.save(UserEventData(eventId = "evt-3", status = "ATTENDING"))
+
+        assertTrue(repository.sessionExpired.value)
+    }
+
+    @Test
+    fun `un 401 sin token no se considera sesion caducada`() = runBlocking {
+        server.enqueue(MockResponse().setResponseCode(401))
+        val repository = UserEventRepository(dao, CosplayJournalApi.create(server.url("/").toString())) { false }
+
+        repository.save(UserEventData(eventId = "evt-4", status = "ATTENDING"))
+
+        assertFalse(repository.sessionExpired.value)
     }
 
     @Test

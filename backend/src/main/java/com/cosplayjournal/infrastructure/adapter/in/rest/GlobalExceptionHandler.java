@@ -69,6 +69,7 @@ public class GlobalExceptionHandler {
             InvalidStateTransitionException.class,
             InvalidFriendshipException.class,
             InvalidChatDataException.class,
+            InvalidGalleryDataException.class,
             IllegalArgumentException.class
     })
     public ResponseEntity<ErrorResponse> handleBadRequestExceptions(RuntimeException ex, HttpServletRequest request) {
