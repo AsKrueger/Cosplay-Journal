@@ -2,7 +2,7 @@
 
 El módulo de dominio de **Cosplay Journal** está implementado en Java 21 puro dentro del paquete `com.cosplayjournal.domain` de la aplicación backend, totalmente aislado de frameworks como Spring, JPA, Hibernate o motores de bases de datos.
 
-La orquestación de este dominio hacia la API REST y la infraestructura se realiza mediante la [**Capa de Aplicación**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/use-cases/USE_CASES.md).
+La orquestación de este dominio hacia la API REST y la infraestructura se realiza mediante la [**Capa de Aplicación**](use-cases/USE_CASES.md).
 
 ---
 

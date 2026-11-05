@@ -8,7 +8,7 @@
 
 ## 2. Métricas de Sincronización Automática (Micrometer)
 
-La tarea programada [`ScheduledEventSynchronizationAdapter`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/infrastructure/adapter/in/scheduler/ScheduledEventSynchronizationAdapter.java) registra las siguientes métricas de contador:
+La tarea programada [`ScheduledEventSynchronizationAdapter`](../../backend/src/main/java/com/cosplayjournal/infrastructure/adapter/in/scheduler/ScheduledEventSynchronizationAdapter.java) registra las siguientes métricas de contador:
 
 | Nombre de la Métrica | Tipo | Descripción |
 |---|---|---|

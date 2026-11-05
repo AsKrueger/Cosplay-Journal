@@ -20,15 +20,15 @@ Plataforma integral para cosplayers orientada a la planificación de proyectos, 
 
 El proyecto evoluciona hacia una arquitectura cliente-servidor basada en **Arquitectura Hexagonal (Ports & Adapters)**:
 
-- **Backend:** Java 21 / Spring Boot 3 ([backend/](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend))
+- **Backend:** Java 21 / Spring Boot 3 ([backend/](backend))
 - **Arquitectura:** Hexagonal (Dominio desacoplado de infraestructura)
-- **Base de Datos:** PostgreSQL 16 + Flyway ([docs/database/DATABASE.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/database/DATABASE.md))
-- **Mensajería Asíncrona:** Apache Kafka ([docs/messaging/KAFKA.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/messaging/KAFKA.md))
-- **Seguridad y Autorización:** Spring Security + JWT + Resource Ownership ([docs/security/SECURITY.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/security/SECURITY.md) / [docs/security/AUTHORIZATION.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/security/AUTHORIZATION.md))
-- **Integraciones Externas:** Scraper ListadoManga + Jsoup + Sincronización Idempotente ([docs/integrations/LISTADOMANGA.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/integrations/LISTADOMANGA.md))
-- **Resiliencia & Operaciones:** Timeouts, Reintentos con Backoff Exponencial y Scheduler ([docs/operations/RESILIENCE.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/operations/RESILIENCE.md) / [docs/operations/OBSERVABILITY.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/operations/OBSERVABILITY.md))
-- **API REST & Contrato OpenAPI:** Especificación OpenAPI 3.0 / Swagger UI / `/api/v1/` ([docs/api/API.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/api/API.md))
-- **CI/CD & Calidad Automatizada:** GitHub Actions, Maven Wrapper (`mvnw`), Testcontainers (PostgreSQL 16 & Kafka) ([docs/ci/CI_CD.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/ci/CI_CD.md) / [docs/testing/TESTCONTAINERS.md](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/testing/TESTCONTAINERS.md))
+- **Base de Datos:** PostgreSQL 16 + Flyway ([docs/database/DATABASE.md](docs/database/DATABASE.md))
+- **Mensajería Asíncrona:** Apache Kafka ([docs/messaging/KAFKA.md](docs/messaging/KAFKA.md))
+- **Seguridad y Autorización:** Spring Security + JWT + Resource Ownership ([docs/security/SECURITY.md](docs/security/SECURITY.md) / [docs/security/AUTHORIZATION.md](docs/security/AUTHORIZATION.md))
+- **Integraciones Externas:** Scraper ListadoManga + Jsoup + Sincronización Idempotente ([docs/integrations/LISTADOMANGA.md](docs/integrations/LISTADOMANGA.md))
+- **Resiliencia & Operaciones:** Timeouts, Reintentos con Backoff Exponencial y Scheduler ([docs/operations/RESILIENCE.md](docs/operations/RESILIENCE.md) / [docs/operations/OBSERVABILITY.md](docs/operations/OBSERVABILITY.md))
+- **API REST & Contrato OpenAPI:** Especificación OpenAPI 3.0 / Swagger UI / `/api/v1/` ([docs/api/API.md](docs/api/API.md))
+- **CI/CD & Calidad Automatizada:** GitHub Actions, Maven Wrapper (`mvnw`), Testcontainers (PostgreSQL 16 & Kafka) ([docs/ci/CI_CD.md](docs/ci/CI_CD.md) / [docs/testing/TESTCONTAINERS.md](docs/testing/TESTCONTAINERS.md))
 - **Cliente Móvil:** Android (Jetpack Compose, Material 3, Coroutines)
 - **DevOps & Infraestructura:** Docker, Docker Compose, Kubernetes, GitHub Actions
 - **Testing:** JUnit 5, Mockito, Testcontainers
@@ -37,27 +37,27 @@ El proyecto evoluciona hacia una arquitectura cliente-servidor basada en **Arqui
 
 ## 📚 Documentación Técnica y Decisiones
 
-La documentación detallada del proyecto se encuentra en el directorio [`docs/`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs):
+La documentación detallada del proyecto se encuentra en el directorio [`docs/`](docs):
 
-- 📄 [**HOJA DE RUTA (ROADMAP)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/ROADMAP.md) — Planificación por fases del desarrollo.
-- 🎯 [**Visión del Producto**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/PRODUCT_VISION.md) — Objetivos, propuesta de valor y usuarios objetivo.
-- 📌 [**Alcance del MVP**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/MVP_SCOPE.md) — Flujo completo del MVP y criterios de aceptación.
-- 🏛️ [**Dirección Técnica y Arquitectura**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/ARCHITECTURE.md) — Reglas de dependencia, Hexagonal, Kafka, K8s, testing y persistencia.
-- 🧩 [**Modelo de Dominio**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/DOMAIN_MODEL.md) — Bounded Contexts, Entidades, Value Objects e invariantes de negocio.
-- ⚡ [**Mensajería y Eventos Kafka**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/messaging/KAFKA.md) — Topics, DTOs de mensajería, claves y consumidores asíncronos.
-- ⚙️ [**Casos de Uso e Integración API**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/use-cases/USE_CASES.md) — Servicios de aplicación, puertos de entrada/salida y endpoints REST.
-- 📖 [**Especificación de API REST (OpenAPI 3)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/api/API.md) — Swagger UI, contratos, DTOs, esquemas JWT y códigos HTTP.
-- 💶 [**Arquitectura de Despliegue de Coste Cero**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/deployment/COST_OPTIMIZED_ARCHITECTURE.md) — Alternativas gratuitas con cuotas verificadas, riesgos de pérdida de datos y ruta de migración.
-- 🚀 [**Integración Continua (CI/CD)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/ci/CI_CD.md) — Pipeline de GitHub Actions, Maven Wrapper, Testcontainers e informes.
-- 🧪 [**Testing con Testcontainers**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/testing/TESTCONTAINERS.md) — Integración sobre contenedores efímeros de PostgreSQL 16 y Kafka.
-- 🔒 [**Seguridad y Autenticación**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/security/SECURITY.md) — Modelo de tokens JWT, BCrypt, roles y filtros.
-- 🛡️ [**Propiedad de Recursos (Ownership)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/security/AUTHORIZATION.md) — Abstracción `CurrentUserPort`, matriz de permisos y respuestas 403 Forbidden.
-- 🌐 [**Integración Externa ListadoManga**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/integrations/LISTADOMANGA.md) — Scraper Jsoup, clave externa, sincronización e idempotencia.
-- 🏥 [**Resiliencia y Timeouts**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/operations/RESILIENCE.md) — Reintentos exponenciales, timeouts HTTP y excepciones técnicas.
-- 📊 [**Observabilidad y Métricas**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/operations/OBSERVABILITY.md) — Métricas Micrometer, Spring Boot Actuator y salud del sistema.
-- 🗄️ [**Esquema de Base de Datos**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/database/DATABASE.md) — Tablas, índices, claves y Docker Compose local.
-- 📋 [**Auditoría y Decisiones (ADR)**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/AUDIT_AND_DECISIONS.md) — Decisiones técnicas ([ADR 0001](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0001-architecture-and-product-redefinition.md) - [ADR 0013](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0013-github-actions-ci-pipeline.md) - [ADR 0015](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/decisions/0015-cost-optimized-deployment-and-kafka-in-production.md)).
-- 📋 [**Próximas Issues**](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/NEXT_ISSUES.md) — Backlog detallado de tareas de implementación.
+- 📄 [**HOJA DE RUTA (ROADMAP)**](ROADMAP.md) — Planificación por fases del desarrollo.
+- 🎯 [**Visión del Producto**](docs/PRODUCT_VISION.md) — Objetivos, propuesta de valor y usuarios objetivo.
+- 📌 [**Alcance del MVP**](docs/MVP_SCOPE.md) — Flujo completo del MVP y criterios de aceptación.
+- 🏛️ [**Dirección Técnica y Arquitectura**](docs/ARCHITECTURE.md) — Reglas de dependencia, Hexagonal, Kafka, K8s, testing y persistencia.
+- 🧩 [**Modelo de Dominio**](docs/DOMAIN_MODEL.md) — Bounded Contexts, Entidades, Value Objects e invariantes de negocio.
+- ⚡ [**Mensajería y Eventos Kafka**](docs/messaging/KAFKA.md) — Topics, DTOs de mensajería, claves y consumidores asíncronos.
+- ⚙️ [**Casos de Uso e Integración API**](docs/use-cases/USE_CASES.md) — Servicios de aplicación, puertos de entrada/salida y endpoints REST.
+- 📖 [**Especificación de API REST (OpenAPI 3)**](docs/api/API.md) — Swagger UI, contratos, DTOs, esquemas JWT y códigos HTTP.
+- 💶 [**Arquitectura de Despliegue de Coste Cero**](docs/deployment/COST_OPTIMIZED_ARCHITECTURE.md) — Alternativas gratuitas con cuotas verificadas, riesgos de pérdida de datos y ruta de migración.
+- 🚀 [**Integración Continua (CI/CD)**](docs/ci/CI_CD.md) — Pipeline de GitHub Actions, Maven Wrapper, Testcontainers e informes.
+- 🧪 [**Testing con Testcontainers**](docs/testing/TESTCONTAINERS.md) — Integración sobre contenedores efímeros de PostgreSQL 16 y Kafka.
+- 🔒 [**Seguridad y Autenticación**](docs/security/SECURITY.md) — Modelo de tokens JWT, BCrypt, roles y filtros.
+- 🛡️ [**Propiedad de Recursos (Ownership)**](docs/security/AUTHORIZATION.md) — Abstracción `CurrentUserPort`, matriz de permisos y respuestas 403 Forbidden.
+- 🌐 [**Integración Externa ListadoManga**](docs/integrations/LISTADOMANGA.md) — Scraper Jsoup, clave externa, sincronización e idempotencia.
+- 🏥 [**Resiliencia y Timeouts**](docs/operations/RESILIENCE.md) — Reintentos exponenciales, timeouts HTTP y excepciones técnicas.
+- 📊 [**Observabilidad y Métricas**](docs/operations/OBSERVABILITY.md) — Métricas Micrometer, Spring Boot Actuator y salud del sistema.
+- 🗄️ [**Esquema de Base de Datos**](docs/database/DATABASE.md) — Tablas, índices, claves y Docker Compose local.
+- 📋 [**Auditoría y Decisiones (ADR)**](docs/AUDIT_AND_DECISIONS.md) — Decisiones técnicas ([ADR 0001](docs/decisions/0001-architecture-and-product-redefinition.md) - [ADR 0013](docs/decisions/0013-github-actions-ci-pipeline.md) - [ADR 0015](docs/decisions/0015-cost-optimized-deployment-and-kafka-in-production.md)).
+- 📋 [**Próximas Issues**](docs/NEXT_ISSUES.md) — Backlog detallado de tareas de implementación.
 
 ---
 
