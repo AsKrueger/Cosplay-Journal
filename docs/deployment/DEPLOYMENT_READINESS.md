@@ -14,22 +14,22 @@ Esta auditoría evalúa la madurez técnica, seguridad, operabilidad, arquitectu
 - **API REST & OpenAPI:** Especificación OpenAPI 3.0 / Swagger UI en `/swagger-ui/index.html`.
 - **Observabilidad:** Spring Boot Actuator (`/actuator/health`, `/actuator/metrics`) + Micrometer.
 - **Testing:** 87 tests (Unitarios, Arquitectura, Resiliencia, OpenAPI y Testcontainers PostgreSQL 16/Kafka real).
-- **CI/CD:** Pipeline automatizado en GitHub Actions ([`.github/workflows/backend-ci.yml`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/.github/workflows/backend-ci.yml)).
+- **CI/CD:** Pipeline automatizado en GitHub Actions ([`.github/workflows/backend-ci.yml`](../../.github/workflows/backend-ci.yml)).
 
 ---
 
 ## 2. Bloqueos Identificados y Brechas antes de Producción
 
-1. **Gestión de Archivos Multimedia (Fotos):** Actualmente las referencias de fotos (`storageReference`) son URIs. En producción se requiere integración con un almacenamiento de objetos ([`PhotoStoragePort`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/application/port/out/PhotoRepositoryPort.java)) como Amazon S3 o MinIO.
+1. **Gestión de Archivos Multimedia (Fotos):** Actualmente las referencias de fotos (`storageReference`) son URIs. En producción se requiere integración con un almacenamiento de objetos ([`PhotoStoragePort`](../../backend/src/main/java/com/cosplayjournal/application/port/out/PhotoRepositoryPort.java)) como Amazon S3 o MinIO.
 2. **Estrategia para Apache Kafka en Producción:** Kafka es ideal para eventos de dominio asíncronos. En un entorno sin presupuesto elevado para MVP, mantener un cluster administrado de Kafka (AWS MSK) es costoso. Se evalúa el uso de un bus de eventos en memoria/transaccional como fallback sin alterar la arquitectura.
 3. **Política de CORS (Cross-Origin Resource Sharing):** Debe habilitarse explícitamente en `SpringSecurityConfig` para permitir llamadas desde clientes móviles/web autenticados.
-4. **Perfil de Producción ([`application-prod.properties`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/resources/application-prod.properties)):** Creado para inyectar variables de entorno requeridas (`POSTGRES_HOST`, `POSTGRES_PASSWORD`, `JWT_SECRET`).
+4. **Perfil de Producción ([`application-prod.properties`](../../backend/src/main/resources/application-prod.properties)):** Creado para inyectar variables de entorno requeridas (`POSTGRES_HOST`, `POSTGRES_PASSWORD`, `JWT_SECRET`).
 
 ---
 
 ## 3. Requisitos Mínimos para Entorno de Producción
 
-- **Contenedor Docker Mínimo y Seguro:** Creado [`Dockerfile`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/Dockerfile) multi-etapa basado en `eclipse-temurin:21-jre-alpine`, ejecutado como usuario no privilegiado (`cosplayuser`), con `HEALTHCHECK` activo.
+- **Contenedor Docker Mínimo y Seguro:** Creado [`Dockerfile`](../../backend/Dockerfile) multi-etapa basado en `eclipse-temurin:21-jre-alpine`, ejecutado como usuario no privilegiado (`cosplayuser`), con `HEALTHCHECK` activo.
 - **Secretos:** `JWT_SECRET` debe tener un mínimo de 256 bits y proceder de variables de entorno inyectadas en tiempo de ejecución.
 - **Salud del Servidor:** Integración de `/api/v1/health` y `/actuator/health` en las sondas de liveness/readiness del orquestador.
 
@@ -57,7 +57,7 @@ Se comparan las alternativas de infraestructura en **AWS** frente a plataformas 
 
 ## 5. Evolución de CI a CD (Continuous Deployment)
 
-Para evolucionar la Integración Continua actual ([`.github/workflows/backend-ci.yml`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/.github/workflows/backend-ci.yml)) hacia un despliegue continuo (CD):
+Para evolucionar la Integración Continua actual ([`.github/workflows/backend-ci.yml`](../../.github/workflows/backend-ci.yml)) hacia un despliegue continuo (CD):
 1. **Aislamiento de Entornos:** Mantener el workflow de CI para PRs y crear `.github/workflows/backend-cd.yml` que se active al fusionar cambios en `main` o al etiquetar un release (`v1.0.0`).
 2. **Gestión de Secretos en GitHub:** Almacenar `PROD_DATABASE_URL`, `PROD_POSTGRES_USER`, `PROD_POSTGRES_PASS` y `PROD_JWT_SECRET` en GitHub Repository Secrets.
 3. **Estrategia de Despliegue:** Construir la imagen Docker, publicarla en un registro (GitHub Container Registry `ghcr.io` o AWS ECR) e invocar el webhook de actualización de la plataforma de producción.
@@ -67,11 +67,11 @@ Para evolucionar la Integración Continua actual ([`.github/workflows/backend-ci
 ## 6. Recomendación Final y Hoja de Ruta Priorizada
 
 ### Recomendación Arquitectónica:
-1. **Fase Inicial MVP / Portfolio (Fase Actual):** Desplegar en **PaaS (Render / Railway / Fly.io)** o **AWS ECS Fargate + RDS PostgreSQL** usando la imagen [`Dockerfile`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/Dockerfile) recién creada. Esto mantiene los costes por debajo de **$15/mes** sin comprometer la arquitectura.
+1. **Fase Inicial MVP / Portfolio (Fase Actual):** Desplegar en **PaaS (Render / Railway / Fly.io)** o **AWS ECS Fargate + RDS PostgreSQL** usando la imagen [`Dockerfile`](../../backend/Dockerfile) recién creada. Esto mantiene los costes por debajo de **$15/mes** sin comprometer la arquitectura.
 2. **Fase Enterprise / Escala (> 10.000 usuarios activos):** Migrar a **AWS App Runner / EKS + Amazon RDS Multi-AZ + Amazon MSK** cuando la carga y alta disponibilidad lo justifiquen.
 
 Para una alternativa de coste cero con límites verificados, ver [`COST_OPTIMIZED_ARCHITECTURE.md`](COST_OPTIMIZED_ARCHITECTURE.md). Sustituye la estimación de la fase inicial por cuotas comprobadas en fuentes oficiales.
 
 ### Próximas Tareas Recomendadas:
 1. **[Fase Android] Issue #17:** Integración del Cliente Móvil Android con la API REST de Cosplay Journal.
-2. **[Fase Media] Issue #18:** Integración de Amazon S3 / MinIO para el almacenamiento real de fotografías de cosplay ([`PhotoStoragePort`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/application/port/out/PhotoRepositoryPort.java)).
+2. **[Fase Media] Issue #18:** Integración de Amazon S3 / MinIO para el almacenamiento real de fotografías de cosplay ([`PhotoStoragePort`](../../backend/src/main/java/com/cosplayjournal/application/port/out/PhotoRepositoryPort.java)).

@@ -5,11 +5,11 @@
 La seguridad en **Cosplay Journal** se implementa como un **adaptador de infraestructura** (`com.cosplayjournal.infrastructure.adapter.in.rest.security` y `com.cosplayjournal.infrastructure.adapter.out.security`).
 
 El módulo de **Dominio** (`com.cosplayjournal.domain`) y la **Capa de Aplicación** (`com.cosplayjournal.application`) permanecen **100% aislados de Spring Security, JWT y BCrypt**:
-- La aplicación trabaja con el puerto abstracto [`UserRepositoryPort`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/application/port/out/UserRepositoryPort.java), [`PasswordHasherPort`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/application/port/out/PasswordHasherPort.java) y [`TokenProviderPort`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/application/port/out/TokenProviderPort.java).
+- La aplicación trabaja con el puerto abstracto [`UserRepositoryPort`](../../backend/src/main/java/com/cosplayjournal/application/port/out/UserRepositoryPort.java), [`PasswordHasherPort`](../../backend/src/main/java/com/cosplayjournal/application/port/out/PasswordHasherPort.java) y [`TokenProviderPort`](../../backend/src/main/java/com/cosplayjournal/application/port/out/TokenProviderPort.java).
 - La infraestructura proporciona los adaptadores concretos:
-  - [`BCryptPasswordHasherAdapter`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/infrastructure/adapter/out/security/BCryptPasswordHasherAdapter.java) (usando BCrypt con sal interna).
-  - [`JwtTokenProviderAdapter`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/infrastructure/adapter/out/security/JwtTokenProviderAdapter.java) (usando JJWT 0.12.6).
-  - [`JwtAuthenticationFilter`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/infrastructure/adapter/in/rest/security/JwtAuthenticationFilter.java) (filtro HTTP para extraer e inyectar credenciales Bearer).
+  - [`BCryptPasswordHasherAdapter`](../../backend/src/main/java/com/cosplayjournal/infrastructure/adapter/out/security/BCryptPasswordHasherAdapter.java) (usando BCrypt con sal interna).
+  - [`JwtTokenProviderAdapter`](../../backend/src/main/java/com/cosplayjournal/infrastructure/adapter/out/security/JwtTokenProviderAdapter.java) (usando JJWT 0.12.6).
+  - [`JwtAuthenticationFilter`](../../backend/src/main/java/com/cosplayjournal/infrastructure/adapter/in/rest/security/JwtAuthenticationFilter.java) (filtro HTTP para extraer e inyectar credenciales Bearer).
 
 ---
 

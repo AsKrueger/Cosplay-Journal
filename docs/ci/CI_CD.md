@@ -2,7 +2,7 @@
 
 ## 1. Visión General
 
-**Cosplay Journal** implementa un pipeline de Integración Continua (CI) automatizado y reproducible mediante **GitHub Actions** ([`.github/workflows/backend-ci.yml`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/.github/workflows/backend-ci.yml)).
+**Cosplay Journal** implementa un pipeline de Integración Continua (CI) automatizado y reproducible mediante **GitHub Actions** ([`.github/workflows/backend-ci.yml`](../../.github/workflows/backend-ci.yml)).
 
 Cada cambio enviado al repositorio o a través de Pull Requests ejecuta de forma automática el ciclo de validación completo sin depender del entorno local del desarrollador.
 
@@ -55,7 +55,7 @@ Surefire Test Reports Artifact            Backend JAR Artifact
 
 1. **Compilación y Construcción:** Garantiza que el código Java 21 compila sin errores.
 2. **Pruebas Unitarias de Dominio y Aplicación:** Valida las reglas de negocio en memoria.
-3. **Aislamiento Arquitectónico ([`ArchitectureIsolationTest`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/test/java/com/cosplayjournal/domain/ArchitectureIsolationTest.java)):** Comprueba que `domain` y `application` no importan Spring, JPA, Kafka, Security, JJWT, Jsoup, Micrometer, OpenAPI ni Testcontainers.
+3. **Aislamiento Arquitectónico ([`ArchitectureIsolationTest`](../../backend/src/test/java/com/cosplayjournal/domain/ArchitectureIsolationTest.java)):** Comprueba que `domain` y `application` no importan Spring, JPA, Kafka, Security, JJWT, Jsoup, Micrometer, OpenAPI ni Testcontainers.
 4. **Testing de Integración con Testcontainers:** Ejecuta las migraciones Flyway V1..V5 contra **PostgreSQL 16 Alpine** y la publicación/consumo de eventos contra **Confluent Kafka 7.6.1**.
 5. **Generación de Artefactos:** Si todas las pruebas pasan en verde, se empaqueta el ejecutable JAR de Spring Boot y se guardan los informes Surefire como artefactos del workflow (`actions/upload-artifact@v4`).
 

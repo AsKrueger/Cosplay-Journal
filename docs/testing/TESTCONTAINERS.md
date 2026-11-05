@@ -28,11 +28,11 @@ JPA / Repository Adapters        Kafka Producer / Consumer
 
 ## 3. Clases de Prueba y Perfil `testcontainers`
 
-- **Clase Base Abstracta:** [`AbstractTestcontainersIntegrationTest`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/test/java/com/cosplayjournal/infrastructure/AbstractTestcontainersIntegrationTest.java) levanta los contenedores de Docker mediante `@Testcontainers` y configura dinámicamente las propiedades de Spring `spring.datasource.url` y `spring.kafka.bootstrap-servers`.
+- **Clase Base Abstracta:** [`AbstractTestcontainersIntegrationTest`](../../backend/src/test/java/com/cosplayjournal/infrastructure/AbstractTestcontainersIntegrationTest.java) levanta los contenedores de Docker mediante `@Testcontainers` y configura dinámicamente las propiedades de Spring `spring.datasource.url` y `spring.kafka.bootstrap-servers`.
 - **Pruebas de Integración:**
-  - [`PostgresFlywayRepositoryIntegrationTest`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/test/java/com/cosplayjournal/infrastructure/PostgresFlywayRepositoryIntegrationTest.java): Válida las 5 migraciones Flyway relacionales e interacciones JPA/PostgreSQL real.
-  - [`KafkaMessagingIntegrationTest`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/test/java/com/cosplayjournal/infrastructure/KafkaMessagingIntegrationTest.java): Válida la publicación y consumo de mensajes de eventos de dominio sobre Kafka real.
-  - [`EndToEndIntegrationWorkflowTest`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/test/java/com/cosplayjournal/infrastructure/EndToEndIntegrationWorkflowTest.java): Prueba el flujo completo de autenticación JWT y consulta de datos.
+  - [`PostgresFlywayRepositoryIntegrationTest`](../../backend/src/test/java/com/cosplayjournal/infrastructure/PostgresFlywayRepositoryIntegrationTest.java): Válida las 5 migraciones Flyway relacionales e interacciones JPA/PostgreSQL real.
+  - [`KafkaMessagingIntegrationTest`](../../backend/src/test/java/com/cosplayjournal/infrastructure/KafkaMessagingIntegrationTest.java): Válida la publicación y consumo de mensajes de eventos de dominio sobre Kafka real.
+  - [`EndToEndIntegrationWorkflowTest`](../../backend/src/test/java/com/cosplayjournal/infrastructure/EndToEndIntegrationWorkflowTest.java): Prueba el flujo completo de autenticación JWT y consulta de datos.
 
 ---
 

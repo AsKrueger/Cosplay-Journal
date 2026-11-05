@@ -19,7 +19,7 @@ Ownership     ➔ ¿Sobre qué recurso?       (Resuelto por la Capa de Aplicaci�
 ## 3. Modelo de Propiedad por Agregado
 
 ### A. Cosplay (`ownerId`)
-- Todo `Cosplay` se crea asignando como `ownerId` la identidad autenticada (`UserId`) obtenida a través de [`CurrentUserPort`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/application/port/out/CurrentUserPort.java).
+- Todo `Cosplay` se crea asignando como `ownerId` la identidad autenticada (`UserId`) obtenida a través de [`CurrentUserPort`](../../backend/src/main/java/com/cosplayjournal/application/port/out/CurrentUserPort.java).
 - **Regla:** Solo el propietario (`ownerId == authenticatedUserId`) o un usuario con rol `ADMIN` puede modificar el estado o detalles de un proyecto de cosplay.
 - Intentos de modificación por otros usuarios retornan **`403 Forbidden`**.
 
@@ -38,8 +38,8 @@ Ownership     ➔ ¿Sobre qué recurso?       (Resuelto por la Capa de Aplicaci�
 ## 4. Abstracción Hexagonal: `CurrentUserPort`
 
 Para evitar que la capa de aplicación y los servicios de negocio dependan de `SecurityContextHolder` o clases de Spring Security:
-- **Puerto de Salida:** [`CurrentUserPort`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/application/port/out/CurrentUserPort.java) en `application.port.out`.
-- **Adaptador:** [`SpringSecurityCurrentUserAdapter`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/infrastructure/adapter/out/security/SpringSecurityCurrentUserAdapter.java) en `infrastructure.adapter.out.security`.
+- **Puerto de Salida:** [`CurrentUserPort`](../../backend/src/main/java/com/cosplayjournal/application/port/out/CurrentUserPort.java) en `application.port.out`.
+- **Adaptador:** [`SpringSecurityCurrentUserAdapter`](../../backend/src/main/java/com/cosplayjournal/infrastructure/adapter/out/security/SpringSecurityCurrentUserAdapter.java) en `infrastructure.adapter.out.security`.
 
 ---
 

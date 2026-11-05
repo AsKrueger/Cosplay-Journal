@@ -26,14 +26,14 @@ Toda conexión HTTP hacia la fuente externa utiliza límites de tiempo independi
 Se evaluó la introducción de un Circuit Breaker (ej. Resilience4j) y se concluyó:
 1. **Frecuencia de Invocación:** La sincronización de ListadoManga ejecuta como una tarea en segundo plano batch cada 6 horas (o mediante activación manual por administradores).
 2. **Impacto en Peticiones de Usuarios:** Las llamadas externas no bloquean peticiones HTTP de usuarios en tiempo real.
-3. **Decisión:** Un mecanismo ligero de **Timeouts + Reintentos Exponenciales + Excepción de Infraestructura Aislada ([`ListadoMangaUnavailableException`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/infrastructure/adapter/out/external/listadomanga/exception/ListadoMangaUnavailableException.java))** resulta idóneo sin necesidad de añadir el sobrecoste de proxies y dependencias pesadas de Resilience4j.
+3. **Decisión:** Un mecanismo ligero de **Timeouts + Reintentos Exponenciales + Excepción de Infraestructura Aislada ([`ListadoMangaUnavailableException`](../../backend/src/main/java/com/cosplayjournal/infrastructure/adapter/out/external/listadomanga/exception/ListadoMangaUnavailableException.java))** resulta idóneo sin necesidad de añadir el sobrecoste de proxies y dependencias pesadas de Resilience4j.
 
 ---
 
 ## 4. Resiliencia del Invocador Programado (Scheduler)
 
 Cuando una sincronización falla debido a indisponibilidad externa:
-- La excepción es capturada por [`ScheduledEventSynchronizationAdapter`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/infrastructure/adapter/in/scheduler/ScheduledEventSynchronizationAdapter.java).
+- La excepción es capturada por [`ScheduledEventSynchronizationAdapter`](../../backend/src/main/java/com/cosplayjournal/infrastructure/adapter/in/scheduler/ScheduledEventSynchronizationAdapter.java).
 - Se incrementa la métrica `cosplay_journal_event_sync_failed_total`.
 - El fallo queda registrado en logs estructurados con nivel `ERROR`.
 - El scheduler **mantiene su estado operativo** para las siguientes ejecuciones programadas.
