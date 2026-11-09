@@ -21,7 +21,7 @@ public record UserEventStatus(UserId userId, String eventId, String status, Inst
         if (eventId == null || eventId.isBlank() || eventId.length() > 150) {
             throw new InvalidUserDataException("El identificador del evento no es válido");
         }
-        if (!STATUSES.contains(status)) {
+        if (!isStorable(status)) {
             throw new InvalidUserDataException("Estado de participación no válido: " + status);
         }
         if (updatedAt == null) {
@@ -31,6 +31,6 @@ public record UserEventStatus(UserId userId, String eventId, String status, Inst
 
     /** Valores que el usuario puede guardar. "NONE" no se guarda: borra la selección. */
     public static boolean isStorable(String status) {
-        return STATUSES.contains(status);
+        return status != null && STATUSES.contains(status);
     }
 }
