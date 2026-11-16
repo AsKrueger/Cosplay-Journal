@@ -6,8 +6,8 @@
 
 La integración respeta rigurosamente la **Arquitectura Hexagonal**:
 - El módulo de **Dominio** emite eventos puros (`com.cosplayjournal.domain.event`).
-- La capa de **Aplicación** publica los eventos mediante el puerto abstracto [`DomainEventPublisherPort`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/application/port/out/DomainEventPublisherPort.java).
-- La capa de **Infraestructura** implementa la mensajería mediante el adaptador de salida Kafka ([`KafkaDomainEventPublisherAdapter`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/infrastructure/adapter/out/messaging/kafka/adapter/KafkaDomainEventPublisherAdapter.java)) y los consumidores de entrada ([`ParticipantJoinedKafkaConsumerAdapter`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/infrastructure/adapter/in/kafka/ParticipantJoinedKafkaConsumerAdapter.java)).
+- La capa de **Aplicación** publica los eventos mediante el puerto abstracto [`DomainEventPublisherPort`](../../backend/src/main/java/com/cosplayjournal/application/port/out/DomainEventPublisherPort.java).
+- La capa de **Infraestructura** implementa la mensajería mediante el adaptador de salida Kafka ([`KafkaDomainEventPublisherAdapter`](../../backend/src/main/java/com/cosplayjournal/infrastructure/adapter/out/messaging/kafka/adapter/KafkaDomainEventPublisherAdapter.java)) y los consumidores de entrada ([`ParticipantJoinedKafkaConsumerAdapter`](../../backend/src/main/java/com/cosplayjournal/infrastructure/adapter/in/kafka/ParticipantJoinedKafkaConsumerAdapter.java)).
 
 ---
 
@@ -77,14 +77,14 @@ Los mensajes Kafka utilízanse DTOs desacoplados de los modelos de dominio inter
 ## 5. Estrategia de Idempotencia y Manejo de Errores
 
 1. **Garantía de Entrega:** Kafka garantiza *at least once delivery*.
-2. **Estrategia de Idempotencia en Consumidor:** El servicio [`ProcessParticipantJoinedService`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/application/service/ProcessParticipantJoinedService.java) almacena las claves procesadas (`participationId:userId`) para evitar duplicados en reprocesamientos de mensajes.
+2. **Estrategia de Idempotencia en Consumidor:** El servicio [`ProcessParticipantJoinedService`](../../backend/src/main/java/com/cosplayjournal/application/service/ProcessParticipantJoinedService.java) almacena las claves procesadas (`participationId:userId`) para evitar duplicados en reprocesamientos de mensajes.
 3. **Manejo de Errores:** Excepciones de deserialización o formato inválido son capturadas por el adaptador consumidor evitando caídas en bucle del listener.
 
 ---
 
 ## 6. Despliegue Local con Docker Compose (KRaft Mode)
 
-Kafka se ejecuta localmente mediante **Apache Kafka en modo KRaft (sin necesidad de Zookeeper)** configurado en [`docker-compose.yml`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/docker-compose.yml):
+Kafka se ejecuta localmente mediante **Apache Kafka en modo KRaft (sin necesidad de Zookeeper)** configurado en [`docker-compose.yml`](../../backend/docker-compose.yml):
 
 ```bash
 cd backend

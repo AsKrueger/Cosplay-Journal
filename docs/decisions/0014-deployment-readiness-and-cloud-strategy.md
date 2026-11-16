@@ -22,7 +22,7 @@ Tras implementar el backend del sistema con Arquitectura Hexagonal, Seguridad JW
 
 ### Opción C: Despliegue en PaaS (Render / Railway / Fly.io) mediante Docker Container (Seleccionada para MVP Inicial)
 - **Ventajas:**
-  - Despliegue automático basado en el [`Dockerfile`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/Dockerfile) multi-etapa de Java 21.
+  - Despliegue automático basado en el [`Dockerfile`](../../backend/Dockerfile) multi-etapa de Java 21.
   - Soporte nativo para PostgreSQL 16 con Flyway.
   - Coste mínimo controlado (**~$7 - $15/mes**) sin riesgos de facturación oculta por NAT Gateways.
 
@@ -31,9 +31,9 @@ Tras implementar el backend del sistema con Arquitectura Hexagonal, Seguridad JW
 ## 3. Decisión Aprobada
 
 Se aprueba la **Opción C** para el MVP inicial y la **Opción B** para una posterior migración a AWS cuando la carga del sistema lo justifique:
-1. Crear el archivo de perfil de producción [`application-prod.properties`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/resources/application-prod.properties) e inyectar variables de entorno requeridas en tiempo de ejecución.
-2. Definir la imagen Docker multi-etapa [`Dockerfile`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/Dockerfile) con `eclipse-temurin:21-jre-alpine` y usuario no privilegiado.
-3. Documentar los resultados y la hoja de ruta en [`DEPLOYMENT_READINESS.md`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/docs/deployment/DEPLOYMENT_READINESS.md).
+1. Crear el archivo de perfil de producción [`application-prod.properties`](../../backend/src/main/resources/application-prod.properties) e inyectar variables de entorno requeridas en tiempo de ejecución.
+2. Definir la imagen Docker multi-etapa [`Dockerfile`](../../backend/Dockerfile) con `eclipse-temurin:21-jre-alpine` y usuario no privilegiado.
+3. Documentar los resultados y la hoja de ruta en [`DEPLOYMENT_READINESS.md`](../deployment/DEPLOYMENT_READINESS.md).
 
 ---
 

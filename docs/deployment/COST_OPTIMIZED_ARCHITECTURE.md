@@ -34,7 +34,7 @@ Mantener un clúster administrado de Kafka (como AWS MSK, $100+/mes) es inviable
 - **Riesgo:** Al superar la cuota, los eventos fallarán. Debe existir una política de reintento o de degradación antes de depender de esta opción.
 
 ### Opción B: Adaptador In-Process `SpringApplicationEventPublisherAdapter`
-- **Estrategia:** Implementación del puerto [`DomainEventPublisherPort`](file:///C:/Users/lovei/Documents/XD/Cosplay-Journal/backend/src/main/java/com/cosplayjournal/application/port/out/DomainEventPublisherPort.java) utilizando `ApplicationEventPublisher` síncrono/asíncrono de Spring Boot.
+- **Estrategia:** Implementación del puerto [`DomainEventPublisherPort`](../../backend/src/main/java/com/cosplayjournal/application/port/out/DomainEventPublisherPort.java) utilizando `ApplicationEventPublisher` síncrono/asíncrono de Spring Boot.
 - **Ventaja:** Cero dependencias externas en producción. La suite de testcontainers en CI mantiene las pruebas reales contra Kafka.
 
 ---
