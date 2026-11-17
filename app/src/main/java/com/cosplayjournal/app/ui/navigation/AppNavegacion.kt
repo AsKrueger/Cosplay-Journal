@@ -33,6 +33,8 @@ import com.cosplayjournal.app.data.events.Asistencia
 import com.cosplayjournal.app.data.social.Contacto
 import com.cosplayjournal.app.data.social.Relacion
 import com.cosplayjournal.app.ui.ads.BarraPublicidad
+import com.cosplayjournal.app.ui.updates.ActualizacionViewModel
+import com.cosplayjournal.app.ui.updates.AvisoActualizacion
 import com.cosplayjournal.app.ui.ads.PublicidadViewModel
 import com.cosplayjournal.app.ui.chat.ChatListScreen
 import com.cosplayjournal.app.ui.chat.ChatRoomScreen
@@ -135,6 +137,7 @@ fun AppNavegacion(eventoInicial: Long? = null, nav: NavHostController = remember
         Column(Modifier.padding(bottom = padding.calculateBottomPadding()).consumeWindowInsets(PaddingValues(bottom = padding.calculateBottomPadding()))) {
         // La barra solo existe si hay un anuncio activo; entonces ella ocupa la barra de estado
         BarraPublicidad(publicidad)
+        AvisoActualizacion(appViewModel { ActualizacionViewModel(it.actualizaciones) })
         NavHost(
             nav, startDestination = Pestaña.entries.first().ruta,
             modifier = Modifier.weight(1f).then(

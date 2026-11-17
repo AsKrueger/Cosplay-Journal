@@ -59,6 +59,7 @@ import com.cosplayjournal.app.BuildConfig
 import com.cosplayjournal.app.R
 import com.cosplayjournal.app.ui.auth.URL_PRIVACIDAD
 import com.cosplayjournal.app.ui.common.appViewModel
+import com.cosplayjournal.app.ui.updates.ActualizacionViewModel
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -127,7 +128,12 @@ fun SettingsScreen(onAtras: () -> Unit, onBloqueados: () -> Unit) {
             Opcion(Icons.Default.Feedback, stringResource(R.string.ajustes_comentarios),
                 stringResource(R.string.ajustes_comentarios_texto)) { dialogo = "comentario" }
             Opcion(Icons.Default.Policy, stringResource(R.string.ajustes_privacidad), null) { uri.openUri(URL_PRIVACIDAD) }
-            Opcion(Icons.Default.Info, stringResource(R.string.ajustes_version, BuildConfig.VERSION_NAME), null, onClick = null)
+            val nueva by appViewModel { ActualizacionViewModel(it.actualizaciones) }.disponible.collectAsStateWithLifecycle()
+            Opcion(
+                Icons.Default.Info, stringResource(R.string.ajustes_version, BuildConfig.VERSION_NAME),
+                nueva?.let { stringResource(R.string.act_disponible, it.version) },
+                onClick = nueva?.let { v -> { uri.openUri(v.url) } },
+            )
 
             Seccion(R.string.ajustes_seccion_cuenta)
             Opcion(Icons.Default.Block, stringResource(R.string.ajustes_bloqueados), null, onClick = onBloqueados)

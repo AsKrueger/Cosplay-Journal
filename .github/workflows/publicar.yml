@@ -1,0 +1,57 @@
+name: Publicar APK
+
+# Publica la app gratis en GitHub Releases (Google Play cobra 25 $ de alta).
+# Se lanza al subir una etiqueta: git tag v2.1.0 && git push origin v2.1.0
+# La app instalada lo detecta sola y ofrece descargar la nueva versión.
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write # crear la release y subir el APK
+
+jobs:
+  publicar:
+    name: Compilar, firmar y publicar
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      FEEDBACK_EMAIL: ${{ secrets.FEEDBACK_EMAIL }}
+      RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+      RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+      RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Comprobar secretos
+        env:
+          KEYSTORE_B64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+        run: |
+          faltan=""
+          for v in SUPABASE_URL SUPABASE_ANON_KEY RELEASE_STORE_PASSWORD RELEASE_KEY_ALIAS RELEASE_KEY_PASSWORD KEYSTORE_B64; do
+            [ -z "${!v}" ] && faltan="$faltan $v"
+          done
+          if [ -n "$faltan" ]; then
+            echo "::error::Faltan secretos:$faltan. Ver docs/PUESTA_EN_MARCHA.md (Publicar la app)"
+            exit 1
+          fi
+          echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/publicacion.jks"
+          echo "RELEASE_STORE_FILE=$RUNNER_TEMP/publicacion.jks" >> "$GITHUB_ENV"
+          echo "VERSION_NAME=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: temurin
+      - uses: gradle/actions/setup-gradle@v4
+      - run: chmod +x gradlew
+      - run: ./gradlew :app:testDebugUnitTest :app:assembleRelease --stacktrace
+
+      - name: Crear la release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          apk="CosplayJournal-${GITHUB_REF_NAME}.apk"
+          cp app/build/outputs/apk/release/app-release.apk "$apk"
+          gh release create "$GITHUB_REF_NAME" "$apk" --title "Cosplay Journal ${GITHUB_REF_NAME}" --generate-notes

@@ -15,6 +15,14 @@ val localProps = Properties().apply {
 }
 fun localProp(name: String) = (localProps.getProperty(name) ?: System.getenv(name) ?: "").trim()
 
+// Versión: la pone el workflow de publicación a partir de la etiqueta (v2.1.0 -> 2.1.0 / 20100)
+val nombreVersion = localProp("VERSION_NAME").ifEmpty { "2.0.0" }
+val codigoVersion = nombreVersion.split('.').map { it.toIntOrNull() ?: 0 }
+    .let { (it.getOrElse(0) { 0 } * 10000) + (it.getOrElse(1) { 0 } * 100) + it.getOrElse(2) { 0 } }
+
+// Firma de la versión publicada. Sin keystore, la release queda sin firmar (solo sirve para compilar).
+val keystore = localProp("RELEASE_STORE_FILE").takeIf { it.isNotEmpty() }?.let { rootProject.file(it) }
+
 android {
     namespace = "com.cosplayjournal.app"
     compileSdk = 35
@@ -23,14 +31,27 @@ android {
         applicationId = "com.cosplayjournal.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 2
-        versionName = "2.0.0"
+        versionCode = codigoVersion
+        versionName = nombreVersion
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
 
         buildConfigField("String", "SUPABASE_URL", "\"${localProp("SUPABASE_URL")}\"")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"${localProp("SUPABASE_ANON_KEY")}\"")
         buildConfigField("String", "FEEDBACK_EMAIL", "\"${localProp("FEEDBACK_EMAIL")}\"")
+        // Repositorio donde se publican los APK; la app consulta ahí si hay versión nueva
+        buildConfigField("String", "GITHUB_REPO", "\"${localProp("GITHUB_REPO").ifEmpty { "AsKrueger/Cosplay-Journal" }}\"")
+    }
+
+    signingConfigs {
+        if (keystore?.exists() == true) {
+            create("publicacion") {
+                storeFile = keystore
+                storePassword = localProp("RELEASE_STORE_PASSWORD")
+                keyAlias = localProp("RELEASE_KEY_ALIAS")
+                keyPassword = localProp("RELEASE_KEY_PASSWORD")
+            }
+        }
     }
 
     androidResources {
@@ -42,6 +63,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfigs.findByName("publicacion")?.let { signingConfig = it }
         }
     }
     compileOptions {

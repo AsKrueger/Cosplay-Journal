@@ -90,6 +90,11 @@
     <string name="ajustes_comentarios_email">Prefiero escribir un email</string>
     <string name="ajustes_privacidad">Política de privacidad</string>
     <string name="ajustes_version">Versión %1$s</string>
+    <string name="act_titulo">Versión %1$s disponible</string>
+    <string name="act_texto">Trae mejoras y correcciones. Se descarga gratis desde GitHub; al abrir el archivo, Android te pedirá permiso para instalarlo.</string>
+    <string name="act_descargar">Descargar</string>
+    <string name="act_ahora_no">Ahora no</string>
+    <string name="act_disponible">Hay una versión nueva (%1$s): toca para descargarla</string>
     <string name="ajustes_seccion_cuenta">Cuenta</string>
     <string name="ajustes_cerrar_sesion">Cerrar sesión</string>
     <string name="ajustes_borrar_cuenta">Borrar mi cuenta</string>
