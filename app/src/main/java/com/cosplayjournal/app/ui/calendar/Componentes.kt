@@ -95,9 +95,16 @@ fun Cartel(url: String?, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TarjetaEvento(e: EventoConEstado, hoy: LocalDate, onClick: () -> Unit, onFavorito: () -> Unit) {
+fun TarjetaEvento(
+    e: EventoConEstado,
+    hoy: LocalDate,
+    onClick: () -> Unit,
+    onFavorito: () -> Unit,
+    /** false al ver los planes de un amigo: mi asistencia y mis favoritos no pintan nada ahí. */
+    mostrarMiEstado: Boolean = true,
+) {
     val ev = e.evento
-    val color = e.tono(hoy).color()
+    val color = if (mostrarMiEstado) e.tono(hoy).color() else EstadoColores.FuturoSinMarcar
     Card(
         onClick = onClick,
         shape = RoundedCornerShape(20.dp),
@@ -121,14 +128,14 @@ fun TarjetaEvento(e: EventoConEstado, hoy: LocalDate, onClick: () -> Unit, onFav
                     }
                 }
                 Spacer(Modifier.weight(1f))
-                e.estado.asistencia?.let { a ->
+                e.estado.asistencia?.takeIf { mostrarMiEstado }?.let { a ->
                     Text(
                         textoAsistencia(a), style = MaterialTheme.typography.labelMedium, color = Color.White,
                         modifier = Modifier.clip(CircleShape).background(color).padding(horizontal = 10.dp, vertical = 2.dp),
                     )
                 }
             }
-            IconButton(onClick = onFavorito) {
+            if (mostrarMiEstado) IconButton(onClick = onFavorito) {
                 Icon(
                     if (e.estado.favorito) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                     stringResource(R.string.cal_favorito),

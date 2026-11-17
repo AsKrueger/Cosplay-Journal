@@ -72,7 +72,8 @@ fun filtrar(eventos: List<EventoConEstado>, c: Consulta, hoy: LocalDate): List<E
 fun eventosDelDia(eventos: List<EventoConEstado>, dia: LocalDate) =
     eventos.filter { dia >= it.evento.inicio && dia <= it.evento.fin }
 
-private fun normalizar(s: String) = java.text.Normalizer.normalize(s.lowercase().trim(), java.text.Normalizer.Form.NFD)
+/** Minúsculas y sin acentos, para buscar "japon" y encontrar "Japón". */
+fun normalizar(s: String) = java.text.Normalizer.normalize(s.lowercase().trim(), java.text.Normalizer.Form.NFD)
     .replace(Regex("\\p{M}"), "")
 
 object Provincias {

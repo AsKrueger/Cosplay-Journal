@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Solo en debug: permite HTTP hacia el Supabase local que corre en el ordenador (10.0.2.2 desde el emulador) -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application
+        android:networkSecurityConfig="@xml/red_debug"
+        tools:ignore="UnusedAttribute" />
+</manifest>

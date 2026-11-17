@@ -2,6 +2,7 @@ package com.cosplayjournal.app.ui.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.statusBars
@@ -131,7 +132,7 @@ fun AppNavegacion(eventoInicial: Long? = null, nav: NavHostController = remember
     ) { padding ->
         val publicidad = appViewModel { PublicidadViewModel(it.anuncios) }
         val hayAnuncio by publicidad.actual.collectAsStateWithLifecycle()
-        Column(Modifier.padding(bottom = padding.calculateBottomPadding()).consumeWindowInsets(padding)) {
+        Column(Modifier.padding(bottom = padding.calculateBottomPadding()).consumeWindowInsets(PaddingValues(bottom = padding.calculateBottomPadding()))) {
         // La barra solo existe si hay un anuncio activo; entonces ella ocupa la barra de estado
         BarraPublicidad(publicidad)
         NavHost(

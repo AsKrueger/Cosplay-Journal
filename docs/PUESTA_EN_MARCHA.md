@@ -52,3 +52,18 @@ La barra superior de anuncios solo aparece si hay una fila activa en la tabla `a
 | `active` | `true` |
 
 La app consulta los anuncios al abrirse y cada 30 minutos y, si hay varios, los rota cada 20 segundos. Todos llevan la etiqueta «Publicidad». Para retirarlo, pon `active = false`.
+
+## 6. Probar todo en local con el emulador (sin cuenta de Supabase)
+
+Requiere Docker Desktop y el emulador de Android Studio.
+
+```bash
+npx supabase@2.40.7 start                    # levanta Supabase y aplica supabase/migrations
+npx supabase@2.40.7 status -o env            # muestra ANON_KEY y SERVICE_ROLE_KEY
+```
+
+1. En `local.properties`: `SUPABASE_URL=http://10.0.2.2:54321` (el ordenador visto desde el emulador) y `SUPABASE_ANON_KEY=<ANON_KEY>`. La versión debug permite HTTP solo hacia esa dirección (`app/src/debug`).
+2. Cargar el calendario: `cd scraper && SUPABASE_URL=http://127.0.0.1:54321 SUPABASE_SERVICE_KEY=<SERVICE_ROLE_KEY> python -m cosplay_scraper.main`
+3. `./gradlew :app:installDebug`. En local no hace falta confirmar el email al registrarse.
+
+Si `supabase start` se queda en «container is not ready: unhealthy» en el primer arranque en Windows, ejecuta `npx supabase@2.40.7 start --ignore-health-check`: la base termina de iniciarse sola.
