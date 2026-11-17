@@ -222,6 +222,8 @@
     <string name="bloq_vacio">No has bloqueado a nadie</string>
     <string name="bloq_desbloquear">Desbloquear</string>
     <string name="chat_vacio_titulo">Aún no tienes chats</string>
+    <string name="chat_foto_caducada">Foto caducada (se borran a los 90 días)</string>
+    <string name="chat_foto_error">No se pudo cargar la foto</string>
     <string name="chat_vacio_texto">Escribe a un amigo desde su perfil o crea un grupo para organizar una grupal.</string>
     <string name="chat_nuevo_grupo">Nuevo grupo</string>
     <string name="chat_nombre_grupo">Nombre del grupo</string>
