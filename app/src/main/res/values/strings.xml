@@ -41,6 +41,17 @@
     <string name="auth_error_no_confirmado">Confirma tu email antes de entrar</string>
     <string name="auth_error_existe">Ya hay una cuenta con ese email</string>
     <string name="auth_error_password_debil">La contraseña es demasiado débil</string>
+    <string name="auth_olvide">¿Has olvidado tu contraseña?</string>
+    <string name="auth_recuperar_titulo">Nueva contraseña</string>
+    <string name="auth_recuperar_explicacion">Escribe tu email y te mandaremos un código de 6 cifras.</string>
+    <string name="auth_recuperar_codigo_enviado">Si %1$s tiene cuenta, te habrá llegado un código. Mira también en spam.</string>
+    <string name="auth_codigo">Código del email</string>
+    <string name="auth_password_nueva">Contraseña nueva</string>
+    <string name="auth_enviar_codigo">Enviarme el código</string>
+    <string name="auth_guardar_password">Guardar y entrar</string>
+    <string name="auth_reenviar_codigo">No me ha llegado, pedir otro</string>
+    <string name="auth_volver_entrar">Volver a entrar</string>
+    <string name="auth_error_codigo">Código incorrecto o caducado</string>
 
     <!-- Navegación -->
     <string name="nav_calendario">Calendario</string>

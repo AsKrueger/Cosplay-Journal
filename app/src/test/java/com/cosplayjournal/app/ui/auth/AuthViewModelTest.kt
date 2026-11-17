@@ -63,6 +63,41 @@ class AuthViewModelTest {
         assertTrue(vm.ui.value.confirmarEmail)
     }
 
+    @Test fun `recuperar contraseña pide el código y luego guarda la nueva`() = runTest(regla.dispatcher) {
+        val vm = AuthViewModel(repo)
+        vm.email("kira@mail.es")
+        vm.empezarRecuperacion()
+        assertEquals(PasoRecuperar.EMAIL, vm.ui.value.recuperar)
+        vm.recuperar()
+        advanceUntilIdle()
+        coVerify { repo.enviarCodigoRecuperacion("kira@mail.es") }
+        assertEquals(PasoRecuperar.CODIGO, vm.ui.value.recuperar)
+
+        vm.codigo("12a34 56")
+        assertEquals("123456", vm.ui.value.codigo)
+        vm.password("corta")
+        assertFalse(vm.ui.value.puedeRecuperar)
+        vm.password("nueva-segura")
+        vm.recuperar()
+        advanceUntilIdle()
+        coVerify { repo.restablecerPassword("kira@mail.es", "123456", "nueva-segura") }
+    }
+
+    @Test fun `un código caducado lo explica`() = runTest(regla.dispatcher) {
+        coEvery { repo.restablecerPassword(any(), any(), any()) } throws
+            AppException(ErrorApp.Servidor("CODIGO_INCORRECTO"), AccesoException(ErrorAcceso.CODIGO_INCORRECTO))
+        val vm = AuthViewModel(repo)
+        vm.email("kira@mail.es")
+        vm.empezarRecuperacion()
+        vm.recuperar()
+        advanceUntilIdle()
+        vm.codigo("000000"); vm.password("12345678")
+        vm.recuperar()
+        advanceUntilIdle()
+        assertEquals(R.string.auth_error_codigo, vm.ui.value.error)
+        assertEquals(PasoRecuperar.CODIGO, vm.ui.value.recuperar)
+    }
+
     @Test fun `credenciales incorrectas muestran su mensaje`() = runTest(regla.dispatcher) {
         coEvery { repo.entrar(any(), any()) } throws
             AppException(ErrorApp.Servidor("CREDENCIALES"), AccesoException(ErrorAcceso.CREDENCIALES))

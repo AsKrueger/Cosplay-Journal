@@ -92,6 +92,10 @@ fun AuthScreen() {
                     }
                     return@Card
                 }
+                if (ui.recuperar != null) {
+                    Recuperar(ui, vm, verPassword) { verPassword = !verPassword }
+                    return@Card
+                }
                 Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(
                         stringResource(if (ui.registro) R.string.auth_crear_cuenta else R.string.auth_entrar),
@@ -150,12 +154,71 @@ fun AuthScreen() {
                         if (ui.enviando) CircularProgressIndicator(Modifier.size(22.dp), strokeWidth = 2.dp)
                         else Text(stringResource(if (ui.registro) R.string.auth_crear_cuenta else R.string.auth_entrar))
                     }
+                    if (!ui.registro) {
+                        TextButton(onClick = vm::empezarRecuperacion, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                            Text(stringResource(R.string.auth_olvide))
+                        }
+                    }
                     TextButton(onClick = vm::cambiarModo, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                         Text(stringResource(if (ui.registro) R.string.auth_ya_tengo_cuenta else R.string.auth_no_tengo_cuenta))
                     }
                 }
             }
             Spacer(Modifier.height(24.dp))
+        }
+    }
+}
+
+@Composable
+private fun Recuperar(ui: AuthUi, vm: AuthViewModel, verPassword: Boolean, onVerPassword: () -> Unit) {
+    Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text(stringResource(R.string.auth_recuperar_titulo), style = MaterialTheme.typography.headlineSmall)
+        val codigo = ui.recuperar == PasoRecuperar.CODIGO
+        Text(
+            if (codigo) stringResource(R.string.auth_recuperar_codigo_enviado, ui.email)
+            else stringResource(R.string.auth_recuperar_explicacion),
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        if (!codigo) {
+            OutlinedTextField(
+                value = ui.email, onValueChange = vm::email, singleLine = true,
+                label = { Text(stringResource(R.string.auth_email)) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Done),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        } else {
+            OutlinedTextField(
+                value = ui.codigo, onValueChange = vm::codigo, singleLine = true,
+                label = { Text(stringResource(R.string.auth_codigo)) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword, imeAction = ImeAction.Next),
+                modifier = Modifier.fillMaxWidth(),
+            )
+            OutlinedTextField(
+                value = ui.password, onValueChange = vm::password, singleLine = true,
+                label = { Text(stringResource(R.string.auth_password_nueva)) },
+                supportingText = { Text(stringResource(R.string.auth_password_corta)) },
+                visualTransformation = if (verPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    IconButton(onClick = onVerPassword) {
+                        Icon(if (verPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility, null)
+                    }
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+        ui.error?.let { Text(stringResource(it), color = MaterialTheme.colorScheme.error) }
+        Button(onClick = vm::recuperar, enabled = ui.puedeRecuperar, modifier = Modifier.fillMaxWidth().height(52.dp)) {
+            if (ui.enviando) CircularProgressIndicator(Modifier.size(22.dp), strokeWidth = 2.dp)
+            else Text(stringResource(if (codigo) R.string.auth_guardar_password else R.string.auth_enviar_codigo))
+        }
+        if (codigo) {
+            TextButton(onClick = vm::empezarRecuperacion, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                Text(stringResource(R.string.auth_reenviar_codigo))
+            }
+        }
+        TextButton(onClick = vm::irAEntrar, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+            Text(stringResource(R.string.auth_volver_entrar))
         }
     }
 }

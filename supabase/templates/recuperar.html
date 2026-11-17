@@ -1,0 +1,8 @@
+<!-- Plantilla «Reset Password» de Supabase (Authentication → Emails → Templates).
+     La app pide el código de 6 cifras; no hace falta ningún enlace ni web propia. -->
+<h2>Cosplay Journal</h2>
+<p>Tu código para cambiar la contraseña es:</p>
+<p style="font-size:32px;font-weight:bold;letter-spacing:6px">{{ .Token }}</p>
+<p>Escríbelo en la app. Caduca en una hora. Si no lo has pedido tú, ignora este correo.</p>
+<hr>
+<p>Your Cosplay Journal password reset code is <b>{{ .Token }}</b>. It expires in one hour.</p>
