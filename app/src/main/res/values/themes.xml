@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.CosplayJournal" parent="Theme.Material3.Light.NoActionBar">
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="android:statusBarColor">@color/white</item>
-        <item name="android:windowLightStatusBar">true</item>
+    <style name="Theme.CosplayJournal" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/fondo</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
+    <style name="Theme.CosplayJournal.Splash" parent="Theme.CosplayJournal" />
 </resources>

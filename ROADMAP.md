@@ -4,10 +4,10 @@ Cada fase es una rama desde `develop` con su PR.
 
 | Fase | Issue | Rama | Contenido | Estado |
 |---|---|---|---|---|
-| 0 | — | `chore/reinicio-v2` | Archivar v1 (`v1-final`), visión, competencia, arquitectura | En curso |
-| 1 | #105 | `feat/supabase-esquema` | Tablas, RLS, funciones, tests de políticas en CI | Pendiente |
-| 2 | #106 | `feat/scraper-eventos` | Importador ListadoManga con carteles y cron diario | Pendiente |
-| 3 | #107 | `feat/app-base` | App nueva: tema, navegación, login, idioma ES/EN, ajustes | Pendiente |
+| 0 | — | `chore/reinicio-v2` | Archivar v1 (`v1-final`), visión, competencia, arquitectura | Hecha |
+| 1 | #105 | `feat/supabase-esquema` | Tablas, RLS, funciones, tests de políticas en CI | Hecha |
+| 2 | #106 | `feat/scraper-eventos` | Importador ListadoManga con carteles y cron diario | Hecha |
+| 3 | #107 | `feat/app-base` | App nueva: tema, navegación, login, idioma ES/EN, ajustes | Hecha |
 | 4 | #108 | `feat/app-calendario` | Calendario, filtros, asistencia, favoritos, cercanos, recordatorios | Pendiente |
 | 5 | #109 | `feat/app-galeria` | Carpeta vinculada, etiquetas evento/cosplay/grupal | Pendiente |
 | 6 | #110 | `feat/app-social` | Amigos, perfil, escaparate, bloquear y denunciar | Pendiente |
