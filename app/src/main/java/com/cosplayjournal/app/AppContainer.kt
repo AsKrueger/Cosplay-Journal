@@ -7,6 +7,10 @@ import com.cosplayjournal.app.data.cache.ImagenesManager
 import com.cosplayjournal.app.data.events.EventRepository
 import com.cosplayjournal.app.data.events.SupabaseEventosRemotos
 import com.cosplayjournal.app.data.feedback.FeedbackRepository
+import com.cosplayjournal.app.data.gallery.CarpetaGuardada
+import com.cosplayjournal.app.data.gallery.GalleryRepository
+import com.cosplayjournal.app.data.gallery.LectorCarpetaSaf
+import kotlinx.coroutines.flow.map
 import com.cosplayjournal.app.data.local.AppDatabase
 import com.cosplayjournal.app.reminders.Recordatorios
 import com.cosplayjournal.app.ui.calendar.Avisos
@@ -50,6 +54,12 @@ class AppContainer(context: Context) {
     val eventos: EventRepository by lazy {
         EventRepository(db.eventos(), SupabaseEventosRemotos(supabase), userId = { auth.userIdActual() })
     }
+    val galeria: GalleryRepository by lazy {
+        GalleryRepository(db.fotos(), LectorCarpetaSaf(appContext), object : CarpetaGuardada {
+            override val carpeta = settings.ajustes.map { it.carpetaGaleria }
+            override suspend fun guardar(uri: String?) = settings.setCarpetaGaleria(uri)
+        })
+    }
     val avisos: Avisos = object : Avisos {
         override fun programar(eventoId: Long, nombre: String, inicio: LocalDate) =
             Recordatorios.programar(appContext, eventoId, nombre, inicio)
@@ -74,6 +84,8 @@ class AppContainer(context: Context) {
 
     /** Cada módulo con datos locales registra aquí cómo borrarlos (Ajustes → Borrar datos). */
     private val limpiadores = mutableListOf<suspend () -> Unit>(
+        // La galería primero: necesita leer la carpeta guardada para soltar su permiso
+        { galeria.borrarLocal() },
         { settings.borrarTodo() },
         { if (configurado) eventos.borrarLocal() },
         { Recordatorios.cancelarTodos(appContext) },
