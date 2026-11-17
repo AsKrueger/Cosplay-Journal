@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
@@ -20,6 +22,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.produceState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.cosplayjournal.app.data.chat.ResumenChat
+import com.cosplayjournal.app.data.events.Asistencia
+import com.cosplayjournal.app.data.social.Contacto
+import com.cosplayjournal.app.data.social.Relacion
+import com.cosplayjournal.app.ui.chat.ChatListScreen
+import com.cosplayjournal.app.ui.chat.ChatRoomScreen
+import com.cosplayjournal.app.ui.chat.ChatRoomViewModel
+import com.cosplayjournal.app.ui.chat.ChatsViewModel
+import java.time.LocalDate
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import android.widget.Toast
@@ -63,6 +76,7 @@ import com.cosplayjournal.app.ui.settings.SettingsScreen
 enum class Pestaña(val ruta: String, @StringRes val titulo: Int, val icono: ImageVector, val iconoActivo: ImageVector) {
     CALENDARIO("calendario", R.string.nav_calendario, Icons.Outlined.CalendarMonth, Icons.Filled.CalendarMonth),
     GALERIA("galeria", R.string.nav_galeria, Icons.Outlined.PhotoLibrary, Icons.Filled.PhotoLibrary),
+    CHATS("chats", R.string.nav_chats, Icons.AutoMirrored.Outlined.Chat, Icons.AutoMirrored.Filled.Chat),
     AMIGOS("amigos", R.string.nav_amigos, Icons.Outlined.People, Icons.Filled.People),
     PERFIL("perfil", R.string.nav_perfil, Icons.Outlined.Person, Icons.Filled.Person),
 }
@@ -71,6 +85,8 @@ object Rutas {
     const val AJUSTES = "ajustes"
     const val BLOQUEADOS = "bloqueados"
     const val AMIGO = "amigo/{id}"
+    const val CHAT = "chat/{id}"
+    fun chat(id: String) = "chat/$id"
     fun amigo(id: String) = "amigo/$id"
     const val EVENTO = "evento/{id}"
     fun evento(id: Long) = "evento/$id"
@@ -125,6 +141,24 @@ fun AppNavegacion(eventoInicial: Long? = null, nav: NavHostController = remember
                 val vm = appViewModel { c -> GalleryViewModel(c.galeria, c.eventos.eventos) }
                 GalleryScreen(vm, accionesExtra = listOf(accionEscaparate()))
             }
+            composable(Pestaña.CHATS.ruta) {
+                val c = appContainer()
+                val vm = appViewModel { ChatsViewModel(it.chats, it.social) }
+                val eventos by c.eventos.eventos.collectAsStateWithLifecycle(emptyList())
+                val hoy = LocalDate.now()
+                val misEventos = eventos.filter { it.estado.asistencia == Asistencia.GOING && it.evento.fin >= hoy }
+                ChatListScreen(vm, misEventos, onChat = { id -> nav.navigate(Rutas.chat(id)) })
+            }
+            composable(Rutas.CHAT) { entrada ->
+                val id = entrada.arguments!!.getString("id")!!
+                val c = appContainer()
+                val vm = appViewModel(key = "chat$id") { ChatRoomViewModel(id, it.chats, it.auth.userIdActual()) }
+                val resumen by produceState<ResumenChat?>(null, id) { value = runCatching { c.chats.misChats().firstOrNull { it.id == id } }.getOrNull() }
+                val amigos by produceState(emptyList<Contacto>()) {
+                    value = runCatching { c.social.contactos().filter { it.relacion == Relacion.FRIEND } }.getOrDefault(emptyList())
+                }
+                ChatRoomScreen(vm, resumen, amigos, onAtras = nav::popBackStack, onEvento = { e -> nav.navigate(Rutas.evento(e)) })
+            }
             composable(Pestaña.AMIGOS.ruta) {
                 val vm = appViewModel { FriendsViewModel(it.social) }
                 FriendsScreen(vm, onAmigo = { id -> nav.navigate(Rutas.amigo(id)) })
@@ -132,7 +166,12 @@ fun AppNavegacion(eventoInicial: Long? = null, nav: NavHostController = remember
             composable(Rutas.AMIGO) { entrada ->
                 val id = entrada.arguments!!.getString("id")!!
                 val vm = appViewModel(key = "amigo$id") { FriendProfileViewModel(id, it.social, it.eventos.eventos) }
-                FriendProfileScreen(vm, onAtras = nav::popBackStack, onEvento = { e -> nav.navigate(Rutas.evento(e)) }, onEscribir = null)
+                val c = appContainer()
+                val scope = rememberCoroutineScope()
+                FriendProfileScreen(
+                    vm, onAtras = nav::popBackStack, onEvento = { e -> nav.navigate(Rutas.evento(e)) },
+                    onEscribir = { scope.launch { runCatching { c.chats.abrirDirecto(id) }.onSuccess { nav.navigate(Rutas.chat(it)) } } },
+                )
             }
             composable(Pestaña.PERFIL.ruta) {
                 val vm = appViewModel { c -> ProfileViewModel(c.perfiles, c.social, c.eventos.eventos, userId = { c.auth.userIdActual() }) }

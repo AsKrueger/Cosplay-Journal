@@ -193,4 +193,26 @@
     <string name="ajustes_bloqueados">Blocked users</string>
     <string name="bloq_vacio">You haven\'t blocked anyone</string>
     <string name="bloq_desbloquear">Unblock</string>
+    <string name="chat_vacio_titulo">No chats yet</string>
+    <string name="chat_vacio_texto">Message a friend from their profile or create a group to plan a group cosplay.</string>
+    <string name="chat_nuevo_grupo">New group</string>
+    <string name="chat_nombre_grupo">Group name</string>
+    <string name="chat_grupo_evento">Event (optional)</string>
+    <string name="chat_ningun_evento">No event</string>
+    <string name="chat_elige_amigos">Pick friends</string>
+    <string name="chat_sin_amigos">You need friends to create a group</string>
+    <string name="chat_crear">Create</string>
+    <string name="chat_foto">📷 Photo</string>
+    <string name="chat_escribe">Write a message</string>
+    <string name="chat_enviar_foto">Send photo</string>
+    <string name="chat_miembros">Members (%1$d)</string>
+    <string name="chat_anadir_miembro">Add friend</string>
+    <string name="chat_salir">Leave group</string>
+    <string name="chat_salir_texto">You\'ll stop seeing messages from this group.</string>
+    <string name="chat_ya_no_amigos">You\'re no longer friends: you can\'t write in this chat</string>
+    <string name="chat_cargar_mas">Load earlier messages</string>
+    <string name="chat_hoy">Today</string>
+    <string name="chat_ayer">Yesterday</string>
+    <string name="chat_usuario_eliminado">Deleted user</string>
+    <string name="chat_ver_salon">View event</string>
 </resources>
