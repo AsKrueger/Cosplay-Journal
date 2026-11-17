@@ -6,10 +6,12 @@ import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Order
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import java.time.OffsetDateTime
 
 /** Acceso a Supabase separado para poder probar el repositorio sin red. */
 interface EventosRemotos {
-    suspend fun eventos(desde: LocalDate, hasta: LocalDate): List<EventoRemoto>
+    /** Eventos del rango; con [cambiadosDesde], solo los modificados después de ese `updated_at`. */
+    suspend fun eventos(desde: LocalDate, hasta: LocalDate, cambiadosDesde: String? = null): List<EventoRemoto>
     suspend fun misAsistencias(userId: String): List<AsistenciaRemota>
     suspend fun misFavoritos(userId: String): List<FavoritoRemoto>
     suspend fun guardarAsistencia(userId: String, eventoId: Long, asistencia: Asistencia?)
@@ -17,11 +19,13 @@ interface EventosRemotos {
 }
 
 class SupabaseEventosRemotos(private val client: SupabaseClient) : EventosRemotos {
-    override suspend fun eventos(desde: LocalDate, hasta: LocalDate) =
+    override suspend fun eventos(desde: LocalDate, hasta: LocalDate, cambiadosDesde: String?) =
         client.from("events").select {
             filter {
                 gte("end_date", desde.toString())
                 lte("start_date", hasta.toString())
+                // La base pone a cada fila su propia hora (clock_timestamp), así que basta con gt
+                if (cambiadosDesde != null) gt("updated_at", cambiadosDesde)
             }
             order("start_date", Order.ASCENDING)
         }.decodeList<EventoRemoto>()
@@ -54,18 +58,36 @@ class EventRepository(
     private val dao: EventDao,
     private val remoto: EventosRemotos,
     private val userId: () -> String?,
+    private val marcas: MarcaSincronizacion = MarcaEnMemoria(),
     private val hoy: () -> LocalDate = LocalDate::now,
 ) {
     val eventos: Flow<List<EventoConEstado>> = dao.todos()
     fun evento(id: Long): Flow<EventoConEstado?> = dao.uno(id)
 
-    /** Descarga los eventos de un año atrás a un año adelante y el estado del usuario. */
+    /**
+     * Trae los eventos de un año atrás a un año adelante y el estado del usuario.
+     * Normalmente solo pide los salones que han cambiado (unos pocos bytes); una vez por semana
+     * lo descarga todo para quitar los que el servidor haya borrado. Así el tráfico gratuito de
+     * Supabase alcanza para muchísimos más usuarios.
+     */
     suspend fun actualizar() = llamada {
         subirPendientes()
         val d = hoy()
-        val eventos = remoto.eventos(d.minusYears(1), d.plusYears(1)).map { it.aEntidad() }
+        val marca = marcas.leer()
+        val completa = marca == null || !d.isBefore(marca.ultimaCompleta.plusDays(DIAS_ENTRE_COMPLETAS)) ||
+            dao.cuantos() == 0
+        val remotos = remoto.eventos(d.minusYears(1), d.plusYears(1), if (completa) null else marca?.cambiosDesde)
+        val eventos = remotos.map { it.aEntidad() }
         dao.guardarEventos(eventos)
-        dao.borrarEventosSalvo(eventos.map { it.id })
+        if (completa) dao.borrarEventosSalvo(eventos.map { it.id })
+        else dao.borrarTerminadosAntesDe(d.minusYears(1))
+        val masReciente = remotos.mapNotNull { it.updatedAt }.maxByOrNull { OffsetDateTime.parse(it) }
+        marcas.guardar(
+            Marca(
+                cambiosDesde = masReciente ?: marca?.cambiosDesde,
+                ultimaCompleta = if (completa) d else marca!!.ultimaCompleta,
+            )
+        )
 
         val uid = userId() ?: return@llamada
         val asistencias = remoto.misAsistencias(uid).associate { it.eventId to it.status }
@@ -108,5 +130,10 @@ class EventRepository(
     suspend fun borrarLocal() {
         dao.borrarEventos()
         dao.borrarEstados()
+        marcas.borrar()
+    }
+
+    private companion object {
+        const val DIAS_ENTRE_COMPLETAS = 7L
     }
 }

@@ -59,6 +59,7 @@ data class EventoRemoto(
     val price: String? = null,
     @SerialName("image_url") val imageUrl: String? = null,
     val website: String? = null,
+    @SerialName("updated_at") val updatedAt: String? = null,
 ) {
     fun aEntidad() = EventoEntity(
         id, name, LocalDate.parse(startDate), LocalDate.parse(endDate), venue, address, city,

@@ -42,6 +42,11 @@ interface EventDao {
     @Query("DELETE FROM mi_estado WHERE pendiente = 0")
     suspend fun borrarEstadosSincronizados()
 
+    @Query("SELECT COUNT(*) FROM eventos") suspend fun cuantos(): Int
+
+    @Query("DELETE FROM eventos WHERE fin < :limite")
+    suspend fun borrarTerminadosAntesDe(limite: LocalDate)
+
     @Query("DELETE FROM eventos") suspend fun borrarEventos()
     @Query("DELETE FROM mi_estado") suspend fun borrarEstados()
 }

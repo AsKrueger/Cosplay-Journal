@@ -29,6 +29,10 @@ class DaoFalso : EventDao {
     override suspend fun guardarEstados(estados: List<MiEstadoEntity>) { estadosTabla.value += estados.associateBy { it.eventoId } }
     override suspend fun borrarEventosSalvo(ids: List<Long>) { eventosTabla.value = eventosTabla.value.filterKeys { it in ids } }
     override suspend fun borrarEstadosSincronizados() { estadosTabla.value = estadosTabla.value.filterValues { it.pendiente } }
+    override suspend fun cuantos() = eventosTabla.value.size
+    override suspend fun borrarTerminadosAntesDe(limite: LocalDate) {
+        eventosTabla.value = eventosTabla.value.filterValues { !it.fin.isBefore(limite) }
+    }
     override suspend fun borrarEventos() { eventosTabla.value = emptyMap() }
     override suspend fun borrarEstados() { estadosTabla.value = emptyMap() }
 }
@@ -39,9 +43,14 @@ class RemotoFalso : EventosRemotos {
     val asistencias = mutableMapOf<Long, Asistencia>()
     val favoritos = mutableSetOf<Long>()
     var rango: Pair<LocalDate, LocalDate>? = null
+    var pedidoDesde: String? = null
+    var descargas = 0
 
     private fun red() { if (sinRed) throw IOException("sin red") }
-    override suspend fun eventos(desde: LocalDate, hasta: LocalDate): List<EventoRemoto> { red(); rango = desde to hasta; return eventos }
+    override suspend fun eventos(desde: LocalDate, hasta: LocalDate, cambiadosDesde: String?): List<EventoRemoto> {
+        red(); rango = desde to hasta; pedidoDesde = cambiadosDesde; descargas++
+        return eventos.filter { cambiadosDesde == null || (it.updatedAt ?: "") > cambiadosDesde }
+    }
     override suspend fun misAsistencias(userId: String) = asistencias.map { AsistenciaRemota(userId, it.key, it.value) }.also { red() }
     override suspend fun misFavoritos(userId: String) = favoritos.map { FavoritoRemoto(userId, it) }.also { red() }
     override suspend fun guardarAsistencia(userId: String, eventoId: Long, asistencia: Asistencia?) {
@@ -53,12 +62,53 @@ class RemotoFalso : EventosRemotos {
 }
 
 class EventRepositoryTest {
-    private val hoy = LocalDate.of(2026, 11, 17)
+    private var hoy = LocalDate.of(2026, 11, 17)
     private val dao = DaoFalso()
     private val remoto = RemotoFalso()
-    private val repo = EventRepository(dao, remoto, userId = { "u1" }, hoy = { hoy })
+    private val marcas = MarcaEnMemoria()
+    private val repo = EventRepository(dao, remoto, userId = { "u1" }, marcas = marcas, hoy = { hoy })
 
-    private fun remotoEvento(id: Long, inicio: String) = EventoRemoto(id, "Salón $id", inicio, inicio, provinceCode = "28 ")
+    private fun remotoEvento(id: Long, inicio: String, cambiado: String = "2026-11-17T06:30:00+00:00") =
+        EventoRemoto(id, "Salón $id", inicio, inicio, provinceCode = "28 ", updatedAt = cambiado)
+
+    @Test fun `tras la primera descarga solo pide los salones cambiados`() = runTest {
+        remoto.eventos = listOf(remotoEvento(1, "2026-12-05"), remotoEvento(2, "2026-12-06"))
+        repo.actualizar()
+        assertEquals(null, remoto.pedidoDesde)
+
+        remoto.eventos = listOf(
+            remotoEvento(1, "2026-12-05"),
+            remotoEvento(2, "2026-12-07", cambiado = "2026-11-18T06:30:00.5+00:00"),
+        )
+        repo.actualizar()
+        assertEquals("2026-11-17T06:30:00+00:00", remoto.pedidoDesde)
+        val lista = repo.eventos.first()
+        assertEquals(listOf(1L, 2L), lista.map { it.evento.id }) // el 1 no se borra aunque no venga
+        assertEquals(LocalDate.of(2026, 12, 7), lista[1].evento.inicio)
+
+        repo.actualizar()
+        assertEquals("2026-11-18T06:30:00.5+00:00", remoto.pedidoDesde)
+    }
+
+    @Test fun `una vez por semana vuelve a descargar todo`() = runTest {
+        remoto.eventos = listOf(remotoEvento(1, "2026-12-05"))
+        repo.actualizar()
+        hoy = hoy.plusDays(6)
+        repo.actualizar()
+        assertTrue(remoto.pedidoDesde != null)
+        hoy = hoy.plusDays(1)
+        repo.actualizar()
+        assertEquals(null, remoto.pedidoDesde)
+    }
+
+    @Test fun `borrar los datos guardados obliga a descargar todo`() = runTest {
+        remoto.eventos = listOf(remotoEvento(1, "2026-12-05"))
+        repo.actualizar()
+        repo.borrarLocal()
+        repo.actualizar()
+        assertEquals(null, remoto.pedidoDesde)
+        assertEquals(1, repo.eventos.first().size)
+    }
 
     @Test fun `descarga un año atrás y uno adelante con el estado del usuario`() = runTest {
         remoto.eventos = listOf(remotoEvento(1, "2026-12-05"), remotoEvento(2, "2026-06-01"))
@@ -74,10 +124,11 @@ class EventRepositoryTest {
         assertTrue(lista[0].estado.favorito)
     }
 
-    @Test fun `quita los eventos que ya no están en el servidor`() = runTest {
+    @Test fun `la descarga semanal quita los eventos que ya no están en el servidor`() = runTest {
         remoto.eventos = listOf(remotoEvento(1, "2026-12-05"), remotoEvento(2, "2026-12-06"))
         repo.actualizar()
         remoto.eventos = listOf(remotoEvento(2, "2026-12-06"))
+        hoy = hoy.plusDays(7)
         repo.actualizar()
         assertEquals(listOf(2L), repo.eventos.first().map { it.evento.id })
     }
