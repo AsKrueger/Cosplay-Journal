@@ -1,0 +1,142 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "0fa6a5f203d2f943bcd3a4963fc115e5",
+    "entities": [
+      {
+        "tableName": "eventos",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `nombre` TEXT NOT NULL, `inicio` INTEGER NOT NULL, `fin` INTEGER NOT NULL, `lugar` TEXT, `direccion` TEXT, `ciudad` TEXT, `provincia` TEXT, `precio` TEXT, `cartel` TEXT, `web` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nombre",
+            "columnName": "nombre",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "inicio",
+            "columnName": "inicio",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fin",
+            "columnName": "fin",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lugar",
+            "columnName": "lugar",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "direccion",
+            "columnName": "direccion",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ciudad",
+            "columnName": "ciudad",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "provincia",
+            "columnName": "provincia",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "precio",
+            "columnName": "precio",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cartel",
+            "columnName": "cartel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "web",
+            "columnName": "web",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_eventos_inicio",
+            "unique": false,
+            "columnNames": [
+              "inicio"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_eventos_inicio` ON `${TABLE_NAME}` (`inicio`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "mi_estado",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`evento_id` INTEGER NOT NULL, `asistencia` TEXT, `favorito` INTEGER NOT NULL, `pendiente` INTEGER NOT NULL, PRIMARY KEY(`evento_id`))",
+        "fields": [
+          {
+            "fieldPath": "eventoId",
+            "columnName": "evento_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "asistencia",
+            "columnName": "asistencia",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "favorito",
+            "columnName": "favorito",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pendiente",
+            "columnName": "pendiente",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "evento_id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0fa6a5f203d2f943bcd3a4963fc115e5')"
+    ]
+  }
+}

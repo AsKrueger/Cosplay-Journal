@@ -76,4 +76,50 @@
     <string name="ajustes_borrar_cuenta">Delete my account</string>
     <string name="ajustes_borrar_cuenta_texto">Your profile, friendships, messages and shared photos will be deleted. This can\'t be undone.</string>
     <string name="ajustes_borrar_cuenta_confirmar">Delete forever</string>
+
+    <string name="cal_buscar">Search event or city</string>
+    <string name="cal_vista_lista">List view</string>
+    <string name="cal_vista_mes">Month view</string>
+    <string name="cal_proximos">Upcoming</string>
+    <string name="cal_pasados">Past</string>
+    <string name="cal_filtro_favoritos">Favorites</string>
+    <string name="cal_filtro_cercanos">Nearby</string>
+    <string name="cal_filtro_voy">Going</string>
+    <string name="cal_filtro_fui">Went</string>
+    <string name="cal_hoy">Today</string>
+    <string name="cal_vacio_titulo">Nothing here</string>
+    <string name="cal_vacio_texto">Try another filter or search.</string>
+    <string name="cal_sin_datos_titulo">No events yet</string>
+    <string name="cal_sin_datos_texto">Connect to the internet to download the calendar.</string>
+    <string name="cal_dia_vacio">No events on this day</string>
+    <string name="cal_leyenda_voy">Going</string>
+    <string name="cal_leyenda_en_curso">I\'m there</string>
+    <string name="cal_leyenda_sin_marcar">Upcoming</string>
+    <string name="cal_leyenda_fui">Went</string>
+    <string name="cal_leyenda_no_fui">Missed</string>
+    <string name="cal_provincia_titulo">Where are you?</string>
+    <string name="cal_provincia_texto">Pick your province to see events within 200 km.</string>
+    <string name="cal_usar_ubicacion">Use my location</string>
+    <string name="cal_cambiar_provincia">Change province (%1$s)</string>
+    <string name="cal_ubicacion_no_disponible">Couldn\'t get your location. Pick your province instead.</string>
+    <string name="cal_favorito">Favorite</string>
+
+    <string name="det_voy">Going</string>
+    <string name="det_no_voy">Not going</string>
+    <string name="det_fui">Went</string>
+    <string name="det_no_fui">Missed it</string>
+    <string name="det_tu_plan">Are you going?</string>
+    <string name="det_fuiste">Did you go?</string>
+    <string name="det_web">Website</string>
+    <string name="det_calendario">To calendar</string>
+    <string name="det_compartir">Share</string>
+    <string name="det_como_llegar">Directions</string>
+    <string name="det_precio">Price</string>
+    <string name="det_aviso">We\'ll remind you the day before at 6 pm</string>
+    <string name="det_compartir_texto">Check out this event! %1$s · %2$s · %3$s</string>
+    <string name="det_no_encontrado">This event is no longer in the calendar</string>
+
+    <string name="recordatorio_canal">Event reminders</string>
+    <string name="recordatorio_titulo">Event tomorrow!</string>
+    <string name="recordatorio_texto">%1$s starts tomorrow. Is your cosplay ready?</string>
 </resources>
