@@ -48,6 +48,9 @@ fun GalleryScreen(
     val scope = rememberCoroutineScope()
     var pending by remember { mutableStateOf<PendingPhoto?>(null) }
 
+    // Recarga cada vez que se abre la galería: si se ha iniciado sesión después, la lista se actualiza
+    LaunchedEffect(Unit) { viewModel.refresh() }
+
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri == null) return@rememberLauncherForActivityResult
         scope.launch {
