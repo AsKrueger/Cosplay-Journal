@@ -12,8 +12,11 @@ FIXTURE = (Path(__file__).parent / "fixtures" / "salones.html").read_text(encodi
 
 
 class Respuesta:
-    def __init__(self, status=200, text=""):
-        self.status_code, self.text, self.encoding = status, text, None
+    def __init__(self, status=200, text="", datos=None):
+        self.status_code, self.text, self.encoding, self.datos = status, text, None, datos
+
+    def json(self):
+        return self.datos
 
     def raise_for_status(self):
         if self.status_code >= 400:
@@ -61,7 +64,7 @@ def test_importar_deduplica_y_tolera_meses_caidos(monkeypatch):
         "https://www.listadomanga.es/salones.php?mes=1&ano=2027": Respuesta(status=503),
     })
     monkeypatch.setattr(cli.time, "sleep", lambda s: None)
-    eventos = cli.importar_eventos(date(2026, 11, 17), sesion, pausa=0)
+    eventos = cli.importar_eventos(date(2026, 11, 17), sesion, pausa=0, minimo=1)
     assert len(eventos) == 3
 
 
@@ -92,3 +95,32 @@ def test_borrar_eventos_de_hace_mas_de_dos_años():
     Supabase("https://x.supabase.co", "k", session=sesion).borrar_antiguos(date(2026, 11, 17))
     metodo, _, kw = sesion.llamadas[0]
     assert metodo == "DELETE" and kw["params"] == {"end_date": "lt.2024-11-17"}
+
+
+def test_muy_pocos_salones_falla_en_vez_de_vaciar_el_calendario(monkeypatch):
+    monkeypatch.setattr(cli, "meses", lambda hoy: [(2026, 11)])
+    sesion = SesionFalsa({"https://www.listadomanga.es/salones.php?mes=11&ano=2026": Respuesta(text=FIXTURE)})
+    with pytest.raises(RuntimeError, match="formato"):
+        cli.importar_eventos(date(2026, 11, 17), sesion, pausa=0)
+
+
+def test_limpieza_borra_por_bucket_con_la_api_de_storage():
+    rpc = "https://x.supabase.co/rest/v1/rpc/storage_purge_candidates"
+    sesion = SesionFalsa({rpc: Respuesta(datos=[
+        {"bucket": "chat", "path": "c1/a.webp"},
+        {"bucket": "showcase", "path": "u1/b.webp"},
+        {"bucket": "chat", "path": "c1/c.webp"},
+    ])})
+    db = Supabase("https://x.supabase.co", "k", session=sesion)
+    cli.limpiar_archivos(db)
+    borrados = {url: kw["json"]["prefixes"] for metodo, url, kw in sesion.llamadas if metodo == "DELETE"}
+    assert borrados == {
+        "https://x.supabase.co/storage/v1/object/chat": ["c1/a.webp", "c1/c.webp"],
+        "https://x.supabase.co/storage/v1/object/showcase": ["u1/b.webp"],
+    }
+
+
+def test_un_fallo_al_limpiar_no_rompe_la_importacion():
+    rpc = "https://x.supabase.co/rest/v1/rpc/storage_purge_candidates"
+    sesion = SesionFalsa({rpc: Respuesta(status=500)})
+    cli.limpiar_archivos(Supabase("https://x.supabase.co", "k", session=sesion))  # no lanza

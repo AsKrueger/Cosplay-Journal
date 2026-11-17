@@ -2,7 +2,7 @@
 \set QUIET on
 
 create schema tests;
-grant usage on schema tests to anon, authenticated;
+grant usage on schema tests to anon, authenticated, service_role;
 
 create function tests.ok(cond boolean, msg text) returns void language plpgsql as
 $$ begin
@@ -20,7 +20,7 @@ $$ begin
     end;
     raise exception 'FALLO: % (no dio error)', msg;
 end $$;
-grant execute on all functions in schema tests to anon, authenticated;
+grant execute on all functions in schema tests to anon, authenticated, service_role;
 
 -- Usuarios: ana, bea, carla y dani
 insert into auth.users (id, raw_user_meta_data) values
@@ -160,5 +160,50 @@ reset role;
 select tests.ok((select count(*) = 0 from public.profiles where nickname = 'carla'), 'borrar la cuenta elimina el perfil');
 select tests.ok((select count(*) = 2 from public.conversation_members
                  where conversation_id = current_setting('tests.group')::uuid), 'y sale de sus grupos');
+
+-- ---------------------------------------------------------------- límites del plan gratuito
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000000a', false);
+set role authenticated;
+do $$ begin
+    for i in 1..5 loop insert into public.feedback (user_id, message) values (auth.uid(), 'comentario ' || i); end loop;
+end $$;
+select tests.throws($$insert into public.feedback (user_id, message) values (auth.uid(), 'el sexto')$$,
+                    'máximo 5 comentarios al día por usuario');
+select tests.throws($$select public.events_keep_updated_at()$$, 'las funciones internas no se llaman desde la app');
+select tests.throws($$select * from public.storage_purge_candidates()$$, 'la limpieza solo la lanza el cron');
+reset role;
+
+-- updated_at no cambia si el importador reescribe el mismo salón
+alter table public.events disable trigger events_keep_updated_at;
+update public.events set updated_at = '2026-01-01' where slug = 'salon-1';
+alter table public.events enable trigger events_keep_updated_at;
+update public.events set name = name, updated_at = now() where slug = 'salon-1';
+select tests.ok((select updated_at = '2026-01-01' from public.events where slug = 'salon-1'),
+                'reescribir un salón sin cambios mantiene updated_at');
+update public.events set city = 'Toledo', updated_at = now() where slug = 'salon-1';
+select tests.ok((select updated_at > '2026-01-01' from public.events where slug = 'salon-1'),
+                'un cambio real actualiza updated_at');
+
+-- 20 mensajes por minuto
+insert into public.messages (conversation_id, sender_id, body)
+select current_setting('tests.group')::uuid, '00000000-0000-0000-0000-00000000000b', 'm' || g
+from generate_series(1, 20 - (select count(*)::int from public.messages
+                                 where sender_id = '00000000-0000-0000-0000-00000000000b')) g;
+select tests.throws($$insert into public.messages (conversation_id, sender_id, body)
+                      values (current_setting('tests.group')::uuid, '00000000-0000-0000-0000-00000000000b', 'uno más')$$,
+                    'máximo 20 mensajes por minuto');
+
+-- Archivos sobrantes: foto huérfana del escaparate, foto vieja del chat y archivo reciente (se respeta)
+insert into storage.objects (bucket_id, name, created_at) values
+    ('showcase', '00000000-0000-0000-0000-00000000000b/huerfana.webp', now() - interval '2 days'),
+    ('chat', current_setting('tests.group') || '/vieja.webp', now() - interval '100 days'),
+    ('showcase', '00000000-0000-0000-0000-00000000000b/recien.webp', now());
+insert into public.messages (conversation_id, sender_id, image_path)
+values (current_setting('tests.group')::uuid, '00000000-0000-0000-0000-00000000000a', current_setting('tests.group') || '/vieja.webp');
+set role service_role;
+select tests.ok((select array_agg(path order by path) from public.storage_purge_candidates()) =
+                array['00000000-0000-0000-0000-00000000000b/huerfana.webp', current_setting('tests.group') || '/vieja.webp'],
+                'la limpieza encuentra huérfanas y fotos de chat de más de 90 días');
+reset role;
 
 \echo 'Todos los tests de políticas han pasado'
