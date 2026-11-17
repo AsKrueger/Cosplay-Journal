@@ -27,6 +27,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -103,10 +104,12 @@ fun ProfileScreen(vm: ProfileViewModel, onAjustes: () -> Unit, onEvento: (Long) 
                     modifier = Modifier.padding(16.dp))
             }
         }
-        items(ui.escaparate, key = { it.id }) { f ->
+        itemsIndexed(ui.escaparate, key = { _, f -> f.id }) { i, f ->
+            // Margen solo en las columnas de los extremos: la cabecera sigue ocupando todo el ancho
+            val borde = Modifier.padding(start = if (i % 3 == 0) 12.dp else 0.dp, end = if (i % 3 == 2) 12.dp else 0.dp)
             AsyncImage(
                 model = urlPrivada("showcase", f.ruta), contentDescription = null, contentScale = ContentScale.Crop,
-                modifier = Modifier.aspectRatio(1f).clip(RoundedCornerShape(12.dp))
+                modifier = borde.aspectRatio(1f).clip(RoundedCornerShape(12.dp))
                     .background(MaterialTheme.colorScheme.surfaceVariant)
                     .combinedClickable(onClick = {}, onLongClick = { quitar = f }),
             )

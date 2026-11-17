@@ -85,6 +85,7 @@ import coil.request.ImageRequest
 import com.cosplayjournal.app.R
 import com.cosplayjournal.app.data.gallery.FotoGaleria
 import com.cosplayjournal.app.domain.Orden
+import com.cosplayjournal.app.domain.normalizar
 import com.cosplayjournal.app.ui.calendar.rangoFechas
 import com.cosplayjournal.app.ui.common.Aviso
 import com.cosplayjournal.app.ui.common.Cargando
@@ -264,8 +265,8 @@ private fun HojaEtiquetar(vm: GalleryViewModel, uris: Set<String>, onCerrar: () 
             )
             val sugerido = propuesta.evento
             val lista = remember(busqueda, ui.eventos) {
-                val q = busqueda.trim().lowercase()
-                ui.eventos.filter { q.isEmpty() || it.evento.nombre.lowercase().contains(q) }
+                val q = normalizar(busqueda)
+                ui.eventos.filter { q.isEmpty() || normalizar(it.evento.nombre).contains(q) }
                     .sortedByDescending { it.evento.inicio }
                     .let { l -> if (sugerido != null && q.isEmpty()) listOf(sugerido) + (l - sugerido) else l }
                     .take(40)
@@ -328,24 +329,28 @@ private fun Visor(
 ) {
     val context = LocalContext.current
     val pager = rememberPagerState(initialPage = fotos.indexOfFirst { it.foto.uri == inicial }.coerceAtLeast(0)) { fotos.size }
-    Dialog(onDismissRequest = onCerrar, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+    Dialog(onDismissRequest = onCerrar, properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)) {
         Box(Modifier.fillMaxSize().background(Color.Black)) {
             HorizontalPager(pager, Modifier.fillMaxSize()) { i ->
                 AsyncImage(model = Uri.parse(fotos[i].foto.uri), contentDescription = null,
                     contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize())
             }
-            IconButton(onClick = onCerrar, modifier = Modifier.statusBarsPadding().padding(8.dp)) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.accion_atras), tint = Color.White)
-            }
-            val actual = fotos.getOrNull(pager.currentPage) ?: return@Box
+            // Acciones arriba: el borde inferior de un Dialog no es fiable con la navegación por gestos
+            val actual = fotos.getOrNull(pager.currentPage)
             Row(
-                Modifier.align(Alignment.BottomCenter).fillMaxWidth().navigationBarsPadding()
-                    .background(Color.Black.copy(alpha = 0.5f)).padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                Modifier.align(Alignment.TopCenter).fillMaxWidth().background(Color.Black.copy(alpha = 0.55f))
+                    .statusBarsPadding().padding(horizontal = 4.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                BotonVisor(Icons.Default.Label, R.string.gal_etiquetar) { onEtiquetar(actual.foto.uri) }
-                BotonVisor(Icons.Default.Share, R.string.gal_compartir) { compartir(context, actual.foto.uri) }
-                accionesExtra.forEach { a -> BotonVisor(a.icono, a.texto) { a.accion(actual) } }
+                IconButton(onClick = onCerrar) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.accion_atras), tint = Color.White)
+                }
+                androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
+                if (actual != null) {
+                    BotonVisor(Icons.Default.Label, R.string.gal_etiquetar) { onEtiquetar(actual.foto.uri) }
+                    BotonVisor(Icons.Default.Share, R.string.gal_compartir) { compartir(context, actual.foto.uri) }
+                    accionesExtra.forEach { a -> BotonVisor(a.icono, a.texto) { a.accion(actual) } }
+                }
             }
         }
     }

@@ -128,7 +128,7 @@ fun FriendProfileScreen(
                 if (ui.vaA.isNotEmpty()) {
                     item(span = { GridItemSpan(maxLineSpan) }) { Titulo(R.string.pa_va_a) }
                     items(ui.vaA, key = { "e" + it.evento.id }, span = { GridItemSpan(maxLineSpan) }) { e ->
-                        TarjetaEvento(e, LocalDate.now(), onClick = { onEvento(e.evento.id) }, onFavorito = {})
+                        TarjetaEvento(e, LocalDate.now(), onClick = { onEvento(e.evento.id) }, onFavorito = {}, mostrarMiEstado = false)
                     }
                 }
                 item(span = { GridItemSpan(maxLineSpan) }) { Titulo(R.string.pa_escaparate) }
