@@ -11,6 +11,12 @@ Pasos para dejar la app funcionando con coste cero.
    - `service_role` → `SUPABASE_SERVICE_KEY` (**secreta**: solo para el scraper en GitHub)
 3. Aplica el esquema: en **SQL Editor** ejecuta en orden los ficheros de `supabase/migrations/`, o con la CLI: `npx supabase link` + `npx supabase db push`.
 4. En **Authentication → Providers → Email** deja activado email + contraseña.
+5. **Emails (importante).** El servidor de correo que trae Supabase solo envía a los miembros de tu equipo y unos 2 correos por hora, así que con usuarios reales no llegarían ni la confirmación ni el código de «He olvidado mi contraseña». Configura un SMTP gratuito, por ejemplo [Brevo](https://www.brevo.com) (300 correos al día gratis):
+   1. En Brevo: crea la cuenta, verifica tu dirección de remitente y en **SMTP & API** genera una clave SMTP.
+   2. En Supabase → **Authentication → Emails → SMTP Settings**: activa *Custom SMTP* con host `smtp-relay.brevo.com`, puerto `587`, usuario = tu login de Brevo, contraseña = la clave SMTP, y como remitente tu dirección verificada y el nombre `Cosplay Journal`.
+   3. En **Authentication → Rate Limits** sube *emails por hora* a 30.
+   4. En **Authentication → Emails → Templates → Reset Password** pon el asunto «Tu código de Cosplay Journal» y pega `supabase/templates/recuperar.html`. La app pide el código de 6 cifras; no hacen falta enlaces ni web.
+   5. Mientras no tengas SMTP, desactiva **Confirm email** en *Providers → Email* para que la gente pueda registrarse.
 
 ## 2. Secretos de GitHub (scraper diario)
 

@@ -25,9 +25,13 @@ object Reglas {
     fun nicknameValido(n: String) = NICKNAME.matches(n)
     fun emailValido(e: String) = EMAIL.matches(e.trim())
     fun passwordValida(p: String) = p.length >= 8
+    fun codigoValido(c: String) = c.length in 6..10 && c.all(Char::isDigit)
 }
 
 enum class EstadoNickname { VACIO, INVALIDO, COMPROBANDO, LIBRE, OCUPADO }
+
+/** Pasos de «He olvidado mi contraseña»: pedir el código y escribirlo con la nueva contraseña. */
+enum class PasoRecuperar { EMAIL, CODIGO }
 
 data class AuthUi(
     val registro: Boolean = false,
@@ -40,7 +44,15 @@ data class AuthUi(
     val enviando: Boolean = false,
     @StringRes val error: Int? = null,
     val confirmarEmail: Boolean = false,
+    val recuperar: PasoRecuperar? = null,
+    val codigo: String = "",
 ) {
+    val puedeRecuperar: Boolean
+        get() = !enviando && Reglas.emailValido(email) && when (recuperar) {
+            PasoRecuperar.CODIGO -> Reglas.codigoValido(codigo) && Reglas.passwordValida(password)
+            else -> true
+        }
+
     val puedeEnviar: Boolean
         get() = !enviando && Reglas.emailValido(email) && Reglas.passwordValida(password) &&
             (!registro || (estadoNickname == EstadoNickname.LIBRE && mayorDe14 && aceptaPrivacidad))
@@ -55,6 +67,29 @@ class AuthViewModel(private val auth: AuthRepository) : ViewModel() {
     fun irAEntrar() = _ui.update { AuthUi(email = it.email) }
     fun email(v: String) = _ui.update { it.copy(email = v.trim(), error = null) }
     fun password(v: String) = _ui.update { it.copy(password = v, error = null) }
+    fun empezarRecuperacion() = _ui.update { AuthUi(email = it.email, recuperar = PasoRecuperar.EMAIL) }
+    fun codigo(v: String) = _ui.update { it.copy(codigo = v.filter(Char::isDigit).take(10), error = null) }
+
+    fun recuperar() {
+        val s = _ui.value
+        if (!s.puedeRecuperar) return
+        _ui.update { it.copy(enviando = true, error = null) }
+        viewModelScope.launch {
+            try {
+                if (s.recuperar == PasoRecuperar.CODIGO) {
+                    // Al acabar queda la sesión iniciada y la app entra sola
+                    auth.restablecerPassword(s.email, s.codigo, s.password)
+                    _ui.update { it.copy(enviando = false) }
+                } else {
+                    auth.enviarCodigoRecuperacion(s.email)
+                    _ui.update { it.copy(enviando = false, recuperar = PasoRecuperar.CODIGO, password = "") }
+                }
+            } catch (e: Exception) {
+                _ui.update { it.copy(enviando = false, error = textoError(e)) }
+            }
+        }
+    }
+
     fun mayorDe14(v: Boolean) = _ui.update { it.copy(mayorDe14 = v) }
     fun aceptaPrivacidad(v: Boolean) = _ui.update { it.copy(aceptaPrivacidad = v) }
 
@@ -111,6 +146,7 @@ class AuthViewModel(private val auth: AuthRepository) : ViewModel() {
             ErrorAcceso.NO_CONFIRMADO -> R.string.auth_error_no_confirmado
             ErrorAcceso.EMAIL_EXISTE -> R.string.auth_error_existe
             ErrorAcceso.PASSWORD_DEBIL -> R.string.auth_error_password_debil
+            ErrorAcceso.CODIGO_INCORRECTO -> R.string.auth_error_codigo
             null -> clasificar(e).texto()
         }
     }

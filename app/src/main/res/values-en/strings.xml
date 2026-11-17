@@ -37,6 +37,17 @@
     <string name="auth_error_no_confirmado">Confirm your email before signing in</string>
     <string name="auth_error_existe">There\'s already an account with that email</string>
     <string name="auth_error_password_debil">That password is too weak</string>
+    <string name="auth_olvide">Forgot your password?</string>
+    <string name="auth_recuperar_titulo">New password</string>
+    <string name="auth_recuperar_explicacion">Enter your email and we\'ll send you a 6-digit code.</string>
+    <string name="auth_recuperar_codigo_enviado">If %1$s has an account, a code is on its way. Check your spam folder too.</string>
+    <string name="auth_codigo">Code from the email</string>
+    <string name="auth_password_nueva">New password</string>
+    <string name="auth_enviar_codigo">Send me the code</string>
+    <string name="auth_guardar_password">Save and sign in</string>
+    <string name="auth_reenviar_codigo">Didn\'t get it? Send another</string>
+    <string name="auth_volver_entrar">Back to sign in</string>
+    <string name="auth_error_codigo">Wrong or expired code</string>
 
     <string name="nav_calendario">Calendar</string>
     <string name="nav_galeria">Gallery</string>
