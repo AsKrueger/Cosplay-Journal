@@ -3,6 +3,7 @@ package com.cosplayjournal.app
 import android.app.Application
 import coil.ImageLoader
 import coil.ImageLoaderFactory
+import com.cosplayjournal.app.reminders.Recordatorios
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -21,6 +22,7 @@ class CosplayJournalApp : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         container = AppContainer(this)
+        Recordatorios.crearCanal(this)
         // Aplica el ajuste guardado y lo vuelve a aplicar cada vez que cambia
         appScope.launch {
             container.settings.ajustes.map { it.imagenesSinConexion }.distinctUntilChanged()

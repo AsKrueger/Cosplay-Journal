@@ -4,7 +4,13 @@ import android.content.Context
 import com.cosplayjournal.app.data.auth.AuthRepository
 import com.cosplayjournal.app.data.auth.SupabaseAuthRepository
 import com.cosplayjournal.app.data.cache.ImagenesManager
+import com.cosplayjournal.app.data.events.EventRepository
+import com.cosplayjournal.app.data.events.SupabaseEventosRemotos
 import com.cosplayjournal.app.data.feedback.FeedbackRepository
+import com.cosplayjournal.app.data.local.AppDatabase
+import com.cosplayjournal.app.reminders.Recordatorios
+import com.cosplayjournal.app.ui.calendar.Avisos
+import java.time.LocalDate
 import com.cosplayjournal.app.data.feedback.SupabaseFeedbackRepository
 import com.cosplayjournal.app.data.profile.ProfileRepository
 import com.cosplayjournal.app.data.profile.SupabaseProfileRepository
@@ -40,6 +46,16 @@ class AppContainer(context: Context) {
     val perfiles: ProfileRepository by lazy { SupabaseProfileRepository(supabase) }
     val comentarios: FeedbackRepository by lazy { SupabaseFeedbackRepository(supabase) }
 
+    val db: AppDatabase by lazy { AppDatabase.crear(appContext) }
+    val eventos: EventRepository by lazy {
+        EventRepository(db.eventos(), SupabaseEventosRemotos(supabase), userId = { auth.userIdActual() })
+    }
+    val avisos: Avisos = object : Avisos {
+        override fun programar(eventoId: Long, nombre: String, inicio: LocalDate) =
+            Recordatorios.programar(appContext, eventoId, nombre, inicio)
+        override fun cancelar(eventoId: Long) = Recordatorios.cancelar(appContext, eventoId)
+    }
+
     /** Las imágenes privadas de Storage se piden con el token de la sesión. */
     private val interceptorStorage = Interceptor { chain ->
         val req = chain.request()
@@ -57,7 +73,11 @@ class AppContainer(context: Context) {
     val imagenes = ImagenesManager(appContext, interceptorStorage)
 
     /** Cada módulo con datos locales registra aquí cómo borrarlos (Ajustes → Borrar datos). */
-    private val limpiadores = mutableListOf<suspend () -> Unit>({ settings.borrarTodo() })
+    private val limpiadores = mutableListOf<suspend () -> Unit>(
+        { settings.borrarTodo() },
+        { if (configurado) eventos.borrarLocal() },
+        { Recordatorios.cancelarTodos(appContext) },
+    )
 
     fun registrarLimpiador(limpiador: suspend () -> Unit) {
         limpiadores += limpiador

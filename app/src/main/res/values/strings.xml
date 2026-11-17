@@ -83,4 +83,53 @@
     <string name="ajustes_borrar_cuenta">Borrar mi cuenta</string>
     <string name="ajustes_borrar_cuenta_texto">Se borrarán tu perfil, amistades, mensajes y fotos compartidas. No se puede deshacer.</string>
     <string name="ajustes_borrar_cuenta_confirmar">Borrar para siempre</string>
+
+    <!-- Calendario -->
+    <string name="cal_buscar">Buscar salón o ciudad</string>
+    <string name="cal_vista_lista">Ver lista</string>
+    <string name="cal_vista_mes">Ver mes</string>
+    <string name="cal_proximos">Próximos</string>
+    <string name="cal_pasados">Pasados</string>
+    <string name="cal_filtro_favoritos">Favoritos</string>
+    <string name="cal_filtro_cercanos">Cercanos</string>
+    <string name="cal_filtro_voy">Voy</string>
+    <string name="cal_filtro_fui">Fui</string>
+    <string name="cal_hoy">Hoy</string>
+    <string name="cal_vacio_titulo">Nada por aquí</string>
+    <string name="cal_vacio_texto">Prueba con otro filtro o búsqueda.</string>
+    <string name="cal_sin_datos_titulo">Aún no hay eventos</string>
+    <string name="cal_sin_datos_texto">Conéctate a internet para descargar el calendario.</string>
+    <string name="cal_dia_vacio">Ningún evento este día</string>
+    <string name="cal_leyenda_voy">Voy</string>
+    <string name="cal_leyenda_en_curso">Estoy allí</string>
+    <string name="cal_leyenda_sin_marcar">Próximo</string>
+    <string name="cal_leyenda_fui">Fui</string>
+    <string name="cal_leyenda_no_fui">No fui</string>
+    <string name="cal_provincia_titulo">¿Dónde estás?</string>
+    <string name="cal_provincia_texto">Elige tu provincia para ver los salones a menos de 200 km.</string>
+    <string name="cal_usar_ubicacion">Usar mi ubicación</string>
+    <string name="cal_cambiar_provincia">Cambiar provincia (%1$s)</string>
+    <string name="cal_ubicacion_no_disponible">No se pudo obtener tu ubicación. Elige la provincia a mano.</string>
+    <string name="cal_favorito">Favorito</string>
+
+    <!-- Detalle -->
+    <string name="det_voy">Voy</string>
+    <string name="det_no_voy">No voy</string>
+    <string name="det_fui">Fui</string>
+    <string name="det_no_fui">No fui</string>
+    <string name="det_tu_plan">¿Vas a ir?</string>
+    <string name="det_fuiste">¿Fuiste?</string>
+    <string name="det_web">Web</string>
+    <string name="det_calendario">Al calendario</string>
+    <string name="det_compartir">Compartir</string>
+    <string name="det_como_llegar">Cómo llegar</string>
+    <string name="det_precio">Precio</string>
+    <string name="det_aviso">Te avisaremos la víspera a las 18:00</string>
+    <string name="det_compartir_texto">¡Mira este salón! %1$s · %2$s · %3$s</string>
+    <string name="det_no_encontrado">Este evento ya no está en el calendario</string>
+
+    <!-- Recordatorios -->
+    <string name="recordatorio_canal">Recordatorios de eventos</string>
+    <string name="recordatorio_titulo">¡Mañana hay salón!</string>
+    <string name="recordatorio_texto">%1$s empieza mañana. ¿Tienes el cosplay listo?</string>
 </resources>
