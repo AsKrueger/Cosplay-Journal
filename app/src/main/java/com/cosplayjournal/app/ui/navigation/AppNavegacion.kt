@@ -1,7 +1,10 @@
 package com.cosplayjournal.app.ui.navigation
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -28,6 +31,8 @@ import com.cosplayjournal.app.data.chat.ResumenChat
 import com.cosplayjournal.app.data.events.Asistencia
 import com.cosplayjournal.app.data.social.Contacto
 import com.cosplayjournal.app.data.social.Relacion
+import com.cosplayjournal.app.ui.ads.BarraPublicidad
+import com.cosplayjournal.app.ui.ads.PublicidadViewModel
 import com.cosplayjournal.app.ui.chat.ChatListScreen
 import com.cosplayjournal.app.ui.chat.ChatRoomScreen
 import com.cosplayjournal.app.ui.chat.ChatRoomViewModel
@@ -124,9 +129,16 @@ fun AppNavegacion(eventoInicial: Long? = null, nav: NavHostController = remember
             }
         },
     ) { padding ->
+        val publicidad = appViewModel { PublicidadViewModel(it.anuncios) }
+        val hayAnuncio by publicidad.actual.collectAsStateWithLifecycle()
+        Column(Modifier.padding(bottom = padding.calculateBottomPadding()).consumeWindowInsets(padding)) {
+        // La barra solo existe si hay un anuncio activo; entonces ella ocupa la barra de estado
+        BarraPublicidad(publicidad)
         NavHost(
             nav, startDestination = Pestaña.entries.first().ruta,
-            modifier = Modifier.padding(bottom = padding.calculateBottomPadding()).consumeWindowInsets(padding),
+            modifier = Modifier.weight(1f).then(
+                if (hayAnuncio != null) Modifier.consumeWindowInsets(WindowInsets.statusBars) else Modifier
+            ),
         ) {
             composable(Pestaña.CALENDARIO.ruta) {
                 val vm = appViewModel { CalendarViewModel(it.eventos, it.settings) }
@@ -179,6 +191,7 @@ fun AppNavegacion(eventoInicial: Long? = null, nav: NavHostController = remember
             }
             composable(Rutas.BLOQUEADOS) { BlockedScreen(onAtras = nav::popBackStack) }
             composable(Rutas.AJUSTES) { SettingsScreen(onAtras = nav::popBackStack, onBloqueados = { nav.navigate(Rutas.BLOQUEADOS) }) }
+        }
         }
     }
 }

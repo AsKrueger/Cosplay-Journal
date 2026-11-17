@@ -12,4 +12,4 @@ Cada fase es una rama desde `develop` con su PR.
 | 5 | #109 | `feat/app-galeria` | Carpeta vinculada, etiquetas evento/cosplay/grupal | Hecha |
 | 6 | #110 | `feat/app-social` | Amigos, perfil, escaparate, bloquear y denunciar | Hecha |
 | 7 | #111 | `feat/app-chats` | Chats privados y de grupo en tiempo real | Hecha |
-| 8 | #112 | `feat/publicidad` | Barra de anuncios que solo aparece con un anuncio activo (post-MVP) | Pendiente |
+| 8 | #112 | `feat/publicidad` | Barra de anuncios que solo aparece con un anuncio activo (post-MVP) | Hecha |

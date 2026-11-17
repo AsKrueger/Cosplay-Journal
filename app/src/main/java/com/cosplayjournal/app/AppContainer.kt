@@ -1,6 +1,8 @@
 package com.cosplayjournal.app
 
 import android.content.Context
+import com.cosplayjournal.app.data.ads.AdsRepository
+import com.cosplayjournal.app.data.ads.SupabaseAdsRepository
 import com.cosplayjournal.app.data.auth.AuthRepository
 import com.cosplayjournal.app.data.auth.SupabaseAuthRepository
 import com.cosplayjournal.app.data.cache.ImagenesManager
@@ -65,6 +67,7 @@ class AppContainer(context: Context) {
     val chats: ChatRepository by lazy {
         SupabaseChatRepository(supabase, CompresorImagenes(appContext), userId = { auth.userIdActual() })
     }
+    val anuncios: AdsRepository by lazy { SupabaseAdsRepository(supabase) }
     val galeria: GalleryRepository by lazy {
         GalleryRepository(db.fotos(), LectorCarpetaSaf(appContext), object : CarpetaGuardada {
             override val carpeta = settings.ajustes.map { it.carpetaGaleria }

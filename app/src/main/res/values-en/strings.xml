@@ -215,4 +215,5 @@
     <string name="chat_ayer">Yesterday</string>
     <string name="chat_usuario_eliminado">Deleted user</string>
     <string name="chat_ver_salon">View event</string>
+    <string name="publicidad">Ad</string>
 </resources>
