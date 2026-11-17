@@ -14,7 +14,11 @@ Pasos para dejar la app funcionando con coste cero.
 
 ## 2. Secretos de GitHub (scraper diario)
 
-En **Settings → Secrets and variables → Actions** del repositorio crea `SUPABASE_URL` y `SUPABASE_SERVICE_KEY`.
+En **Settings → Secrets and variables → Actions** del repositorio crea `SUPABASE_URL` y `SUPABASE_SERVICE_KEY`. Después lanza a mano el workflow **Eventos** (pestaña Actions → Eventos → Run workflow) para cargar el calendario la primera vez.
+
+## Comentarios de los usuarios
+
+Los comentarios enviados desde la app se guardan en la tabla privada `feedback`. Se leen en Supabase → **Table Editor → feedback**; marca `processed` cuando los hayas atendido. No se publican en GitHub porque el repositorio es público.
 
 ## 3. App Android
 
