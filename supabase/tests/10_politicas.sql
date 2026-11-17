@@ -144,12 +144,14 @@ select tests.throws($$insert into public.messages (conversation_id, sender_id, b
 select tests.ok((select count(*) = 0 from public.showcase_photos), 'tras el bloqueo no se ve el escaparate');
 insert into public.reports (reporter_id, reported_id, reason)
 values (auth.uid(), '00000000-0000-0000-0000-00000000000a', 'Spam');
+select tests.ok((select nickname = 'ana_cos' from public.my_blocks()), 'quien bloquea ve a quién ha bloqueado');
 
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000000a', false);
 select tests.throws($$select public.send_friend_request('00000000-0000-0000-0000-00000000000b')$$,
                     'la bloqueada no puede volver a pedir amistad');
 select tests.ok((select count(*) = 0 from public.search_profiles('bea')), 'la bloqueada no encuentra a quien la bloqueó');
 select tests.ok((select count(*) = 0 from public.reports), 'las denuncias no se leen desde la app');
+select tests.ok((select count(*) = 0 from public.my_blocks()), 'la bloqueada no ve la lista de quien la bloqueó');
 
 -- ---------------------------------------------------------------- borrar cuenta
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-00000000000c', false);
