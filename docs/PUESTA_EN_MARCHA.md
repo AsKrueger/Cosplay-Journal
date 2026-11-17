@@ -25,3 +25,12 @@ SUPABASE_URL=https://xxxx.supabase.co
 SUPABASE_ANON_KEY=eyJ...
 FEEDBACK_EMAIL=tu-correo@ejemplo.com
 ```
+
+## 4. Probar el esquema en local
+
+Con Docker arrancado:
+
+```bash
+docker run -d --name cj-pg -e POSTGRES_PASSWORD=test -v "$PWD/supabase:/supabase" postgres:15-alpine
+docker exec -e PGUSER=postgres cj-pg bash /supabase/tests/run.sh
+```
