@@ -62,6 +62,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import java.time.Instant
+import java.time.Duration
+import androidx.compose.material.icons.outlined.BrokenImage
 import com.cosplayjournal.app.R
 import com.cosplayjournal.app.data.chat.Mensaje
 import com.cosplayjournal.app.data.chat.ResumenChat
@@ -229,8 +232,21 @@ private fun Burbuja(m: Mensaje, mio: Boolean, autor: String?) {
                     modifier = Modifier.padding(start = 8.dp, top = 4.dp, bottom = 2.dp))
             }
             m.foto?.let {
-                AsyncImage(model = urlPrivada("chat", it), contentDescription = null, contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(240.dp).clip(RoundedCornerShape(14.dp)))
+                var fallo by remember(it) { mutableStateOf(false) }
+                if (fallo) {
+                    // Las fotos del chat se borran a los 90 días para no llenar el almacenamiento gratuito
+                    val caducada = m.instante.isBefore(Instant.now().minus(Duration.ofDays(90)))
+                    val color = if (mio) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                    Row(Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Outlined.BrokenImage, null, tint = color, modifier = Modifier.size(20.dp))
+                        Text(stringResource(if (caducada) R.string.chat_foto_caducada else R.string.chat_foto_error),
+                            color = color, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(start = 8.dp))
+                    }
+                } else {
+                    AsyncImage(model = urlPrivada("chat", it), contentDescription = null, contentScale = ContentScale.Crop,
+                        onError = { fallo = true },
+                        modifier = Modifier.size(240.dp).clip(RoundedCornerShape(14.dp)))
+                }
             }
             m.body?.let {
                 Text(it, color = if (mio) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface)

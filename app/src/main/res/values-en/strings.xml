@@ -211,6 +211,8 @@
     <string name="bloq_vacio">You haven\'t blocked anyone</string>
     <string name="bloq_desbloquear">Unblock</string>
     <string name="chat_vacio_titulo">No chats yet</string>
+    <string name="chat_foto_caducada">Photo expired (deleted after 90 days)</string>
+    <string name="chat_foto_error">Couldn\'t load the photo</string>
     <string name="chat_vacio_texto">Message a friend from their profile or create a group to plan a group cosplay.</string>
     <string name="chat_nuevo_grupo">New group</string>
     <string name="chat_nombre_grupo">Group name</string>
