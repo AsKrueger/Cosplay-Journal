@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -21,8 +19,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.cosplayjournal.app.CosplayJournalApplication
-import com.cosplayjournal.app.ui.components.EmptyState
 import com.cosplayjournal.app.ui.navigation.Screen
+import com.cosplayjournal.app.ui.screens.gallery.GalleryScreen
+import com.cosplayjournal.app.ui.viewmodel.GalleryViewModel
+import com.cosplayjournal.app.ui.viewmodel.GalleryViewModelFactory
 import com.cosplayjournal.app.ui.screens.event.EventDetailScreen
 import com.cosplayjournal.app.ui.screens.event.EventListScreen
 import com.cosplayjournal.app.ui.screens.profile.ProfileScreen
@@ -110,10 +110,12 @@ fun MainScreen() {
             }
 
             composable(Screen.Gallery.route) {
-                EmptyState(
-                    icon = Icons.Default.PhotoLibrary,
-                    title = "Tu galería",
-                    description = "Aquí verás tus fotos, clasificadas por evento y por grupal."
+                val galleryViewModel: GalleryViewModel = viewModel(factory = GalleryViewModelFactory(app.galleryRepository))
+                val events by eventViewModel.events.collectAsState()
+                GalleryScreen(
+                    viewModel = galleryViewModel,
+                    events = events,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 

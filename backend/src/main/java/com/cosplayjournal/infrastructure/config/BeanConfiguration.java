@@ -97,6 +97,14 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public GalleryApplicationService galleryApplicationService(
+            GalleryPhotoRepositoryPort galleryPhotoRepositoryPort,
+            PhotoStoragePort photoStoragePort
+    ) {
+        return new GalleryApplicationService(galleryPhotoRepositoryPort, photoStoragePort);
+    }
+
+    @Bean
     public PhotoApplicationService photoApplicationService(
             PhotoRepositoryPort photoRepositoryPort,
             ParticipationRepositoryPort participationRepositoryPort,

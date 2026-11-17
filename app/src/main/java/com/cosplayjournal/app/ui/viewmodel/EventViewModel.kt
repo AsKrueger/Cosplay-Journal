@@ -25,6 +25,9 @@ class EventViewModel(
     /** true cuando la última carga desde el backend ha fallado. */
     val loadError: StateFlow<Boolean> = _loadError
 
+    /** true cuando la sesión ha caducado y los cambios de asistencia solo quedan en este móvil. */
+    val sessionExpired: StateFlow<Boolean> = userEventRepository.sessionExpired
+
     val userEventData: StateFlow<List<UserEventData>> = userEventRepository.all.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
