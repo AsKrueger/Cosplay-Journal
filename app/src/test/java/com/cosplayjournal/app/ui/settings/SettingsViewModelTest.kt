@@ -27,6 +27,7 @@ class SettingsViewModelTest {
         override val ajustes = this@SettingsViewModelTest.ajustes
         override suspend fun setImagenesSinConexion(activo: Boolean) { ajustes.value = ajustes.value.copy(imagenesSinConexion = activo) }
         override suspend fun setMiProvincia(codigo: String?) { ajustes.value = ajustes.value.copy(miProvincia = codigo) }
+        override suspend fun setCarpetaGaleria(uri: String?) { ajustes.value = ajustes.value.copy(carpetaGaleria = uri) }
         override suspend fun borrarTodo() { ajustes.value = Ajustes() }
     }
     private val auth = mockk<AuthRepository>(relaxed = true) { every { userIdActual() } returns "u1" }

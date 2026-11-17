@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.PhotoLibrary
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -34,12 +36,15 @@ import com.cosplayjournal.app.ui.calendar.CalendarViewModel
 import com.cosplayjournal.app.ui.calendar.EventDetailScreen
 import com.cosplayjournal.app.ui.calendar.EventDetailViewModel
 import com.cosplayjournal.app.ui.common.appViewModel
+import com.cosplayjournal.app.ui.gallery.GalleryScreen
+import com.cosplayjournal.app.ui.gallery.GalleryViewModel
 import com.cosplayjournal.app.ui.profile.ProfileScreen
 import com.cosplayjournal.app.ui.settings.SettingsScreen
 
 /** Pestañas de la barra inferior. Cada fase añade la suya. */
 enum class Pestaña(val ruta: String, @StringRes val titulo: Int, val icono: ImageVector, val iconoActivo: ImageVector) {
     CALENDARIO("calendario", R.string.nav_calendario, Icons.Outlined.CalendarMonth, Icons.Filled.CalendarMonth),
+    GALERIA("galeria", R.string.nav_galeria, Icons.Outlined.PhotoLibrary, Icons.Filled.PhotoLibrary),
     PERFIL("perfil", R.string.nav_perfil, Icons.Outlined.Person, Icons.Filled.Person),
 }
 
@@ -93,6 +98,10 @@ fun AppNavegacion(eventoInicial: Long? = null, nav: NavHostController = remember
                 val id = entrada.arguments!!.getLong("id")
                 val vm = appViewModel(key = "evento$id") { EventDetailViewModel(id, it.eventos, it.avisos) }
                 EventDetailScreen(vm, onAtras = nav::popBackStack)
+            }
+            composable(Pestaña.GALERIA.ruta) {
+                val vm = appViewModel { c -> GalleryViewModel(c.galeria, c.eventos.eventos) }
+                GalleryScreen(vm)
             }
             composable(Pestaña.PERFIL.ruta) { ProfileScreen(onAjustes = { nav.navigate(Rutas.AJUSTES) }) }
             composable(Rutas.AJUSTES) { SettingsScreen(onAtras = nav::popBackStack) }

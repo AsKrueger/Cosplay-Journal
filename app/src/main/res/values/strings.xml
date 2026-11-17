@@ -132,4 +132,32 @@
     <string name="recordatorio_canal">Recordatorios de eventos</string>
     <string name="recordatorio_titulo">¡Mañana hay salón!</string>
     <string name="recordatorio_texto">%1$s empieza mañana. ¿Tienes el cosplay listo?</string>
+
+    <!-- Galería -->
+    <string name="gal_vincular_titulo">Tu galería de cosplay</string>
+    <string name="gal_vincular_texto">Elige la carpeta del móvil donde guardas tus fotos de salones. Las fotos se quedan en tu móvil: solo las ordenamos.</string>
+    <string name="gal_elegir_carpeta">Elegir carpeta</string>
+    <string name="gal_cambiar_carpeta">Cambiar carpeta</string>
+    <string name="gal_vacia_titulo">No hay fotos en esta carpeta</string>
+    <string name="gal_vacia_texto">Añade fotos a la carpeta o elige otra.</string>
+    <string name="gal_orden_todas">Todas</string>
+    <string name="gal_orden_evento">Por evento</string>
+    <string name="gal_orden_cosplay">Por cosplay</string>
+    <string name="gal_orden_grupal">Grupales</string>
+    <string name="gal_sin_evento">Sin evento</string>
+    <string name="gal_sin_cosplay">Sin cosplay</string>
+    <string name="gal_sin_grupales">Aún no has marcado ninguna foto como grupal</string>
+    <string name="gal_n_fotos">%1$d fotos</string>
+    <string name="gal_seleccionadas">%1$d seleccionadas</string>
+    <string name="gal_etiquetar">Etiquetar</string>
+    <string name="gal_etiquetar_titulo">Etiquetar fotos</string>
+    <string name="gal_evento">Evento</string>
+    <string name="gal_ningun_evento">Ningún evento</string>
+    <string name="gal_sugerido">Sugerido por la fecha</string>
+    <string name="gal_buscar_evento">Buscar evento</string>
+    <string name="gal_cosplay">Cosplay (personaje)</string>
+    <string name="gal_grupal">Foto grupal</string>
+    <string name="gal_guardar">Guardar</string>
+    <string name="gal_compartir">Compartir</string>
+    <string name="gal_seleccionar_grupo">Seleccionar todas</string>
 </resources>

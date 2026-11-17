@@ -122,4 +122,31 @@
     <string name="recordatorio_canal">Event reminders</string>
     <string name="recordatorio_titulo">Event tomorrow!</string>
     <string name="recordatorio_texto">%1$s starts tomorrow. Is your cosplay ready?</string>
+
+    <string name="gal_vincular_titulo">Your cosplay gallery</string>
+    <string name="gal_vincular_texto">Pick the folder on your phone where you keep your con photos. Photos stay on your phone: we just sort them.</string>
+    <string name="gal_elegir_carpeta">Choose folder</string>
+    <string name="gal_cambiar_carpeta">Change folder</string>
+    <string name="gal_vacia_titulo">No photos in this folder</string>
+    <string name="gal_vacia_texto">Add photos to the folder or pick another one.</string>
+    <string name="gal_orden_todas">All</string>
+    <string name="gal_orden_evento">By event</string>
+    <string name="gal_orden_cosplay">By cosplay</string>
+    <string name="gal_orden_grupal">Group shots</string>
+    <string name="gal_sin_evento">No event</string>
+    <string name="gal_sin_cosplay">No cosplay</string>
+    <string name="gal_sin_grupales">You haven\'t marked any photo as a group shot yet</string>
+    <string name="gal_n_fotos">%1$d photos</string>
+    <string name="gal_seleccionadas">%1$d selected</string>
+    <string name="gal_etiquetar">Tag</string>
+    <string name="gal_etiquetar_titulo">Tag photos</string>
+    <string name="gal_evento">Event</string>
+    <string name="gal_ningun_evento">No event</string>
+    <string name="gal_sugerido">Suggested by date</string>
+    <string name="gal_buscar_evento">Search event</string>
+    <string name="gal_cosplay">Cosplay (character)</string>
+    <string name="gal_grupal">Group shot</string>
+    <string name="gal_guardar">Save</string>
+    <string name="gal_compartir">Share</string>
+    <string name="gal_seleccionar_grupo">Select all</string>
 </resources>
