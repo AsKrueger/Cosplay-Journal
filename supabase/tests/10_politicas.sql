@@ -183,6 +183,10 @@ select tests.ok((select updated_at = '2026-01-01' from public.events where slug 
 update public.events set city = 'Toledo', updated_at = now() where slug = 'salon-1';
 select tests.ok((select updated_at > '2026-01-01' from public.events where slug = 'salon-1'),
                 'un cambio real actualiza updated_at');
+insert into public.events (slug, name, start_date, end_date)
+values ('salon-a', 'A', '2026-12-01', '2026-12-01'), ('salon-b', 'B', '2026-12-01', '2026-12-01');
+select tests.ok((select count(distinct updated_at) = 2 from public.events where slug in ('salon-a', 'salon-b')),
+                'cada salón recibe su propia hora aunque se escriban juntos');
 
 -- 20 mensajes por minuto
 insert into public.messages (conversation_id, sender_id, body)

@@ -2,21 +2,25 @@
 -- 5 GB de tráfico al mes) y mantenimiento que ejecuta el cron diario de GitHub.
 
 -- ---------------------------------------------------------------------------
--- 1. updated_at de un evento solo cambia si cambian sus datos.
+-- 1. updated_at de un evento solo cambia si cambian sus datos, y lo pone la base.
 --    El importador reescribe todos los salones cada día; así la app puede pedir
---    únicamente los que han cambiado desde su última sincronización.
+--    únicamente los posteriores a su última sincronización (updated_at > marca).
+--    clock_timestamp() da una hora distinta a cada fila y siempre creciente entre
+--    lotes, de modo que ningún cambio queda por detrás de la marca de la app.
 -- ---------------------------------------------------------------------------
 create function public.events_keep_updated_at() returns trigger
     language plpgsql as
 $$
 begin
-    if (to_jsonb(new) - 'updated_at') = (to_jsonb(old) - 'updated_at') then
+    if tg_op = 'UPDATE' and (to_jsonb(new) - 'updated_at') = (to_jsonb(old) - 'updated_at') then
         new.updated_at := old.updated_at;
+    else
+        new.updated_at := clock_timestamp();
     end if;
     return new;
 end;
 $$;
-create trigger events_keep_updated_at before update on public.events
+create trigger events_keep_updated_at before insert or update on public.events
     for each row execute function public.events_keep_updated_at();
 create index events_updated_at_idx on public.events (updated_at);
 
