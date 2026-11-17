@@ -1,7 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Cosplay Journal</string>
-    <string name="home_title">Home</string>
-    <string name="events_title">Events</string>
-    <string name="cosplans_title">Cosplans</string>
-    <string name="profile_title">Profile</string>
+    <string name="app_tagline">Todos los salones de España, tus fotos y tu gente.</string>
+
+    <!-- Común -->
+    <string name="accion_cancelar">Cancelar</string>
+    <string name="accion_aceptar">Aceptar</string>
+    <string name="accion_enviar">Enviar</string>
+    <string name="accion_reintentar">Reintentar</string>
+    <string name="accion_atras">Atrás</string>
+    <string name="accion_cerrar">Cerrar</string>
+    <string name="error_sin_conexion">Sin conexión. Revisa tu internet e inténtalo de nuevo.</string>
+    <string name="error_generico">Algo ha fallado. Inténtalo de nuevo.</string>
+    <string name="cargando">Cargando…</string>
+
+    <!-- Configuración pendiente -->
+    <string name="config_falta_titulo">Falta conectar el servidor</string>
+    <string name="config_falta_texto">Añade SUPABASE_URL y SUPABASE_ANON_KEY a local.properties y vuelve a compilar. Los pasos están en docs/PUESTA_EN_MARCHA.md.</string>
+
+    <!-- Acceso -->
+    <string name="auth_entrar">Entrar</string>
+    <string name="auth_crear_cuenta">Crear cuenta</string>
+    <string name="auth_ya_tengo_cuenta">Ya tengo cuenta</string>
+    <string name="auth_no_tengo_cuenta">Soy nuevo, crear cuenta</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_password">Contraseña</string>
+    <string name="auth_nickname">Nickname</string>
+    <string name="auth_nickname_ayuda">De 3 a 24 letras, números, _ o punto. Es lo único que verán los demás.</string>
+    <string name="auth_nickname_libre">¡Está libre!</string>
+    <string name="auth_nickname_ocupado">Ese nickname ya está cogido</string>
+    <string name="auth_nickname_invalido">Usa de 3 a 24 letras, números, _ o punto</string>
+    <string name="auth_password_corta">Mínimo 8 caracteres</string>
+    <string name="auth_email_invalido">Revisa el email</string>
+    <string name="auth_edad">Tengo 14 años o más</string>
+    <string name="auth_privacidad">Acepto la política de privacidad</string>
+    <string name="auth_ver_privacidad">Leer la política de privacidad</string>
+    <string name="auth_confirma_email">Te hemos enviado un email. Confírmalo y vuelve para entrar.</string>
+    <string name="auth_error_credenciales">Email o contraseña incorrectos</string>
+    <string name="auth_error_no_confirmado">Confirma tu email antes de entrar</string>
+    <string name="auth_error_existe">Ya hay una cuenta con ese email</string>
+    <string name="auth_error_password_debil">La contraseña es demasiado débil</string>
+
+    <!-- Navegación -->
+    <string name="nav_calendario">Calendario</string>
+    <string name="nav_galeria">Galería</string>
+    <string name="nav_amigos">Amigos</string>
+    <string name="nav_chats">Chats</string>
+    <string name="nav_perfil">Perfil</string>
+
+    <!-- Perfil -->
+    <string name="perfil_codigo_amigo">Tu código de amigo</string>
+    <string name="perfil_codigo_copiado">Código copiado</string>
+    <string name="perfil_compartir_codigo">¡Agrégame en Cosplay Journal! Mi código es %1$s</string>
+    <string name="perfil_ajustes">Ajustes</string>
+
+    <!-- Ajustes -->
+    <string name="ajustes_titulo">Ajustes</string>
+    <string name="ajustes_seccion_app">App</string>
+    <string name="ajustes_idioma">Idioma</string>
+    <string name="ajustes_idioma_sistema">El del móvil</string>
+    <string name="ajustes_idioma_es">Español</string>
+    <string name="ajustes_idioma_en">English</string>
+    <string name="ajustes_seccion_datos">Datos y almacenamiento</string>
+    <string name="ajustes_offline">Guardar imágenes sin conexión</string>
+    <string name="ajustes_offline_texto">Carteles y fotos disponibles aunque no tengas internet</string>
+    <string name="ajustes_borrar_cache">Borrar caché</string>
+    <string name="ajustes_cache_ocupa">Ocupa %1$s</string>
+    <string name="ajustes_cache_borrada">Caché borrada</string>
+    <string name="ajustes_borrar_datos">Borrar datos guardados</string>
+    <string name="ajustes_borrar_datos_texto">Quita del móvil el calendario descargado, las etiquetas de la galería y tus preferencias. Tu cuenta y tus fotos no se tocan.</string>
+    <string name="ajustes_datos_borrados">Datos borrados</string>
+    <string name="ajustes_seccion_ayuda">Ayuda</string>
+    <string name="ajustes_comentarios">Enviar comentarios</string>
+    <string name="ajustes_comentarios_texto">Ideas, fallos o lo que quieras contarnos</string>
+    <string name="ajustes_comentarios_hint">Escribe aquí tu comentario</string>
+    <string name="ajustes_comentarios_gracias">¡Gracias! Lo leeremos pronto.</string>
+    <string name="ajustes_comentarios_email">Prefiero escribir un email</string>
+    <string name="ajustes_privacidad">Política de privacidad</string>
+    <string name="ajustes_version">Versión %1$s</string>
+    <string name="ajustes_seccion_cuenta">Cuenta</string>
+    <string name="ajustes_cerrar_sesion">Cerrar sesión</string>
+    <string name="ajustes_borrar_cuenta">Borrar mi cuenta</string>
+    <string name="ajustes_borrar_cuenta_texto">Se borrarán tu perfil, amistades, mensajes y fotos compartidas. No se puede deshacer.</string>
+    <string name="ajustes_borrar_cuenta_confirmar">Borrar para siempre</string>
 </resources>

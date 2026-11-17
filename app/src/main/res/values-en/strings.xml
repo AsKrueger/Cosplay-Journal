@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_tagline">Every con in Spain, your photos and your people.</string>
+
+    <string name="accion_cancelar">Cancel</string>
+    <string name="accion_aceptar">OK</string>
+    <string name="accion_enviar">Send</string>
+    <string name="accion_reintentar">Retry</string>
+    <string name="accion_atras">Back</string>
+    <string name="accion_cerrar">Close</string>
+    <string name="error_sin_conexion">You\'re offline. Check your connection and try again.</string>
+    <string name="error_generico">Something went wrong. Please try again.</string>
+    <string name="cargando">Loading…</string>
+
+    <string name="config_falta_titulo">Server not connected</string>
+    <string name="config_falta_texto">Add SUPABASE_URL and SUPABASE_ANON_KEY to local.properties and rebuild. See docs/PUESTA_EN_MARCHA.md.</string>
+
+    <string name="auth_entrar">Sign in</string>
+    <string name="auth_crear_cuenta">Create account</string>
+    <string name="auth_ya_tengo_cuenta">I already have an account</string>
+    <string name="auth_no_tengo_cuenta">I\'m new, create an account</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_password">Password</string>
+    <string name="auth_nickname">Nickname</string>
+    <string name="auth_nickname_ayuda">3 to 24 letters, numbers, _ or dot. It\'s the only thing others will see.</string>
+    <string name="auth_nickname_libre">It\'s available!</string>
+    <string name="auth_nickname_ocupado">That nickname is taken</string>
+    <string name="auth_nickname_invalido">Use 3 to 24 letters, numbers, _ or dot</string>
+    <string name="auth_password_corta">At least 8 characters</string>
+    <string name="auth_email_invalido">Check your email</string>
+    <string name="auth_edad">I\'m 14 or older</string>
+    <string name="auth_privacidad">I accept the privacy policy</string>
+    <string name="auth_ver_privacidad">Read the privacy policy</string>
+    <string name="auth_confirma_email">We\'ve sent you an email. Confirm it and come back to sign in.</string>
+    <string name="auth_error_credenciales">Wrong email or password</string>
+    <string name="auth_error_no_confirmado">Confirm your email before signing in</string>
+    <string name="auth_error_existe">There\'s already an account with that email</string>
+    <string name="auth_error_password_debil">That password is too weak</string>
+
+    <string name="nav_calendario">Calendar</string>
+    <string name="nav_galeria">Gallery</string>
+    <string name="nav_amigos">Friends</string>
+    <string name="nav_chats">Chats</string>
+    <string name="nav_perfil">Profile</string>
+
+    <string name="perfil_codigo_amigo">Your friend code</string>
+    <string name="perfil_codigo_copiado">Code copied</string>
+    <string name="perfil_compartir_codigo">Add me on Cosplay Journal! My code is %1$s</string>
+    <string name="perfil_ajustes">Settings</string>
+
+    <string name="ajustes_titulo">Settings</string>
+    <string name="ajustes_seccion_app">App</string>
+    <string name="ajustes_idioma">Language</string>
+    <string name="ajustes_idioma_sistema">Same as phone</string>
+    <string name="ajustes_idioma_es">Español</string>
+    <string name="ajustes_idioma_en">English</string>
+    <string name="ajustes_seccion_datos">Data and storage</string>
+    <string name="ajustes_offline">Save images for offline use</string>
+    <string name="ajustes_offline_texto">Posters and photos available even without internet</string>
+    <string name="ajustes_borrar_cache">Clear cache</string>
+    <string name="ajustes_cache_ocupa">Using %1$s</string>
+    <string name="ajustes_cache_borrada">Cache cleared</string>
+    <string name="ajustes_borrar_datos">Clear saved data</string>
+    <string name="ajustes_borrar_datos_texto">Removes the downloaded calendar, gallery tags and your preferences from this phone. Your account and photos are not affected.</string>
+    <string name="ajustes_datos_borrados">Data cleared</string>
+    <string name="ajustes_seccion_ayuda">Help</string>
+    <string name="ajustes_comentarios">Send feedback</string>
+    <string name="ajustes_comentarios_texto">Ideas, bugs or anything you want to tell us</string>
+    <string name="ajustes_comentarios_hint">Write your feedback here</string>
+    <string name="ajustes_comentarios_gracias">Thanks! We\'ll read it soon.</string>
+    <string name="ajustes_comentarios_email">I\'d rather send an email</string>
+    <string name="ajustes_privacidad">Privacy policy</string>
+    <string name="ajustes_version">Version %1$s</string>
+    <string name="ajustes_seccion_cuenta">Account</string>
+    <string name="ajustes_cerrar_sesion">Sign out</string>
+    <string name="ajustes_borrar_cuenta">Delete my account</string>
+    <string name="ajustes_borrar_cuenta_texto">Your profile, friendships, messages and shared photos will be deleted. This can\'t be undone.</string>
+    <string name="ajustes_borrar_cuenta_confirmar">Delete forever</string>
+</resources>

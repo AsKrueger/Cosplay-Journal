@@ -1,10 +1,15 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in /path/to/android-sdk/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.kts.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools-proguard.html
+# kotlinx.serialization: conservar serializadores de los modelos
+-keepattributes *Annotation*, InnerClasses
+-dontnote kotlinx.serialization.**
+-keepclassmembers class com.cosplayjournal.app.** {
+    *** Companion;
+}
+-keepclasseswithmembers class com.cosplayjournal.app.** {
+    kotlinx.serialization.KSerializer serializer(...);
+}
+-keep,includedescriptorclasses class com.cosplayjournal.app.**$$serializer { *; }
 
-# Add any custom Keep rules here:
+# Ktor / Supabase
+-dontwarn org.slf4j.**
+-dontwarn io.ktor.**
+-keep class io.ktor.** { *; }
