@@ -7,7 +7,7 @@ local.properties
 .externalNativeBuild
 .cxx
 
-# Build outputs (Android/Gradle y backend/Maven)
+# Build outputs
 build/
 target/
 
@@ -23,5 +23,7 @@ target/
 /.idea/appInsightsSettings.xml
 /.idea/copilot.data.migration.*.xml
 
-# Fotos guardadas en disco en desarrollo
-backend/uploads/
+# Python (scraper)
+__pycache__/
+.venv/
+.pytest_cache/
