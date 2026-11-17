@@ -7,6 +7,7 @@ import com.cosplayjournal.app.data.auth.AuthRepository
 import com.cosplayjournal.app.data.auth.SupabaseAuthRepository
 import com.cosplayjournal.app.data.cache.ImagenesManager
 import com.cosplayjournal.app.data.events.EventRepository
+import com.cosplayjournal.app.data.events.DataStoreMarcaSincronizacion
 import com.cosplayjournal.app.data.events.SupabaseEventosRemotos
 import com.cosplayjournal.app.data.feedback.FeedbackRepository
 import com.cosplayjournal.app.data.chat.ChatRepository
@@ -59,7 +60,10 @@ class AppContainer(context: Context) {
 
     val db: AppDatabase by lazy { AppDatabase.crear(appContext) }
     val eventos: EventRepository by lazy {
-        EventRepository(db.eventos(), SupabaseEventosRemotos(supabase), userId = { auth.userIdActual() })
+        EventRepository(
+            db.eventos(), SupabaseEventosRemotos(supabase), userId = { auth.userIdActual() },
+            marcas = DataStoreMarcaSincronizacion(appContext),
+        )
     }
     val social: SocialRepository by lazy {
         SupabaseSocialRepository(supabase, CompresorImagenes(appContext), userId = { auth.userIdActual() })
