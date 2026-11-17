@@ -38,3 +38,17 @@ Con Docker arrancado:
 docker run -d --name cj-pg -e POSTGRES_PASSWORD=test -v "$PWD/supabase:/supabase" postgres:15-alpine
 docker exec -e PGUSER=postgres cj-pg bash /supabase/tests/run.sh
 ```
+
+## 5. Publicidad (opcional)
+
+La barra superior de anuncios solo aparece si hay una fila activa en la tabla `ads`. Para publicar un anuncio, en Supabase → **Table Editor → ads → Insert row**:
+
+| Campo | Ejemplo |
+|---|---|
+| `title` | Tienda de pelucas |
+| `image_url` | URL pública de una imagen horizontal (proporción 6:1, p. ej. 1200×200) |
+| `target_url` | Web a la que lleva al pulsar |
+| `starts_at` / `ends_at` | Fechas de campaña (`ends_at` vacío = sin fin) |
+| `active` | `true` |
+
+La app consulta los anuncios al abrirse y cada 30 minutos y, si hay varios, los rota cada 20 segundos. Todos llevan la etiqueta «Publicidad». Para retirarlo, pon `active = false`.
