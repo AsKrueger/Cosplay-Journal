@@ -39,6 +39,8 @@ class SettingsViewModel(
     private val comentarios: FeedbackRepository,
     private val almacen: AlmacenLocal,
     private val version: String,
+    /** Borra avatar y escaparate del servidor antes de eliminar la cuenta. */
+    private val borrarArchivos: suspend () -> Unit = {},
 ) : ViewModel() {
 
     private val local = MutableStateFlow(AjustesUi())
@@ -81,6 +83,7 @@ class SettingsViewModel(
     }
 
     fun borrarCuenta() = tarea(null) {
+        runCatching { borrarArchivos() }
         auth.borrarCuenta()
         almacen.borrarDatos()
     }

@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.CleaningServices
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.DeleteSweep
@@ -63,7 +64,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(onAtras: () -> Unit) {
+fun SettingsScreen(onAtras: () -> Unit, onBloqueados: () -> Unit) {
     val context = LocalContext.current
     val vm = appViewModel { c ->
         SettingsViewModel(
@@ -74,6 +75,7 @@ fun SettingsScreen(onAtras: () -> Unit) {
                 override suspend fun borrarDatos() = c.borrarDatosLocales()
             },
             BuildConfig.VERSION_NAME,
+            borrarArchivos = { c.social.borrarMisArchivos() },
         )
     }
     val ui by vm.ui.collectAsStateWithLifecycle()
@@ -128,6 +130,7 @@ fun SettingsScreen(onAtras: () -> Unit) {
             Opcion(Icons.Default.Info, stringResource(R.string.ajustes_version, BuildConfig.VERSION_NAME), null, onClick = null)
 
             Seccion(R.string.ajustes_seccion_cuenta)
+            Opcion(Icons.Default.Block, stringResource(R.string.ajustes_bloqueados), null, onClick = onBloqueados)
             Opcion(Icons.AutoMirrored.Filled.Logout, stringResource(R.string.ajustes_cerrar_sesion), null, onClick = vm::cerrarSesion)
             Opcion(Icons.Default.DeleteForever, stringResource(R.string.ajustes_borrar_cuenta), null,
                 peligro = true) { dialogo = "cuenta" }

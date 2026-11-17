@@ -8,6 +8,9 @@ import com.cosplayjournal.app.data.events.EventRepository
 import com.cosplayjournal.app.data.events.SupabaseEventosRemotos
 import com.cosplayjournal.app.data.feedback.FeedbackRepository
 import com.cosplayjournal.app.data.gallery.CarpetaGuardada
+import com.cosplayjournal.app.data.social.CompresorImagenes
+import com.cosplayjournal.app.data.social.SocialRepository
+import com.cosplayjournal.app.data.social.SupabaseSocialRepository
 import com.cosplayjournal.app.data.gallery.GalleryRepository
 import com.cosplayjournal.app.data.gallery.LectorCarpetaSaf
 import kotlinx.coroutines.flow.map
@@ -53,6 +56,9 @@ class AppContainer(context: Context) {
     val db: AppDatabase by lazy { AppDatabase.crear(appContext) }
     val eventos: EventRepository by lazy {
         EventRepository(db.eventos(), SupabaseEventosRemotos(supabase), userId = { auth.userIdActual() })
+    }
+    val social: SocialRepository by lazy {
+        SupabaseSocialRepository(supabase, CompresorImagenes(appContext), userId = { auth.userIdActual() })
     }
     val galeria: GalleryRepository by lazy {
         GalleryRepository(db.fotos(), LectorCarpetaSaf(appContext), object : CarpetaGuardada {

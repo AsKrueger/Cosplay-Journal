@@ -5,9 +5,12 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.People
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.PhotoLibrary
 import androidx.compose.material3.Icon
@@ -17,6 +20,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
+import android.widget.Toast
+import kotlinx.coroutines.launch
+import com.cosplayjournal.app.data.ErrorApp
+import com.cosplayjournal.app.data.clasificar
+import com.cosplayjournal.app.ui.common.appContainer
+import com.cosplayjournal.app.ui.common.texto
+import com.cosplayjournal.app.ui.gallery.AccionFoto
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -38,18 +50,28 @@ import com.cosplayjournal.app.ui.calendar.EventDetailViewModel
 import com.cosplayjournal.app.ui.common.appViewModel
 import com.cosplayjournal.app.ui.gallery.GalleryScreen
 import com.cosplayjournal.app.ui.gallery.GalleryViewModel
+import com.cosplayjournal.app.ui.friends.FriendProfileScreen
+import com.cosplayjournal.app.ui.friends.FriendProfileViewModel
+import com.cosplayjournal.app.ui.friends.FriendsScreen
+import com.cosplayjournal.app.ui.friends.FriendsViewModel
 import com.cosplayjournal.app.ui.profile.ProfileScreen
+import com.cosplayjournal.app.ui.profile.ProfileViewModel
+import com.cosplayjournal.app.ui.settings.BlockedScreen
 import com.cosplayjournal.app.ui.settings.SettingsScreen
 
 /** Pestañas de la barra inferior. Cada fase añade la suya. */
 enum class Pestaña(val ruta: String, @StringRes val titulo: Int, val icono: ImageVector, val iconoActivo: ImageVector) {
     CALENDARIO("calendario", R.string.nav_calendario, Icons.Outlined.CalendarMonth, Icons.Filled.CalendarMonth),
     GALERIA("galeria", R.string.nav_galeria, Icons.Outlined.PhotoLibrary, Icons.Filled.PhotoLibrary),
+    AMIGOS("amigos", R.string.nav_amigos, Icons.Outlined.People, Icons.Filled.People),
     PERFIL("perfil", R.string.nav_perfil, Icons.Outlined.Person, Icons.Filled.Person),
 }
 
 object Rutas {
     const val AJUSTES = "ajustes"
+    const val BLOQUEADOS = "bloqueados"
+    const val AMIGO = "amigo/{id}"
+    fun amigo(id: String) = "amigo/$id"
     const val EVENTO = "evento/{id}"
     fun evento(id: Long) = "evento/$id"
 }
@@ -101,10 +123,44 @@ fun AppNavegacion(eventoInicial: Long? = null, nav: NavHostController = remember
             }
             composable(Pestaña.GALERIA.ruta) {
                 val vm = appViewModel { c -> GalleryViewModel(c.galeria, c.eventos.eventos) }
-                GalleryScreen(vm)
+                GalleryScreen(vm, accionesExtra = listOf(accionEscaparate()))
             }
-            composable(Pestaña.PERFIL.ruta) { ProfileScreen(onAjustes = { nav.navigate(Rutas.AJUSTES) }) }
-            composable(Rutas.AJUSTES) { SettingsScreen(onAtras = nav::popBackStack) }
+            composable(Pestaña.AMIGOS.ruta) {
+                val vm = appViewModel { FriendsViewModel(it.social) }
+                FriendsScreen(vm, onAmigo = { id -> nav.navigate(Rutas.amigo(id)) })
+            }
+            composable(Rutas.AMIGO) { entrada ->
+                val id = entrada.arguments!!.getString("id")!!
+                val vm = appViewModel(key = "amigo$id") { FriendProfileViewModel(id, it.social, it.eventos.eventos) }
+                FriendProfileScreen(vm, onAtras = nav::popBackStack, onEvento = { e -> nav.navigate(Rutas.evento(e)) }, onEscribir = null)
+            }
+            composable(Pestaña.PERFIL.ruta) {
+                val vm = appViewModel { c -> ProfileViewModel(c.perfiles, c.social, c.eventos.eventos, userId = { c.auth.userIdActual() }) }
+                ProfileScreen(vm, onAjustes = { nav.navigate(Rutas.AJUSTES) }, onEvento = { e -> nav.navigate(Rutas.evento(e)) })
+            }
+            composable(Rutas.BLOQUEADOS) { BlockedScreen(onAtras = nav::popBackStack) }
+            composable(Rutas.AJUSTES) { SettingsScreen(onAtras = nav::popBackStack, onBloqueados = { nav.navigate(Rutas.BLOQUEADOS) }) }
+        }
+    }
+}
+
+/** Sube la foto abierta en el visor al escaparate del perfil. */
+@Composable
+private fun accionEscaparate(): AccionFoto {
+    val c = appContainer()
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    return AccionFoto(Icons.Filled.Star, R.string.esc_anadir) { foto ->
+        Toast.makeText(context, R.string.esc_subiendo, Toast.LENGTH_SHORT).show()
+        scope.launch {
+            val r = runCatching { c.social.añadirAlEscaparate(foto.foto.uri, foto.etiquetas.eventoId, null) }
+            val err = r.exceptionOrNull()?.let { clasificar(it) }
+            val msg = when {
+                err == null -> R.string.esc_anadida
+                err is ErrorApp.Servidor && err.codigo == "showcase_full" -> R.string.esc_lleno
+                else -> err.texto()
+            }
+            Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
         }
     }
 }
