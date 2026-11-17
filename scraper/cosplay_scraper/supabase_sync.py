@@ -13,7 +13,8 @@ LOTE = 200
 
 class Supabase:
     def __init__(self, url: str, service_key: str, session: requests.Session | None = None):
-        self.base = url.rstrip("/") + "/rest/v1"
+        self.raiz = url.rstrip("/")
+        self.base = self.raiz + "/rest/v1"
         self.http = session or requests.Session()
         self.http.headers.update({
             "apikey": service_key,
@@ -41,3 +42,21 @@ class Supabase:
         limite = hoy - timedelta(days=365 * años)
         r = self.http.delete(f"{self.base}/events", params={"end_date": f"lt.{limite.isoformat()}"}, timeout=30)
         r.raise_for_status()
+
+    def archivos_sobrantes(self, dias_chat: int = 90) -> list[tuple[str, str]]:
+        """(bucket, ruta) de las fotos de chat antiguas y de los archivos que ya no usa nadie."""
+        r = self.http.post(f"{self.base}/rpc/storage_purge_candidates", json={"p_chat_days": dias_chat}, timeout=30)
+        r.raise_for_status()
+        return [(f["bucket"], f["path"]) for f in r.json()]
+
+    def borrar_archivos(self, archivos: list[tuple[str, str]]) -> int:
+        """Borra con la API de Storage (quita fila y fichero). Devuelve cuántos se pidieron borrar."""
+        por_bucket: dict[str, list[str]] = {}
+        for bucket, ruta in archivos:
+            por_bucket.setdefault(bucket, []).append(ruta)
+        for bucket, rutas in por_bucket.items():
+            for i in range(0, len(rutas), 100):
+                r = self.http.delete(f"{self.raiz}/storage/v1/object/{bucket}",
+                                     json={"prefixes": rutas[i:i + 100]}, timeout=30)
+                r.raise_for_status()
+        return len(archivos)

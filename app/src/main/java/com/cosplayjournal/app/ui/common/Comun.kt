@@ -43,6 +43,7 @@ inline fun <reified VM : ViewModel> appViewModel(key: String? = null, crossinlin
 @StringRes
 fun ErrorApp.texto(): Int = when (this) {
     ErrorApp.SinConexion -> R.string.error_sin_conexion
+    is ErrorApp.Servidor -> if (codigo == "rate_limited") R.string.error_demasiado_rapido else R.string.error_generico
     else -> R.string.error_generico
 }
 

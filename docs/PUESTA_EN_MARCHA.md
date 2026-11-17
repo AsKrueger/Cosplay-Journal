@@ -20,6 +20,23 @@ En **Settings → Secrets and variables → Actions** del repositorio crea `SUPA
 
 Los comentarios enviados desde la app se guardan en la tabla privada `feedback`. Se leen en Supabase → **Table Editor → feedback**; marca `processed` cuando los hayas atendido. No se publican en GitHub porque el repositorio es público.
 
+## Cómo se mantiene gratis y sin ordenador encendido
+
+Todo funciona en la nube gratuita; tu PC y Docker no hacen falta para que la app esté en marcha.
+
+| Pieza | Dónde corre | Plan gratuito |
+|---|---|---|
+| Base de datos, cuentas, chat, fotos | Supabase | 500 MB de base, 1 GB de archivos, 5 GB de tráfico/mes |
+| Importar salones y limpiar archivos | GitHub Actions (cron diario) | Ilimitado en repositorios públicos |
+
+Protecciones para no salir del plan gratuito:
+
+- **Supabase pausa los proyectos gratuitos tras 7 días sin uso.** El cron diario consulta la base cada mañana, así que nunca llega a pausarse.
+- **GitHub apaga los crons de repositorios sin actividad en 60 días.** El propio cron se reactiva cada día (último paso de `eventos.yml`).
+- **Si ListadoManga cambia su web** y el importador encuentra menos de 30 salones, falla sin tocar el calendario y GitHub te avisa por email.
+- **Almacenamiento:** las fotos se comprimen a WebP (máx. 300 KB), el escaparate admite 12 por persona y el cron borra cada día las fotos del chat con más de 90 días y los archivos que ya no usa nadie.
+- **Spam:** como máximo 20 mensajes por minuto, 30 solicitudes de amistad al día, 5 comentarios al día, 10 grupos al día y 20 denuncias al día por usuario.
+
 ## 3. App Android
 
 Añade a `local.properties` (no se sube al repositorio):

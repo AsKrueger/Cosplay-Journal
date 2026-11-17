@@ -36,7 +36,7 @@ fun clasificar(e: Throwable): ErrorApp = when {
 
 private val CODIGOS = listOf(
     "not_friends", "user_not_found", "request_not_found", "showcase_full", "conversation_not_found",
-    "cannot_friend_self", "cannot_block_self", "not_authenticated",
+    "cannot_friend_self", "cannot_block_self", "not_authenticated", "rate_limited",
 )
 
 private fun codigoDe(mensaje: String): String? = CODIGOS.firstOrNull { mensaje.contains(it) }

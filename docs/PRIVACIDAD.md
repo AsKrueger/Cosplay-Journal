@@ -17,6 +17,8 @@ Cosplay Journal es una app gratuita para cosplayers. Esta política explica qué
 | Mensajes y fotos de chats | Hablar con tus amigos y grupos | Los miembros de cada chat |
 | Comentarios que nos envías | Mejorar la app | El equipo de Cosplay Journal |
 
+**Las fotos enviadas por chat se borran a los 90 días**; los mensajes de texto se conservan hasta que borras tu cuenta.
+
 **Tu galería se queda en tu móvil.** La app solo lee la carpeta que tú eliges; no sube ninguna foto salvo las que añades al escaparate o envías a un chat.
 
 La ubicación aproximada, si la permites, se usa solo en el móvil para ordenar los eventos por cercanía. No se envía a ningún servidor.

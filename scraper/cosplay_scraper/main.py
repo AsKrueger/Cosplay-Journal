@@ -22,6 +22,9 @@ from .listadomanga import Evento, parsear_pagina, url_mes
 from .supabase_sync import Supabase
 
 log = logging.getLogger("cosplay_scraper")
+# ListadoManga publica cientos de salones al año: muy pocos significa que ha cambiado su web
+# y el lector ya no la entiende. Mejor fallar (GitHub avisa por email) que dejar el calendario vacío.
+MINIMO_EVENTOS = 30
 USER_AGENT = "CosplayJournalBot/2.0 (+https://github.com/AsKrueger/Cosplay-Journal)"
 
 
@@ -46,7 +49,8 @@ def descargar(url: str, http: requests.Session, intentos: int = 3, espera: float
     raise AssertionError("inalcanzable")
 
 
-def importar_eventos(hoy: date, http: requests.Session, pausa: float = 1.0) -> list[Evento]:
+def importar_eventos(hoy: date, http: requests.Session, pausa: float = 1.0,
+                     minimo: int = MINIMO_EVENTOS) -> list[Evento]:
     por_slug: dict[str, Evento] = {}
     fallos = 0
     lista = meses(hoy)
@@ -62,6 +66,8 @@ def importar_eventos(hoy: date, http: requests.Session, pausa: float = 1.0) -> l
     if fallos == len(lista):
         raise RuntimeError("No se pudo descargar ningún mes de ListadoManga")
     log.info("%d eventos únicos en %d meses (%d con error)", len(por_slug), len(lista), fallos)
+    if len(por_slug) < minimo:
+        raise RuntimeError(f"Solo {len(por_slug)} salones: ¿ha cambiado el formato de ListadoManga?")
     return list(por_slug.values())
 
 
@@ -85,7 +91,19 @@ def main(argv: list[str] | None = None) -> int:
     db.upsert_eventos(eventos)
     db.borrar_antiguos(hoy)
     log.info("Eventos sincronizados: %d", len(eventos))
+    limpiar_archivos(db)
     return 0
+
+
+def limpiar_archivos(db: Supabase) -> None:
+    """Mantiene el almacenamiento por debajo de 1 GB. Si falla no se pierde nada: se reintenta mañana."""
+    try:
+        sobrantes = db.archivos_sobrantes()
+        if sobrantes:
+            db.borrar_archivos(sobrantes)
+        log.info("Archivos sobrantes borrados: %d", len(sobrantes))
+    except requests.RequestException as e:
+        log.warning("No se pudo limpiar el almacenamiento: %s", e)
 
 
 if __name__ == "__main__":

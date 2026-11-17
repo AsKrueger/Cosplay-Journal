@@ -10,6 +10,7 @@
     <string name="accion_cerrar">Close</string>
     <string name="error_sin_conexion">You\'re offline. Check your connection and try again.</string>
     <string name="error_generico">Something went wrong. Please try again.</string>
+    <string name="error_demasiado_rapido">You\'re going too fast. Wait a moment and try again.</string>
     <string name="cargando">Loading…</string>
 
     <string name="config_falta_titulo">Server not connected</string>
