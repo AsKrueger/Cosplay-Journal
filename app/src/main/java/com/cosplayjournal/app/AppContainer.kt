@@ -7,6 +7,8 @@ import com.cosplayjournal.app.data.cache.ImagenesManager
 import com.cosplayjournal.app.data.events.EventRepository
 import com.cosplayjournal.app.data.events.SupabaseEventosRemotos
 import com.cosplayjournal.app.data.feedback.FeedbackRepository
+import com.cosplayjournal.app.data.chat.ChatRepository
+import com.cosplayjournal.app.data.chat.SupabaseChatRepository
 import com.cosplayjournal.app.data.gallery.CarpetaGuardada
 import com.cosplayjournal.app.data.social.CompresorImagenes
 import com.cosplayjournal.app.data.social.SocialRepository
@@ -59,6 +61,9 @@ class AppContainer(context: Context) {
     }
     val social: SocialRepository by lazy {
         SupabaseSocialRepository(supabase, CompresorImagenes(appContext), userId = { auth.userIdActual() })
+    }
+    val chats: ChatRepository by lazy {
+        SupabaseChatRepository(supabase, CompresorImagenes(appContext), userId = { auth.userIdActual() })
     }
     val galeria: GalleryRepository by lazy {
         GalleryRepository(db.fotos(), LectorCarpetaSaf(appContext), object : CarpetaGuardada {

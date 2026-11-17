@@ -204,4 +204,26 @@
     <string name="ajustes_bloqueados">Usuarios bloqueados</string>
     <string name="bloq_vacio">No has bloqueado a nadie</string>
     <string name="bloq_desbloquear">Desbloquear</string>
+    <string name="chat_vacio_titulo">Aún no tienes chats</string>
+    <string name="chat_vacio_texto">Escribe a un amigo desde su perfil o crea un grupo para organizar una grupal.</string>
+    <string name="chat_nuevo_grupo">Nuevo grupo</string>
+    <string name="chat_nombre_grupo">Nombre del grupo</string>
+    <string name="chat_grupo_evento">Salón (opcional)</string>
+    <string name="chat_ningun_evento">Sin salón</string>
+    <string name="chat_elige_amigos">Elige amigos</string>
+    <string name="chat_sin_amigos">Necesitas amigos para crear un grupo</string>
+    <string name="chat_crear">Crear</string>
+    <string name="chat_foto">📷 Foto</string>
+    <string name="chat_escribe">Escribe un mensaje</string>
+    <string name="chat_enviar_foto">Enviar foto</string>
+    <string name="chat_miembros">Miembros (%1$d)</string>
+    <string name="chat_anadir_miembro">Añadir amigo</string>
+    <string name="chat_salir">Salir del grupo</string>
+    <string name="chat_salir_texto">Dejarás de ver los mensajes de este grupo.</string>
+    <string name="chat_ya_no_amigos">Ya no sois amigos: no puedes escribir en este chat</string>
+    <string name="chat_cargar_mas">Cargar mensajes anteriores</string>
+    <string name="chat_hoy">Hoy</string>
+    <string name="chat_ayer">Ayer</string>
+    <string name="chat_usuario_eliminado">Usuario eliminado</string>
+    <string name="chat_ver_salon">Ver salón</string>
 </resources>
