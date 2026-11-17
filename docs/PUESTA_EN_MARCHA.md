@@ -53,6 +53,31 @@ SUPABASE_ANON_KEY=eyJ...
 FEEDBACK_EMAIL=tu-correo@ejemplo.com
 ```
 
+## Publicar la app gratis (GitHub Releases)
+
+Google Play cobra 25 $ por darse de alta, así que la app se publica como APK en las *Releases* del repositorio, que es gratis. La app consulta GitHub al abrirse y, si hay una versión más nueva, ofrece descargarla una vez (y la deja indicada en **Ajustes → Versión**).
+
+**Una sola vez — crear la clave de firma** (guárdala en un sitio seguro: si la pierdes, quien tenga la app no podrá actualizar sin desinstalar):
+
+```bash
+keytool -genkeypair -keystore cosplayjournal.jks -alias cosplayjournal -keyalg RSA -keysize 2048 -validity 10000
+base64 -w0 cosplayjournal.jks > keystore.txt     # en Windows (Git Bash) igual
+```
+
+En **Settings → Secrets and variables → Actions** añade, además de los del importador:
+
+| Secreto | Valor |
+|---|---|
+| `RELEASE_KEYSTORE_BASE64` | contenido de `keystore.txt` |
+| `RELEASE_STORE_PASSWORD` / `RELEASE_KEY_PASSWORD` | las contraseñas que pusiste en `keytool` |
+| `RELEASE_KEY_ALIAS` | `cosplayjournal` |
+| `SUPABASE_ANON_KEY` | la clave `anon public` |
+| `FEEDBACK_EMAIL` | tu correo (opcional) |
+
+**Cada versión:** desde `main`, `git tag v2.1.0 && git push origin v2.1.0`. El workflow **Publicar APK** pasa los tests, compila, firma y crea la release con el APK. El número de la etiqueta es la versión que verá la gente.
+
+Para instalarla, el usuario abre el enlace en el móvil, descarga el APK y acepta *instalar apps desconocidas* para su navegador. Si algún día quieres estar en Google Play, la misma clave y el mismo APK sirven.
+
 ## 4. Probar el esquema en local
 
 Con Docker arrancado:

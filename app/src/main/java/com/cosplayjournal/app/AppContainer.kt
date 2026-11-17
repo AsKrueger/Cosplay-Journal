@@ -7,6 +7,9 @@ import com.cosplayjournal.app.data.auth.AuthRepository
 import com.cosplayjournal.app.data.auth.SupabaseAuthRepository
 import com.cosplayjournal.app.data.cache.ImagenesManager
 import com.cosplayjournal.app.data.events.EventRepository
+import com.cosplayjournal.app.data.updates.ActualizacionesRepository
+import com.cosplayjournal.app.data.updates.GitHubVersiones
+import com.cosplayjournal.app.data.updates.PreferenciasVersionDescartada
 import com.cosplayjournal.app.data.events.DataStoreMarcaSincronizacion
 import com.cosplayjournal.app.data.events.SupabaseEventosRemotos
 import com.cosplayjournal.app.data.feedback.FeedbackRepository
@@ -72,6 +75,9 @@ class AppContainer(context: Context) {
         SupabaseChatRepository(supabase, CompresorImagenes(appContext), userId = { auth.userIdActual() })
     }
     val anuncios: AdsRepository by lazy { SupabaseAdsRepository(supabase) }
+    val actualizaciones = ActualizacionesRepository(
+        GitHubVersiones(BuildConfig.GITHUB_REPO), BuildConfig.VERSION_NAME, PreferenciasVersionDescartada(appContext),
+    )
     val galeria: GalleryRepository by lazy {
         GalleryRepository(db.fotos(), LectorCarpetaSaf(appContext), object : CarpetaGuardada {
             override val carpeta = settings.ajustes.map { it.carpetaGaleria }
